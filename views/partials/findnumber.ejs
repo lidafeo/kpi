@@ -1,0 +1,16 @@
+<select name="section" id="section">
+	<% for(let i = 0; i < section.length; i++) {%>
+		<option><%=section[i]%></option>
+	<%} %>
+</select>
+<select name="subtype" id="subtype">
+	<% for(let i = 0; i < subtype.length; i++) {%>
+		<option><%=subtype[i]%></option>
+	<%} %>
+</select>
+<select name="number" id="number">
+	<% for(let i = 0; i < number.length; i++) {%>
+	<option><%=number[i]%></option>
+	<%} %>
+</select>
+<button id="submit">Вывести значения показателей</button>

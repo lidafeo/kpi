@@ -1,0 +1,23 @@
+<nav>
+	<ul class="navigation">
+		<!-- Описание ссылок в меню и сами ссылки. -->
+		<li><a href="/admin">Главная</a></li>
+		<li><a>Сотрудники</a>
+			<ul>
+				<li><a href="/admin/getusers">Список</a></li>
+				<li><a href="/admin/adduser">Добавить</a></li>
+				<li><a href="/admin">Удалить</a></li>
+			</ul>
+		</li>
+		
+		<li><a>ПЭДы</a>
+			<ul>
+				<li><a href="/admin/getkpi">Список</a></li>
+				<li><a href="/admin/addkpi">Добавить</a></li>
+				<li><a href="/admin/editballs">Изменить оценки</a></li>
+			</ul>
+		</li>
+		<li><a href="/admin">Закрыть доступ в личные кабинеты</a></li>
+		<li><form action="/exit" method="post"><button>Выход</button></form></li>
+	</ul>
+</nav>

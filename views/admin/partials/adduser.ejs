@@ -1,0 +1,42 @@
+<form name="adduser" action="/adduser" method="post" class="add">
+	<div class="form-left-decoration"></div>
+	<div class="form-right-decoration"></div>
+	<div class="circle"></div>
+	<div class="form-inner">
+		<h3>Добавить пользователя</h3>
+		<div class="errormess" id="error"></div>
+		<div>
+			<label>ФИО</label>
+			<input type="text" name="name" id="name" placeholder="ФИО">
+		</div>
+		<div>
+			<label>Должность</label>
+			<select name="position" id="position">
+				<% for(let i = 0; i < positions.length; i++) {%>
+				<option><%=positions[i].position%></option>
+				<%} %>
+			</select>
+		</div>
+		<div id="facultydiv">
+			<label>Факультет</label>
+			<select name="faculty" id="faculty">
+				<option></option>
+			</select>
+		</div>
+		<div id="departmentdiv">
+			<label>Кафедра</label>
+			<select name="department" id="department">
+				<option></option>
+			</select>
+		</div>
+		<div>
+			<label>login</label>
+			<input type="text" name="login" id="login" placeholder="login">
+		</div>
+		<div>
+			<label>Пароль</label>
+			<input type="text" name="password" id="password" placeholder="password" autocomplete="off">
+		</div>
+		<input type="submit" name="submit" id="add" value="Добавить">
+	</div>
+</form>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Сотрудники</title>
+	<meta charset="utf-8" />
+</head>
+<body>
+	<%- include("partials/menuadmin.ejs") %>
+	<p class="nametable">Список пользователей</p>
+	<table>
+		<tr>
+			<th>ФИО</th>
+			<th>Логин</th>
+			<th>Должность</th>
+			<th>Факультет</th>
+			<th>Кафедра</th>
+		</tr>
+		<% for(let i = 0; i < users.length; i ++) {%>
+			<tr>
+				<td><%=users[i].name %></td>
+				<td><%=users[i].login %></td>
+				<td><%=users[i].position %></td>
+				<td><%=users[i].faculty %></td>
+				<td><%=users[i].department %></td>
+			</tr>
+		<%} %>
+	</table>
+	<link rel="stylesheet" type="text/css" href="../admin/menu.css">
+	<link rel="stylesheet" type="text/css" href="../admin/list.css">
+</body>
+</html>

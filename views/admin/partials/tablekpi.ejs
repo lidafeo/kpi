@@ -1,0 +1,64 @@
+<% if(kpi) {%>
+<table>
+	<tr class="row1">
+		<th rowspan="2">Шифр показателя эффективности</th>
+		<th rowspan="2">Показатель</th>
+		<th rowspan="2">Критерии оценки эффективности деятельности</th>
+		<th colspan="6">Группы</th>
+	</tr>
+	<tr class="row2">
+		<th>Декан</th>
+		<th>Зав. кафедрой</th>
+		<th>Профессор</th>
+		<th>Доцент</th>
+		<th>Ст. преподаватель</th>
+		<th>Ассистент/преподаватель</th>
+	</tr>
+	<% for(let u = 0; u < kpi.length; u++) {%>
+		<% if(kpi[u].length != 0) {%>
+			<tr>
+				<td><%=kpi[u][0].section[0] + "." %></td>
+				<td colspan="8" class="namesection">
+					<h4>Раздел <%=(u+1) + ". " + kpi[u][0].section %></h4>
+				</td>
+			</tr>
+			<% for(let i = 0; i < kpi[u].length; i++) {%>
+				<% let arr = kpi[u]; %>
+				<% if(arr[i].type == 1) {%>
+					<tr>
+						<td rowspan=<%=arr[i].substrings.length + ""%>><%=arr[i].name %></td>
+						<td rowspan=<%=arr[i].substrings.length + ""%>><%=arr[i].description %></td>
+						<% for(let j = 0; j < arr[i].substrings.length; j++) {%>
+							<% if(j != 0) {%>
+								</tr><tr>
+							<%} %>
+							<td><%=arr[i].substrings[j].namecriterion %></td>
+							<% for(let k = 0; k <arr[i].substrings[j].balls.length; k++) {%>
+								<td><big><%=arr[i].substrings[j].balls[k] %></big></td>
+							<%} %>
+						<%} %>
+					</tr>
+				<%} %>
+				<% if(arr[i].type == 2) {%>
+					<tr>
+						<td rowspan=<%=(arr[i].substrings.length + 1) + "" %>><%=arr[i].name %></td>
+						<td colspan="8"><%=arr[i].description %></td>
+					</tr>
+					<% for(let j = 0; j < arr[i].substrings.length; j++) {%>
+					<tr>
+						<td><%=arr[i].substrings[j].description %></td>
+						<td><%=arr[i].substrings[j].namecriterion %></td>
+						<% for(let k = 0; k < arr[i].substrings[j].balls.length; k++) {%>
+							<td><big><%=arr[i].substrings[j].balls[k] %></big></td>
+						<%} %>
+					</tr>
+					<%} %>
+				<%} %>
+			<%} %>
+		<%} %>
+	<%} %>
+</table>
+<%} %>
+<% if(!kpi) {%>
+<h4>Нет Показателей эффективности деятельности</h4>
+<%} %>

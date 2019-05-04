@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title><%=title%></title>
+	<meta charset="utf-8" />
+</head>
+<body>
+	<% if(title != "Образовательная деятельность") {%>
+	<a href="/editkpi/educational">Образовательная деятельность</a>
+	<%} %>
+	<% if(title != "Научная деятельность") {%>
+	<a href="/editkpi/scientific">Научная деятельность</a>
+	<%} %>
+	<% if(title != "Репутационная деятельность") {%>
+	<a href="/editkpi/reputation">Репутационная деятельность</a>
+	<%} %>
+
+	<% for(let i = 0; i < kpi.length; i++) {%>
+		<form enctype="multipart/form-data" name=<%="form" + i%>" 
+			action="/editkpi/educational" method="POST">
+			<h4>ПЭД: <%=kpi[i].name %></h4>
+			<input type="hidden" name="name" value=<%=kpi[i].name %>>
+			<p><%=kpi[i].description %></p>
+			<% if(kpi[i].type == 2) {%>
+				<% for(let j = 0; j < kpi[i].substrings.length; j++) {%>
+					<input type="radio" name="two" value=<%=(j+1)+""%> checked>
+					<%=kpi[i].substrings[j].description %>
+					<br/>
+				<%} %>
+			<%} %>
+			<label>Подтвердить: </label> 
+			<textarea name="text"></textarea>  
+			<br/>
+			<input class="file" type="file" name="file">
+			<br/>
+			<% if(i == check) {%>
+				<p class="errorsend">Нельзя отправить пустое подтверждение</p>
+				<br/>
+			<%} %>
+			<button id="submit">Изменить показатель</button>
+			<br/>
+		</form>
+		<br/>
+		<hr/>
+	<%} %>
+	<style type="text/css">
+		a {
+			border: 2px solid black;
+			background-color: #CCEEFF;
+			padding: 12px;
+			font-size: 18px;
+			text-decoration: none;
+			margin: 10px;
+		}
+		body {
+			padding: 10px;
+		}
+		button, .file {
+			padding: 12px;
+		}
+		.errorsend {
+			color: red;
+		}
+	</style>
+</body>
+</html>

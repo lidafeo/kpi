@@ -1,0 +1,46 @@
+<% if(textErr) {%>
+	<p class="errormess"><%=textErr%></p>
+<%} %>
+<% if(!textErr) {%>
+	<h3><%=desc.description %></h3>
+	<% if(kpi.length != 0) {%>
+	<table border="3">
+		<tr>
+			<td>Дата</td>
+			<td>Текст</td>
+			<td>Файл</td>
+			<% if(desc.type == 2) {%>
+				<td>Показатель</td>
+			<%} %>
+			<td>Отметить, как неверные</td>
+			<td>Комментарий</td>
+		</tr>
+		<% for(let i = 0; i < kpi.length; i++) {%>
+		<% if(!kpi[i].invalid) {%>
+			<tr id=<%="tr" + i %>>
+				<input type="hidden" id=<%="hd" + i %> name="hidd" value=<%=kpi[i]._id%>>
+				<td><%=kpi[i].modifydate %></td>
+				<td><%=kpi[i].text %></td>
+				<% if(kpi[i].file != "") {%>
+					<td><a href=<%="/sendfiles?file="+kpi[i]._id %> download=""><%=kpi[i].file %></a></td>
+				<%} %>
+				<% if(kpi[i].file == "") {%>
+					<td>Файл не прикреплен</td>
+				<%} %>
+				<% if(desc.type == 2) {%>
+					<td><%=desc.substrings[kpi[i].number].description %></td>
+				<%} %>
+				<td><input type="checkbox" name="checkbox" value=<%=i + ""%>></td>
+				<td><input type="text" name="comment" id=<%="comm" + i%>></td>
+			</tr>
+		<%} %>
+		<%} %>
+	</table>
+	<%} %>
+	<% if(kpi.length == 0) {%>
+		<p>Нет отмеченных ПЭДов</p>
+	<%} %>
+	<% if(kpi.length != 0) {%>
+		<button id="incorrect">Подтвердить неверные ПЭДы</button>
+	<%} %>
+<%} %>

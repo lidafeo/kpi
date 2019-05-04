@@ -1,0 +1,66 @@
+nav {
+	background-color: #3B3B3B;
+	display: flex;
+	justify-content: center;
+}
+
+/*убираем отступы и поля, а также list-style для "ul", и добавляем "position:relative" */
+nav ul {
+	padding: 0;
+	margin: 0;
+	list-style: none;
+	position: relative;
+}
+
+/*применяем inline-block позиционирование к элементам навигации*/
+nav ul li {
+	margin: 0px -7px 0 0;
+	display: inline-block;
+	background-color: #3B3B3B;
+}
+
+/*стилизуем ссылки*/
+nav a, nav button {
+	display: block;
+	padding: 0 10px;
+	color: #FFF;
+	font-size: 20px;
+	line-height: 60px;
+	text-decoration: none;
+}
+
+/*изменяем цвет фона при наведении курсора */
+nav a:hover, nav button:hover {
+	background-color: #FFFFFF;
+	color: #3B3B3B;
+}
+nav button {
+	border: 0;
+	background-color: #3B3B3B;
+}
+
+/*скрываем выпадающие списки по умолчанию и задаем абсолютное позиционирование*/
+nav ul ul {
+	display: none;
+	position: absolute;
+	top: 100%;
+}
+
+/*отображаем выпадающий список при наведении */
+nav ul li:hover > ul {
+	display: inherit;
+}
+
+/*первый уровень выпадающего списка */
+nav ul ul li {
+	min-width: 170px;
+	float: none;
+	display: list-item;
+	position: relative;
+	z-index: 5;
+}
+body, html {
+	padding: 0;
+	margin: 0;
+	background: #E0DBC5;
+}

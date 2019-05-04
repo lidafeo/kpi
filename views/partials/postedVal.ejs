@@ -1,0 +1,53 @@
+<% if(textErr) {%>
+	<p class="errormess">Этот ПЭД недоступен для Вашей должности</p>
+<%} %>
+<% if(!textErr) {%>
+	<h3><%=desc.description %></h3>
+	<% if(kpi.length != 0) {%>
+	<table>
+		<tr>
+			<th>Дата добавления</th>
+			<th>Дата реализации</th>
+			<th>Текст</th>
+			<th>Файл</th>
+			<% if(desc.type == 2) {%>
+				<th>Показатель</th>
+			<%} %>
+			<th>Статус</th>
+			<th>Автор проверки</th>
+			<th>Пояснение от автора проверки</th>
+		</tr>
+		<% for(let i = 0; i < kpi.length; i++) {%>
+			<tr>
+				<td><%=kpi[i].modifydate %></td>
+				<td><%=kpi[i].modifystartDate%></td>
+				<td><%=kpi[i].text %></td>
+				<% if(kpi[i].file != "") {%>
+					<td><a href=<%="/sendfiles?file="+kpi[i]._id %> download=""><%=kpi[i].file %></a></td>
+				<%} %>
+				<% if(kpi[i].file == "") {%>
+					<td>Файл не прикреплен</td>
+				<%} %>
+				<% if(desc.type == 2) {%>
+					<td><%=desc.substrings[kpi[i].number].description %></td>
+				<%} %>
+				<% if(kpi[i].invalid) {%>
+					<td class="errormess">Недействительно</td>
+					<td><%=kpi[i].invalidInfo.author %></td>
+					<td><%=kpi[i].invalidInfo.text %></td>
+				<%} %>
+				<% if(!kpi[i].invalid) {%>
+					<td>Выполнено</td>
+					<td></td>
+					<td></td>
+				<%} %>
+			</tr>
+		<%} %>
+	</table>
+	<%} %>
+	<% if(kpi.length == 0) {%>
+		<p>Нет отмеченных ПЭДов</p>
+	<%} %>
+	<button id="plus">+</button>
+	<div id="plusdiv"></div>
+<%} %>

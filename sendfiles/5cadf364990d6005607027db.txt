@@ -1,0 +1,19 @@
+function foo(arr, key, value) {
+	let arr2 = arr.filter(function(a) {
+		return a[key] == value;
+	});
+	return arr2;
+}
+let arr = [{name:"Ann", age:23}, 
+		{name:"Quiny", age:71}, 
+		{name:"Ola", age:23}, 
+		{name:"Vlad"},
+		{name: "Kate", age:23},
+		{age:55}];
+let a = foo(arr, "age", 23);
+//a.forEach(function(item) {
+//	alert(item.name);
+//});
+let str = "12,ret,67, rr4, 67";
+let arr3 = str.split(",");
+console.log(arr3);
