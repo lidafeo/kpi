@@ -7,7 +7,5 @@ log/*
 sendfiles/*
 modules0/*
 views0/*
-public0/*
 desktop.ini
 package-lock.json
-.gitignore
