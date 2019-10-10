@@ -1,23 +1,24 @@
-<form name="addkpi" action="/addkpi" method="post" class="add">
+<form name="addkpi" action="/addkpi" method="post" class="form-add" style="width: 80%; margin-top: 5%;">
 	<div class="form-left-decoration"></div>
 	<div class="form-right-decoration"></div>
 	<div class="circle"></div>
 	<div class="form-inner">
 		<h3>Добавить Показатель эффективности деятельности</h3>
-		<div class="errormess" id="error"></div>
+		<div class="" id="error"></div>
+		<br>
 		<div class="input__container" id="infokpi">
 			<div>
 				<label>Шифр</label>
-				<input type="text" name="name" id="name" class="notempty" placeholder="Шифр" autocomplete="off">
+				<input type="text" name="name" id="name" class="notempty" placeholder="Шифр" autocomplete="off" required>
 			</div>
 			<div>
 				<label>Раздел</label>
-				<input name="section" list="section" id="inputsection" class="notempty" placeholder="Раздел" autocomplete="off">
+				<input name="section" list="section" id="inputsection" class="notempty" placeholder="Раздел" autocomplete="off" required>
 			</div>
 
 			<datalist id="section">
 				<% for(let i = 0; i < section.length; i++) {%>
-				<option><%=section[i]%></option>
+				<option><%=section[i].section%></option>
 				<%} %>
 			</datalist>
 			<div>
@@ -30,14 +31,25 @@
 			</div>
 			<div>
 				<label>Номер</label>
-				<input type="text" name="number" id="number" class="figure" placeholder="номер" autocomplete="off">
+				<input type="number" name="number" id="number" class="figure" placeholder="номер" autocomplete="off" required>
 			</div>
 			<div>
 				<label>Показатель</label>
-				<p><textarea name="description" id="desc" class="notempty"></textarea></p>
+				<p><textarea name="desc" id="desc" class="notempty" required></textarea></p>
 			</div>
 			<div>
-				<label>Могут ли выполняться несколько критериев одновременно?</label>
+				<label>Время действия подтверждения ПЭДа (в месяцах)</label>
+				<input type="text" name="implementationPeriod" class="figure" value="6" autocomplete="off" required>
+			</div>
+			<div>
+				<label>При подтверждении показателя:</label><br>
+				<input type="radio" name="indicatorssumm" value="false" id="rad1" class="radio" checked="">
+				<label for="rad1">Преподаватель должен указывать значение</label><br>
+				<input type="radio" name="indicatorssumm" value="true" id="rad2" class="radio">
+				<label for="rad2">Автоматически добавлять значение 1 к действующему значению</label>
+			</div>
+			<div>
+				<label>Могут ли выполняться несколько критериев одновременно?</label><br>
 				<input type="radio" name="type" value="1" id="radio1" class="radio" checked="">
 				<label for="radio1">Нет</label>
 				<input type="radio" name="type" value="2" id="radio2" class="radio">
@@ -50,25 +62,25 @@
 						<option><%=i%></option>
 					<%} %>
 				</select>
-			</div>
+			</div><br><br>
 		</div>
 		<div class="addcrit">
 			<div id="crit0">
-				<hr>
+				<br><hr>
 				<label id="critname">Критерий №1</label>
-				<div class="errormess" id="errorсrit"></div>
+				<div class="" id="errorсrit"></div>
 				<div class="input__container">
 					<div class="hidden">
 						<label>Показатель критерия</label>
-						<p><textarea name="description_0" id="description" class="notempty"></textarea></p>
+						<p><textarea name="description" id="description" class="notempty"></textarea></p>
 					</div>
 					<div>
 						<label>Описание критерия</label>
-						<p><textarea name="namecriterion_0" id="namecriterion" class="notempty"></textarea></p>
+						<p><textarea name="namecriterion" id="namecriterion" class="notempty"></textarea></p>
 					</div>
 					<div>
 						<label>Тип</label>
-						<select name="type_0" class="typecriterion">
+						<select name="typecrit" class="typecriterion">
 							<option>Да/Нет</option>
 							<option>Не менее n</option>
 							<option>От a до b</option>
@@ -94,27 +106,27 @@
 				<div class="input__container">
 					<div>
 						<label>Декан</label>
-						<input type="text" name="g1_0" id="g1" class="figure" placeholder="декан" autocomplete="off">
+						<input type="number" name="g1" id="g1" class="figure" placeholder="оценка" autocomplete="off" required>
 					</div>
 					<div>
 						<label>Зав.кафедрой</label>
-						<input type="text" name="g2_0" id="g2" class="figure" placeholder="зав.кафедрой" autocomplete="off">
+						<input type="number" name="g2" id="g2" class="figure" placeholder="оценка" autocomplete="off" required>
 					</div>
 					<div>
 						<label>Профессор</label>
-						<input type="text" name="g3_0" id="g3" class="figure" placeholder="профессор" autocomplete="off">
+						<input type="number" name="g3" id="g3" class="figure" placeholder="оценка" autocomplete="off" required>
 					</div>
 					<div>
 						<label>Доцент</label>
-						<input type="text" name="g4_0" id="g4" class="figure" placeholder="доцент" autocomplete="off">
+						<input type="number" name="g4" id="g4" class="figure" placeholder="оценка" autocomplete="off" required>
 					</div>
 					<div>
 						<label>Ст.преподаватель</label>
-						<input type="text" name="g5_0" id="g5" class="figure" placeholder="ст.преподаватель" autocomplete="off">
+						<input type="number" name="g5" id="g5" class="figure" placeholder="оценка" autocomplete="off" required>
 					</div>
 					<div>
 						<label>Ассистент/преподаватель</label>
-						<input type="text" name="g6_0" id="g6" class="figure" placeholder="ассистент/преподаватель" autocomplete="off">
+						<input type="number" name="g6" id="g6" class="figure" placeholder="оценка" autocomplete="off" required>
 					</div>
 				</div>
 			</div>

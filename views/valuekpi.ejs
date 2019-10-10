@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Значения ПЭД</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../list.css">
+	<link rel="stylesheet" type="text/css" href="../footer.css">
+	<link rel="stylesheet" type="text/css" href="../stylebut.css">
+</head>
+<body>
+	<div class="wrapper">
+		<header>
+			<a href="/mypage" class="exitt">Назад</a>
+		</header>
+		<div class="content">
+			<h2>Значения ПЭД</h2>
+			<% if(kpi.length != 0) {%>
+				<table>
+					<tr>
+						<th style="width: 10%;"><h4>Дата добавления </h4></th>
+						<th style="width: 6%;"><h4>ПЭД</h4></th>
+						<th style="width: 10%;"><h4>Дата реализации</h4></th>
+						<th style="width: 10%;"><h4>Значение</h4></th>
+						<th style="width: 15%;"><h4>Текст</h4></th>
+						<th style="width: 15%;"><h4>Файл</h4></th>
+						<th><h4>Выбранный показатель</h4></th>
+						<th style="width: 9%;"><h4>Статус</h4></th>
+						<th><h4>Автор проверки</h4></th>
+						<th><h4>Пояснение от автора проверки</h4></th>
+					</tr>
+					<% for(let i = 0; i < kpi.length; i++) {%>
+						<tr>
+							<td><%=kpi[i].modifydate %></td>
+							<td><%=kpi[i].name_kpi %></td>
+							<td><%=kpi[i].modifystart_date%></td>
+							<td><%=kpi[i].value%></td>
+							<td><%=kpi[i].text %></td>
+							<% if(kpi[i].file) {%>
+								<td><a href=<%="/sendfiles?file="+kpi[i].id %> download=""><img src="/img/download.png" alt="Скачать файл"></a></td>
+							<%} %>
+							<% if(!kpi[i].file) {%>
+								<td>Файл не прикреплен</td>
+							<%} %>
+							<% if(kpi[i].type == 2) {%>
+								<td><%=kpi[i].criterion_description %></td>
+							<%} %>
+							<% if(kpi[i].type != 2) {%>
+								<td></td>
+							<%} %>
+							<% if(kpi[i].valid == 0) {%>
+								<td style="color:red;">Недействительно</td>
+								<td><%=kpi[i].author_verify %></td>
+								<td><%=kpi[i].text_verify %></td>
+							<%} %>
+							<% if(kpi[i].valid == 1) {%>
+								<td>Выполнено</td>
+								<td></td>
+								<td></td>
+							<%} %>
+						</tr>
+					<%} %>
+				</table>
+			<%} %>
+			<% if(kpi.length == 0) {%>
+				<p>Нет добавленных значений ПЭД</p>
+			<%} %>
+		</div>
+		<div class="footer">
+			<%- include("partials/footer.ejs") %>
+		</div>
+	</div>
+</body>
+</html>	
+
+

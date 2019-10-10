@@ -3,19 +3,30 @@
 <head>
 	<title>История действий</title>
 	<meta charset="utf-8" />
-</head>
-<body>
-	<%- include("partials/menuadmin.ejs") %>
-	<p class="namelist">История действий пользователей за
-		<input type="date" name="date" id="date" value=<%=date%>>
-	</p>
-	<ul class="logs">
-		<% for(let i = 0; i < logs.length; i++) {%>
-			<li><%=logs[i]%></li>
-		<%} %>
-	</ul>
-	<%- include("../partials/footer.ejs") %>
 	<link rel="stylesheet" type="text/css" href="../admin/menu.css">
 	<link rel="stylesheet" type="text/css" href="../admin/logs.css">
+	<link rel="stylesheet" type="text/css" href="../footer.css">	
+	<link rel="stylesheet" type="text/css" href="../stylebut.css">
+	
+</head>
+<body>
+	<div class="wrapper">
+		<div class="content">
+			<%- include("partials/menuadmin.ejs") %>
+			<p class="namelist">История действий пользователей за
+				<input type="date" name="date" id="date" class="date" value=<%=date%>>
+			</p>
+			<ul class="logs" id="logs">
+				<%- include("partials/getlogs.ejs") %>
+			</ul>
+		</div>
+		
+		<div class="footer">
+			<%- include("../partials/footer.ejs") %>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="../jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src="../admin/main.js"></script>
 </body>
 </html>

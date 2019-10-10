@@ -1,5 +1,7 @@
 $(document).ready(function() {
 	let num = 0;
+	let countSlide = 1;
+	let divCrit = $('#crit0').html();
 	$('.addcrit').slick({
 		infinite: false,
 		arrows: false,
@@ -7,38 +9,37 @@ $(document).ready(function() {
 	});
 
 	$('#add').click(function(e) {
-		//$("input").css("border", "none");
-		let bool = true;
-		if(+$("#count").val() != num + 1 || !checkEmpty(num)) {
-			$('#error').html('<h4>Заполните все критерии!</h4>');
-			bool = false;
-		}
-		else if(!checkInfoKPI()) {
+		$('#crit' + num + ' #errorсrit').html('');
+		$("#next").css("border", "none");
+		let check = true;
+		let inputClass = "#crit" + num + " ";
+		if(!checkEmpty("#infokpi ")) {
 			$('#error').html('<h4>Заполните данные о ПЭДе!</h4>');
-			bool = false;
+			check = false;
 		}
-		else if(/\D/.test($("#number").val())) {
-			$('#error').html('<h4>Поле номер должно быть числом!</h4>');
-			//$('html, body').animate({scrollTop: $('#number').position().top}, 500);
-			$('#number').css("border", "2px solid red");
-			bool = false;
+		else if(!checkFigure("#infokpi ")) {
+			$('#error').html('<h4>Введите числа!</h4>');
+			check = false;
 		}
-		if(!bool) {
+		else if(!checkEmpty(inputClass)) {
+			$('#error').html('<h4>Заполните критерий!</h4>');
+			$('#crit' + num + ' #errorсrit').html('<h4>Заполните поля!</h4>');
+			check = false;
+		}
+		else if(!checkFigure(inputClass)) {
+			$('#error').html('<h4>Заполните критерий!</h4>');
+			$('#crit' + num + ' #errorсrit').html('<h4>Введите числа!</h4>');
+			check = false;
+		}
+		else if(+$("#count").val() != num + 1) {
+			$('#error').html('<h4>Заполните все критерии!</h4>');
+			$('#next').css("border", "2px solid red");
+			check = false;
+		}
+		if(!check) {
 			e.preventDefault();
 			$('html, body').animate({scrollTop: 0}, 500);
 		}
-		/*
-		let arr = ["#g1", "#g2", "#g3", "#g4", "#g5", "#g6"];
-		for(let i = 0; i < arr.length; i++) {
-			if(/\D/.test($(arr[i]).val()))  {
-				e.preventDefault();
-				$('#error').html('<h4>Оценка должна быть числом!</h4>');
-				$('html, body').animate({scrollTop: $(arr[i]).position().top}, 500);
-				$(arr[i]).css("border", "2px solid red");
-				return;
-			}
-		}
-		*/
 	});
 
 	//Изменение типа ПЭДа
@@ -50,48 +51,59 @@ $(document).ready(function() {
 		else {
 			$('.hidden').show();
 			$('.addcrit').slick('slickGoTo', 0);
+			$('#prev').hide();
 			num = 0;
 		}
 	});
 
 	//Изменение количества критериев
 	$("#count").change(function() {
-		num = 0;
-		$('.n').hide();
-		$('.a').hide();
-		$('.b').hide();
-		let div = $("#crit0").html();
-		$('.addcrit').html('<div id="crit0">' + div + '</div>')
 		let count = + $("#count option:selected").text();
 		if(count != 1) $("#next").show();
-		//$('.addcrit').slick('unslick');
-		for(let i = 1; i < count; i++) {
-			let crit = "#crit" + (i - 1);
-			$(crit).after('<div id="crit' + i + '">' + div + '</div>');
-			//$('#crit' + i).hide();
-			$('#crit' + i + ' #critname').text("Критерий №" + (i + 1));
-
-			$('#crit' + i + ' #description').attr("name", "description_" + i);
-			$('#crit' + i + ' .typecriterion').attr("name", "type_" + i);
-			$('#crit' + i + ' #namecriterion').attr("name", "namecriterion_" + i);
-			for(let j = 1; j <= 6; j++) {
-				$('#crit' + i + ' #g' + j).attr("name", "g" + j + "_" + i);
+		if(count == countSlide) return;
+		if(count < countSlide) {
+			//удаляем слайды
+			for(let i = countSlide - 1; i >= count; i--) {
+				$("#crit" + i).remove();
+				$('.addcrit').slick('slickRemove', i);
 			}
+			if(count <= num) {
+				num = count - 1;
+				$("#next").hide();
+			}
+			if(count == 1) $("#prev").hide();
 		}
-		/*
-		$('.addcrit').slick({
-			infinite: false,
-			arrows: false,
-			swipe: false
-		});
-		*/
+		else {
+			//добавляем слайды
+			for(let i = countSlide; i < count; i++) {
+				let crit = "#crit" + (i - 1);
+				$(crit).after('<div id="crit' + i + '">' + divCrit + '</div>');
+				$('#crit' + i + ' #critname').text("Критерий №" + (i + 1));
+
+				//$('#crit' + i + ' #description').attr("name", "description_" + i);
+				//$('#crit' + i + ' .typecriterion').attr("name", "type_" + i);
+				//$('#crit' + i + ' #namecriterion').attr("name", "namecriterion_" + i);
+				/*
+				for(let j = 1; j <= 6; j++) {
+					$('#crit' + i + ' #g' + j).attr("name", "g" + j + "_" + i);
+				}
+				*/
+				if($("input[value='2']").prop("checked")) {
+					$('#crit' + i +' .hidden').show();
+				}
+
+				$('.addcrit').slick('slickAdd', $('#crit' + i));
+			}
+			$("#next").show();
+		}
+		countSlide = count;
 	});
 
 	//изменили тип критерия
 	$('form').on('change', '.typecriterion', function() {
 		//Узнаем номер критерия
-		let n = $(this).attr('name').split('_')[1];
-		let crit = "#crit" + n;
+		//let n = $(this).attr('name').split('_')[1];
+		let crit = "#crit" + num;
 		if($(this).val() == "Не менее n") {
 			$(crit + ' .n').show();
 			$(crit + ' .a').hide();
@@ -112,8 +124,17 @@ $(document).ready(function() {
 	//нажали на кнопку "следующий критерий"
 	$('#next').click(function(e) {
 		e.preventDefault();
-		if(!checkEmpty(num))
-			return $('#crit' + num + ' #errorсrit').html('<h4>Заполните поля!</h4>');
+		let crit = "#crit" + num + " ";
+		if(!checkEmpty(crit)) {
+			$('#crit' + num + ' #errorсrit').html('<h4>Заполните поля!</h4>');
+			return $('html, body').animate({scrollTop: $('#crit' + num + ' #errorсrit').offset().top},
+			 500);
+		}
+		if(!checkFigure(crit)) {
+			$('#crit' + num + ' #errorсrit').html('<h4>Введите числа!</h4>');
+			return $('html, body').animate({scrollTop: $('#crit' + num + ' #errorсrit').offset().top},
+			 500);
+		}
 		$('#crit' + num + ' #errorсrit').html('');
 		if(+$("#count").val() != num + 1) {
 
@@ -138,58 +159,34 @@ $(document).ready(function() {
 	});
 });
 
-function checkEmpty(n) {
-	let crit = "#crit" + n + " ";
-	$(crit + " input").css("border", "none");
-	$(crit + " textarea").css("border", "none");
-	let valid = true;
-	let firstEl;
+function checkEmpty(inputClass) {
+	$(inputClass + " input, " + inputClass + " textarea").css("border", "none");
 
-	//let arr = ["#g1", "#g2", "#g3", "#g4", "#g5", "#g6", "#namecriterion"];
-	if($(crit + " .notempty:input:visible, " + crit + " .figure:input:visible").length != 0) {
-		$(crit + " .notempty:input:visible").css("border", "2px solid red");
-		valid = false;
-	}
-	/*console.log(arr);
-	for(let i = 0; i < arr.length; i++) {
-		if(!arr[i].val().trim()) {
-			valid = false;
-			arr[i].css("border", "2px solid red");
-		}
-	}*/
-	if(!$(crit + "#description").val() && $("#radio2").prop("checked")) {
-		valid = false;
-		$(crit + "#description").css("border", "2px solid red");
-	}
-	if($(crit + ".typecriterion").val() == "Не менее n" && !$(crit + "#n").val()) {
-		valid = false;
-		$(crit + "#n").css("border", "2px solid red");
-	}
-	if($(crit + ".typecriterion").val() == "От a до b") {
-		if(!$(crit + "#a").val()) {
-			valid = false;
-			$(crit + "#a").css("border", "2px solid red");
-		}
-		if(!$(crit + "#b").val()) {
-			valid = false;
-			$(crit + "#b").css("border", "2px solid red");
-		}
-	}
-	return valid;
+	$(inputClass + " .notempty, " + inputClass + " .figure").each(function() {
+		if($(this).val() != "")
+			$(this).removeClass('empty_field');
+		else 
+			$(this).addClass('empty_field');
+	});
+	$(inputClass + ' .notempty:hidden, ' + inputClass + ' .figure:hidden').each(function() {
+		$(this).removeClass('empty_field');
+	});
+	$(inputClass + ' .empty_field').css("border", "2px solid red");
+	return $(inputClass + ' .empty_field').length == 0;
 }
 
-function checkInfoKPI() {
-	let bool = true;
-	$("#infokpi input").css("border", "none");
-	$("#infokpi textarea").css("border", "none");
-	let arr = ["#name", "#inputsection", "#number", "#desc"];
-	for(let i = 0; i < arr.length; i++) {
-		console.log($(arr[i]).val());
-		if(!$(arr[i]).val()) {
-			$(arr[i]).css("border", "2px solid red");
-			bool = false;
-		}
-		console.log(bool);
-	}
-	return bool;
+function checkFigure(inputClass) {
+	$(inputClass + " input, " + inputClass + " textarea").css("border", "none");
+
+	$(inputClass + " .figure").each(function() {
+		if(/\D/.test($(this).val()))
+			$(this).addClass('notfigure_field');
+		else 
+			$(this).removeClass('notfigure_field');
+	});
+	$(inputClass + ' .figure:hidden').each(function() {
+		$(this).removeClass('notfigure_field');
+	});
+	$(inputClass + ' .notfigure_field').css("border", "2px solid red");
+	return $(inputClass + ' .notfigure_field').length == 0;
 }

@@ -3,23 +3,23 @@
 <head>
 	<title>Список Показателей</title>
 	<meta charset="utf-8" />
+	<link rel="stylesheet" type="text/css" href="../admin/menu.css">
+	<link rel="stylesheet" type="text/css" href="../list.css">
+	<link rel="stylesheet" type="text/css" href="../footer.css">
+	<link rel="stylesheet" type="text/css" href="../stylebut.css">
 </head>
 <body>
-	<%- include("partials/menuadmin.ejs") %>
-	<p class="nametable">Список Показателей эффективности деятельности</p>
-	<%- include("partials/tablekpi.ejs") %>
-	<link rel="stylesheet" type="text/css" href="../admin/menu.css">
-	<link rel="stylesheet" type="text/css" href="../admin/list.css">
-	<style type="text/css">
-		tr.row1 th:nth-child(1) {
-			max-width: 100px;
-		}
-		tr.row2 th {
-			max-width: 100px;
-		}
-		.namesection {
-			color: #3B3B3B;
-		}
-	</style>
+	<div class="wrapper">
+		<div class="content">
+			<%- include("partials/menuadmin.ejs") %>
+			<h3 class="nametable">Список Показателей эффективности деятельности</h3>
+			<%- include("partials/tablekpi.ejs") %>
+		</div>
+		
+		<div class="footer">
+			<%- include("../partials/footer.ejs") %>
+		</div>
+	</div>
+	
 </body>
 </html>

@@ -1,0 +1,96 @@
+* {
+	box-sizing: border-box;
+}
+body, html {
+	margin: 0;
+	padding: 0;
+}
+header {
+	display: flex;
+	justify-content: flex-end;
+}
+.treeCSS{
+	border: 2px solid #A1B9D5;
+	font-size: 16px;
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	box-shadow: 0 2px 4px 1px rgba(0,0,0,0.2), 1px 3px 15px 1px rgba(0,0,0,0.1);
+}
+
+.treeCSS a:hover  {
+	background: rgb(236, 240, 243); 
+	color: rgb(38, 29, 58);
+	border: 1px solid #8b8b8b;
+}
+
+.treeCSS, .treeCSS ul, .treeCSS li {
+	margin: 0;
+	padding: 2%;
+	line-height: 1.2;
+	list-style: none;
+}
+.treeCSS ul {
+	margin: 0 0 0 15px;
+}
+.treeCSS > li:not(:only-child), .treeCSS li li {
+	position: relative;
+	padding: 3px 0 0 20px;
+	color: black;
+}
+.treeCSS li:not(:last-child) {
+	border-left: 1px solid #ccc;
+}
+.treeCSS li li:before, .treeCSS > li:not(:only-child):before {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 1.1em;
+	height: .7em;
+	border-bottom: 1px solid #ccc;
+}
+.treeCSS li:last-child:before {
+	width: calc(1.1em - 1px);
+	border-left: 1px solid #ccc;
+}
+
+.treeCSS .drop {
+	position: absolute;
+	left: -6px;
+	top: 5px;
+	width: 11px;
+	height: 11px;
+	line-height: 1em;
+	text-align: center;
+	background: #9F9F9F;
+	color: #fff;
+	font-size: 78%;
+	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+}
+.treeCSS li:last-child > .drop {
+	margin-left: 1px;
+}
+
+.treeCSS .drop + ul {
+	/*display: none;*/ display: block;
+}
+
+.treeCSS .dropM + ul {
+	/* display: block; */display: none;
+}
+.page {
+	display: grid;
+	grid-template-columns: 230px 1fr;
+	grid-gap: 40px;
+	padding: 10px;
+}
+
+.tablekpiborder
+{
+	border: 2px solid #A1B9D5;
+	font-size: 16px;
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	box-shadow: 0 2px 4px 1px rgba(0,0,0,0.2), 1px 3px 15px 1px rgba(0,0,0,0.1);
+	padding: 2%
+}

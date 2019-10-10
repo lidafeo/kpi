@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>ПФУ</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../footer.css">
+	<link rel="stylesheet" type="text/css" href="../stylebut.css">
+</head>
+
+<header>
+	<a class="exitt" href="/exit">Выход</a>
+
+</header>
+<body>
+	<div class="wrapper">
+		<div class="content">
+				<br>
+				<br>
+			<div class="formborderadmin"><% if(setbool) {%>
+				<p class="text">Текущий период: с <%=period.date1Str%> по <%=period.date2Str%></p>
+				<form action="/pfu" method="post">
+					<input type="submit" class="buttonmypage" value="Сформировать отчет за период">
+				</form>
+			<%} %> 
+			<% if(!setbool) {%>
+				<div>Не был установлен период для отчета</div>
+			<%} %>
+		</div>
+	</div>
+		
+		<div class="footer">
+			<%- include("partials/footer.ejs") %>
+		</div>
+	</div>
+
+</body>
+</html>

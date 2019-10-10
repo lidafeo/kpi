@@ -1,10 +1,81 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title></title>
+	<title>Изменить оценки</title>
 	<meta charset="utf-8" />
+	<link rel="stylesheet" type="text/css" href="../list.css">
+	<link rel="stylesheet" type="text/css" href="../admin/menu.css">
+	<link rel="stylesheet" type="text/css" href="../footer.css">
+	<link rel="stylesheet" type="text/css" href="../stylebut.css">
+	<link rel="stylesheet" type="text/css" href="../form.css">
+
 </head>
 <body>
-	
+	<div class="wrapper">
+		<div class="content">
+			<%- include("partials/menuadmin.ejs") %>
+			<% if(!choose) {%>
+				<% if(action == 1) {%>
+					<p class="uspeshno">Успешно</p>
+				<%} %>
+				<% if(action == 2) {%>
+					<p class="errormess">Ошибка изменения оценок</p>
+				<%} %>
+				<form name="editballs" class="formborderadmin" action="/editballs" method="post">
+					
+					<label for="name" class="text">Показатель эффективности</label>
+					<select name="name" class="text" id="name">
+						<% for(let i = 0; i < kpi.length; i++) {%>
+						<option><%=kpi[i].name%></option>
+						<%} %>
+					</select>
+					<input type="submit" class="buttonmypage"  name="submit" value="Выбрать">
+				</form>
+			<%} %>
+			<% if(choose) {%>
+				<form name="editballskpi" class="formborderadmin" style="width: 95%;" action="/editballskpi" method="post">
+					<input type="hidden" name="name" value=<%=name%>>
+					Выбранный ПЭД: <%=description%>
+					<br>
+					<div id="error"></div>
+					<table>
+						<tr class="row1">
+							<% if(type == 2) {%>
+								<th rowspan="2">Показатель</th>
+							<%} %>
+							<th rowspan="2">Критерий оценки эффективности деятельности</th>
+							<th colspan="6">Группы</th>
+						</tr>
+						<tr class="row2">
+							<th>Декан</th>
+							<th>Зав. кафедрой</th>
+							<th>Профессор</th>
+							<th>Доцент</th>
+							<th>Ст. преподаватель</th>
+							<th>Ассистент/преподаватель</th>
+						</tr>
+						<% for(let i = 0; i < arr.length; i++) {%>
+							<tr>
+								<% if(type == 2) {%>
+									<td><%=arr[i].criterion_description %></td>
+								<%} %>
+								<td><%=arr[i].name_criterion %></td>
+								<% for(let k = 0; k < arr[i].balls.length; k++) {%>
+									<td><input type="number" min="0" max="1000" name="balls" style="width: 50px;" class="inp" value=<%=arr[i].balls[k] + "" %> required></td>
+								<%} %>
+							</tr>
+						<%} %>
+					</table>
+					<input type="submit" class="buttonmypage" name="submit" value="Изменить">
+				</form>
+			<%} %>
+			<br>
+		</div>
+		
+		<div class="footer">
+			<%- include("../partials/footer.ejs") %>
+		</div>
+	</div>
+
 </body>
 </html>

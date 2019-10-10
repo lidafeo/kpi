@@ -1,5 +1,5 @@
 $(document).ready(function() {
-
+	let currRef;
 	$('#submit').click(function(e) {
 		e.preventDefault();
 		let section = $("#section option:selected").text();
@@ -12,34 +12,31 @@ $(document).ready(function() {
 		request.open("POST", "/editkpi", true);
 		request.setRequestHeader("Content-Type", "application/json");
 		request.addEventListener("load", function() {
-			console.log(request.response); //смотрим ответ сервера
 			$('#tablekpi').html(request.response);
 		});
 		request.send(sendValue);
 	});
 
 	$("body").on('click', "#plus", function() {
-		let section = $("#section option:selected").text();
-		let subtype = $("#subtype option:selected").text();
-		let number = $("#number option:selected").text();
-		let name;
-		if(subtype) name = section[0] + '.' + subtype[0] + '.' + number;
-		else name = section[0] + '.' + number;
-
-		let sendValue = JSON.stringify({name: name});
-		let request = new XMLHttpRequest();
-		//посылаем запрос на адрес "/editkpi"
-		request.open("POST", "/plus", true);
-		request.setRequestHeader("Content-Type", "application/json");
-		request.addEventListener("load", function() {
-			console.log(request.response); //смотрим ответ сервера
-			$('#plusdiv').html(request.response);
-			$('#name').val(name);
-		});
-		request.send(sendValue);
+		$('#plusdiv').show();
 		$('#plus').hide();
 	});
-
+	$("body").on('click', ".ref", function(e) {
+		e.preventDefault();
+		let elem = $(this).html();
+		currRef = this;
+		document.cookie = "choosekpi=" + elem;
+		let sendValue = JSON.stringify({name: elem});
+		let request = new XMLHttpRequest();
+		//посылаем запрос на адрес "/editkpi"
+		request.open("POST", "/editkpi", true);
+		request.setRequestHeader("Content-Type", "application/json");
+		request.addEventListener("load", function() {
+			$('#tablekpi').html(request.response);
+			$('#plusdiv').hide();
+		});
+		request.send(sendValue);
+	});
 	$("body").on('click', "#addkpi", function(e) {
 		e.preventDefault();
 		let file = document.getElementById("file");
@@ -51,29 +48,45 @@ $(document).ready(function() {
 		let value;
 		if ($('#radio').val()) {
 			let radiobut = document.getElementsByName('radio');
-			console.log(radiobut);
 			//определяем выбранное значение
 			for( let i = 0; i < radiobut.length; i++) {
 				if(radiobut[i].checked) value = radiobut[i];
 			}
 			form.append("radio", value.value);
 		}
-		form.append("name", $('#name').val());
+		form.append("name", getCookie("choosekpi"));
 		form.append("date", $('#datekpi').val());
 		form.append("value", $('#value').val());
 		form.append("text", $('#text').val());
 		request.open("POST", "/upload", true);
 		//request.setRequestHeader("Content-Type", "multipart/form-data");
-		request.send(form);
 		request.onload = function(ev) {
-			console.log(request.response);
 			//document.location = '/user';
 			//location.reload();
 			if(request.response == 'err') 
 				alert('Обязательные поля: значение + файл или текст для подтверждения + дата реализации');
-			else document.querySelector('#submit').click();
-		}
+			else $(currRef).click();
+		};
+		request.send(form);
 	});
 
-	document.querySelector('#submit').click();
+
+	(function() {
+		let ul = document.querySelectorAll('.treeCSS > li:not(:only-child) ul, .treeCSS ul ul');
+		for( let i = 0; i < ul.length; i++) {
+			let div = document.createElement('div');
+			div.className = 'drop dropM';
+			div.innerHTML = "+";
+			ul[i].parentNode.insertBefore(div, ul[i].previousSibling);
+			div.onclick = function() {
+				this.innerHTML = (this.innerHTML == '+' ? '-' : '+');
+				this.className = (this.className == 'drop' ? 'drop dropM' : 'drop');
+			}
+		}
+	})();
 });
+function getCookie(name) {
+	let matches = document.cookie.match(new RegExp("(?:^|; )" + 
+		name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"));
+	return matches ? decodeURIComponent(matches[1]) : undefined;
+}

@@ -3,29 +3,41 @@
 <head>
 	<title>Сотрудники</title>
 	<meta charset="utf-8" />
+	<link rel="stylesheet" type="text/css" href="../admin/menu.css">
+	<link rel="stylesheet" type="text/css" href="../list.css">
+	<link rel="stylesheet" type="text/css" href="../footer.css">
 </head>
 <body>
-	<%- include("partials/menuadmin.ejs") %>
-	<p class="nametable">Список пользователей</p>
-	<table>
-		<tr>
-			<th>ФИО</th>
-			<th>Логин</th>
-			<th>Должность</th>
-			<th>Факультет</th>
-			<th>Кафедра</th>
-		</tr>
-		<% for(let i = 0; i < users.length; i ++) {%>
-			<tr>
-				<td><%=users[i].name %></td>
-				<td><%=users[i].login %></td>
-				<td><%=users[i].position %></td>
-				<td><%=users[i].faculty %></td>
-				<td><%=users[i].department %></td>
-			</tr>
-		<%} %>
-	</table>
-	<link rel="stylesheet" type="text/css" href="../admin/menu.css">
-	<link rel="stylesheet" type="text/css" href="../admin/list.css">
+	<div class="wrapper">
+		<div class="content">
+			<%- include("partials/menuadmin.ejs") %>
+			<p> 
+				<h3 class="nametable">Список пользователей</h3>
+			</p>
+			<table style="margin-left: 20px;">
+				<tr>
+					<th><h4>ФИО</h4></th>
+					<th><h4>Логин</h4></th>
+					<th><h4>Должность</h4></th>
+					<th><h4>Факультет</h4></th>
+					<th><h4>Кафедра</h4></th>
+				</tr>
+				<% for(let i = 0; i < users.length; i ++) {%>
+					<tr>
+						<td><%=users[i].name %></td>
+						<td><%=users[i].login %></td>
+						<td><%=users[i].position %></td>
+						<td><%=users[i].faculty %></td>
+						<td><%=users[i].department %></td>
+					</tr>
+				<%} %>
+			</table>
+		</div>
+		
+		<div class="footer">
+			<%- include("../partials/footer.ejs") %>
+		</div>
+	</div>
+
 </body>
 </html>

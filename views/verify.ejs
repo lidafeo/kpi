@@ -3,60 +3,71 @@
 <head>
 	<title>Проверка значений</title>
 	<meta charset="utf-8" />
+	<link rel="stylesheet" type="text/css" href="../footer.css">
+	<link rel="stylesheet" type="text/css" href="../stylebut.css">
+	<link rel="stylesheet" type="text/css" href="../list.css">
+
 </head>
 <body>
-	<% if(mypage) {%>
-		<form action="/exit" method="post"><button class="exit">Выход</button></form>
-	<%} %>
-	<% if(!mypage) {%>
-		<a href="/mypage" class="exit">Назад</a>
-	<%} %>
-	<br/>
-	<% if(worker.length == 0) {%>
-	<p class="errormess">Нет доступных сотрудников</p>
-	<%} %>
-	<% if(worker.length != 0) {%>
-	<form name="editform" action="/verify" method="post">
-		<label for="worker">Сотрудник:</label>
-		<input name="worker" list="worker" id="name">
-		<datalist id="worker">
-			<% for(let i = 0; i < worker.length; i++) {%>
-			<option><%=worker[i].name%></option>
+	<div class="wrapper">
+		<header>
+			<form name="editform" class="formborder flexparent" style="margin-top: 6%;" action="/verify" method="post">
+				<div class="flexblocks">
+					<label>Факультет</label>
+					<% if(faculty.length == 1) {%>
+						<input type="text" name="faculty" id="faculty" value="<%=faculty[0]%>" style="width: 300px;" disabled>
+					<%} %>
+					<% if(faculty.length > 1) {%>
+						<select name="faculty" id="faculty">
+							<% for(let i = 0; i < faculty.length; i++) {%>
+								<option><%=faculty[i]%></option>
+							<%} %>
+						</select>
+					<%} %>
+
+					<label>Кафедра</label>
+					<% if(department.length == 1) {%>
+						<input type="text" name="department" id="department" value="<%=department[0]%>" style="width: 500px;" disabled>
+					<%} %>
+					<% if(department.length > 1) {%>
+						<select name="department" id="department">
+							<% for(let i = 0; i < department.length; i++) {%>
+								<option><%=department[i]%></option>
+							<%} %>
+						</select>
+					<%} %>
+					<button id="choosedep">Выбрать кафедру</button>
+					<br>
+
+					<div id="usersdiv"></div>
+
+				</div>
+			</form>
+
+			<% if(mypage) {%>
+				<form action="/exit" method="post">
+					<button class="exitt" style="margin: -56px 4px 0 0;" >Выход</button></form>
 			<%} %>
-		</datalist>
-		
-		<%- include("partials/findnumber.ejs") %>
-		
-	</form>
-	<div id="tablekpi"></div>
-	<%} %>
-	<style type="text/css">
-		button {
-			padding: 10px;
-		}
-		.exit{
-			border: 1px solid black;
-			background-color: #DCDCDC;
-			padding: 12px;
-			font-size: 18px;
-			text-decoration: none;
-			margin: 10px;
-			float: right;
-		}
-		.errormess {
-			color: red;
-		}
-		tr td:last-child {
-			text-align: center;
-		}
-		body {
-			background: #E0FFFF;
-		}
-	</style>
-	<% if(worker.length != 0) {%>
+			<% if(!mypage) {%>
+				<a href="/mypage" class="exitt" style="margin: -56px 4px 0 0;">Назад</a>
+			<%} %> 
+				
+		</header>
+
+		<div class="content">
+			
+			<div id="tablekpi" ></div>
+
+		</div>
+
+		<div class="footer"></div>
+			<%- include("partials/footer.ejs") %>
+		</div>
+	</div>
+
 	<script type="text/javascript" src="../jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src="../carhartl-jquery-cookie-92b7715/jquery.cookie.js"></script>
 	<script type="text/javascript" src="../verify/verify.js"></script>
 	<script type="text/javascript" src="../findnumber.js"></script>
-	<%} %>
 </body>
 </html>

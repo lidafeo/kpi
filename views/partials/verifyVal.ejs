@@ -2,45 +2,46 @@
 	<p class="errormess"><%=textErr%></p>
 <%} %>
 <% if(!textErr) {%>
-	<h3><%=desc.description %></h3>
 	<% if(kpi.length != 0) {%>
 	<table border="3">
 		<tr>
 			<td>Дата</td>
+			<td>ПЭД</td>
+			<td>Значение</td>
 			<td>Текст</td>
 			<td>Файл</td>
-			<% if(desc.type == 2) {%>
-				<td>Показатель</td>
-			<%} %>
 			<td>Отметить, как неверные</td>
 			<td>Комментарий</td>
 		</tr>
 		<% for(let i = 0; i < kpi.length; i++) {%>
-		<% if(!kpi[i].invalid) {%>
 			<tr id=<%="tr" + i %>>
-				<input type="hidden" id=<%="hd" + i %> name="hidd" value=<%=kpi[i]._id%>>
+				<input type="hidden" id=<%="hd" + i %> name="hidd" value=<%=kpi[i].id%>>
+				<input type="hidden" id=<%="kpi" + i %>  value=<%=kpi[i].name_kpi%>>
 				<td><%=kpi[i].modifydate %></td>
+				<% if(kpi[i].type == 1) {%>
+					<td><%=kpi[i].name_kpi %></td>
+				<%} %>
+				<% if(kpi[i].type == 2) {%>
+					<td><%=(kpi[i].name_kpi + " (" + kpi[i].description + ")")%></td>
+				<%} %>
+				<td><%=kpi[i].value %></td>
 				<td><%=kpi[i].text %></td>
-				<% if(kpi[i].file != "") {%>
-					<td><a href=<%="/sendfiles?file="+kpi[i]._id %> download=""><%=kpi[i].file %></a></td>
+				<% if(kpi[i].file != null) {%>
+					<td><a href=<%="/sendfiles?file="+kpi[i].id %> download=""><%=kpi[i].file %></a></td>
 				<%} %>
-				<% if(kpi[i].file == "") {%>
+				<% if(kpi[i].file == null) {%>
 					<td>Файл не прикреплен</td>
-				<%} %>
-				<% if(desc.type == 2) {%>
-					<td><%=desc.substrings[kpi[i].number].description %></td>
 				<%} %>
 				<td><input type="checkbox" name="checkbox" value=<%=i + ""%>></td>
 				<td><input type="text" name="comment" id=<%="comm" + i%>></td>
 			</tr>
 		<%} %>
-		<%} %>
 	</table>
 	<%} %>
 	<% if(kpi.length == 0) {%>
-		<p>Нет отмеченных ПЭДов</p>
+		<p class="errormess" style="color:black">Нет отмеченных ПЭД</p>
 	<%} %>
 	<% if(kpi.length != 0) {%>
-		<button id="incorrect">Подтвердить неверные ПЭДы</button>
+		<button id="incorrect" class="buttonmypage">Подтвердить неверные ПЭД</button>
 	<%} %>
 <%} %>

@@ -1,18 +1,18 @@
 <% if(kpi) {%>
 <table>
 	<tr class="row1">
-		<th rowspan="2">Шифр показателя эффективности</th>
-		<th rowspan="2">Показатель</th>
-		<th rowspan="2">Критерии оценки эффективности деятельности</th>
-		<th colspan="6">Группы</th>
+		<th rowspan="2"><h4>Шифр показателя эффективности</h4></th>
+		<th rowspan="2"><h4>Показатель</h4></th>
+		<th rowspan="2"><h4>Критерии оценки эффективности деятельности</h4></th>
+		<th colspan="6"><h4>Группы</h4></th>
 	</tr>
 	<tr class="row2">
-		<th>Декан</th>
-		<th>Зав. кафедрой</th>
-		<th>Профессор</th>
-		<th>Доцент</th>
-		<th>Ст. преподаватель</th>
-		<th>Ассистент/преподаватель</th>
+		<th><h4>Декан</h4></th>
+		<th><h4>Зав. кафедрой</h4></th>
+		<th><h4>Профессор</h4></th>
+		<th><h4>Доцент</h4></th>
+		<th><h4>Ст. преподаватель</h4></th>
+		<th><h4>Ассистент/преподаватель</h4></th>
 	</tr>
 	<% for(let u = 0; u < kpi.length; u++) {%>
 		<% if(kpi[u].length != 0) {%>
@@ -22,38 +22,52 @@
 					<h4>Раздел <%=(u+1) + ". " + kpi[u][0].section %></h4>
 				</td>
 			</tr>
-			<% for(let i = 0; i < kpi[u].length; i++) {%>
+			<% top: for(let i = 0; i < kpi[u].length; i++) {%>
 				<% let arr = kpi[u]; %>
-				<% if(arr[i].type == 1) {%>
+					<% if(arr[i].type == 1) {%>
 					<tr>
-						<td rowspan=<%=arr[i].substrings.length + ""%>><%=arr[i].name %></td>
-						<td rowspan=<%=arr[i].substrings.length + ""%>><%=arr[i].description %></td>
-						<% for(let j = 0; j < arr[i].substrings.length; j++) {%>
+						<td rowspan=<%=arr[i].count_criterion + ""%>><%=arr[i].name %></td>
+						<td rowspan=<%=arr[i].count_criterion + ""%>><%=arr[i].description %></td>
+						<% for(let j = 0; j < arr[i].count_criterion; j++) {%>
 							<% if(j != 0) {%>
 								</tr><tr>
 							<%} %>
-							<td><%=arr[i].substrings[j].namecriterion %></td>
-							<% for(let k = 0; k <arr[i].substrings[j].balls.length; k++) {%>
-								<td><big><%=arr[i].substrings[j].balls[k] %></big></td>
+							<td><%=arr[i].name_criterion %></td>
+							<% for(let k = 0; k < arr[i].balls.length; k++) {%>
+								<td><big><%=arr[i].balls[k] %></big></td>
+							<%} %>
+							<% if(i != kpi[u].length && j != arr[i].count_criterion - 1) {%>
+								<% i = i + 1; %>
+							<%} %>
+							<% if(i == kpi[u].length) {%>
+								</tr><tr>
+								<% break top; %>
+							<%} %>
+						<%} %>
+						<% continue top; %>
+					</tr>
+					<%} %>
+					<% if(arr[i].type == 2) {%>
+					<tr>
+						<td rowspan=<%=(arr[i].count_criterion + 1) + "" %>><%=arr[i].name %></td>
+						<td colspan="8"><%=arr[i].description %></td>
+						</tr>
+						<% for(let j = 0; j < arr[i].count_criterion; j++) {%>
+						<tr>
+							<td><%=arr[i].criterion_description %></td>
+							<td><%=arr[i].name_criterion %></td>
+							<% for(let k = 0; k < arr[i].balls.length; k++) {%>
+								<td><big><%=arr[i].balls[k] %></big></td>
+							<%} %>
+							<% if(i != kpi[u].length && j != arr[i].count_criterion - 1) {%>
+								<% i = i + 1; %>
+							<%} %>
+							<% if(i == kpi[u].length) {%>
+								<% break top; %>
 							<%} %>
 						<%} %>
 					</tr>
-				<%} %>
-				<% if(arr[i].type == 2) {%>
-					<tr>
-						<td rowspan=<%=(arr[i].substrings.length + 1) + "" %>><%=arr[i].name %></td>
-						<td colspan="8"><%=arr[i].description %></td>
-					</tr>
-					<% for(let j = 0; j < arr[i].substrings.length; j++) {%>
-					<tr>
-						<td><%=arr[i].substrings[j].description %></td>
-						<td><%=arr[i].substrings[j].namecriterion %></td>
-						<% for(let k = 0; k < arr[i].substrings[j].balls.length; k++) {%>
-							<td><big><%=arr[i].substrings[j].balls[k] %></big></td>
-						<%} %>
-					</tr>
 					<%} %>
-				<%} %>
 			<%} %>
 		<%} %>
 	<%} %>

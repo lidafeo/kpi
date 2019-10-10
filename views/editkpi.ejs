@@ -3,34 +3,56 @@
 <head>
 	<title>Просмотр подтверждений ПЭДа</title>
 	<meta charset="utf-8" />
+	<link rel="stylesheet" type="text/css" href="../list.css">
+	<link rel="stylesheet" type="text/css" href="editkpi.css">
+	<link rel="stylesheet" type="text/css" href="../footer.css">
+	<link rel="stylesheet" type="text/css" href="../stylebut.css">
 </head>
 <body>
-	<a href="/mypage" class="exit">Назад</a>
-	<br/>
-	<form name="editform" action="/editkpi" method="post">
-		<%- include("partials/findnumber.ejs") %>
-	</form>
+	<div class="wrapper">
+		<header>
+			<a href="/mypage" class="exitt" >Назад</a>
+		</header>
+		<div class="content">
+			<h2 style="margin-left: 10px; margin-top: -10px;">Отметить выполнение ПЭД</h2>
+			<div class="page">
+				<aside>
+					<ul class="treeCSS">
+						<li>Выберите ПЭД
+							<ul>
+								<% for (key in obj) {%>
+								<li><div class="drop dropM">-</div><%=key%>
+									<ul>
+										<% for(key2 in obj[key])  {%>
+											<% if(key2 != 'nosubtype') {%>
+												<li><div class=" drop dropM">-</div><%=key2%>
+												<ul>
+											<%} %>
+											<% for(let i = 0; i < obj[key][key2].length; i++) {%>
+												<li><a class="ref" id = <%=obj[key][key2][i]['name'] + ""%>  href="" title="<%=obj[key][key2][i]['description']%>"><%=obj[key][key2][i]['name']%></a></li>
+											<%} %>
+											<% if(key2 != 'nosubtype') {%>
+												</ul></li>
+											<%} %>
+										<%} %>
+									</ul>
+								</li>
+								<%} %>
+							</ul>
+						</li>
+					</ul>
+				</aside>
 
-	<div id="tablekpi"></div>
+				<div id="tablekpi" class="tablekpiborder"></div>
+			</div>
+		</div>
 
-	<link rel="stylesheet" type="text/css" href="../list.css">
-	<style type="text/css">
-		button {
-			padding: 10px;
-		}
-		.errormess {
-			color: red;
-		}
-		.exit{
-			border: 1px solid black;
-			background-color: #DCDCDC;
-			padding: 12px;
-			font-size: 18px;
-			text-decoration: none;
-			margin: 10px;
-			float: right;
-		}
-	</style>
+		<div class="footer">
+			<%- include("partials/footer.ejs") %>
+		</div>
+	
+	
+</div>
 
 	<script type="text/javascript" src="../jquery-3.3.1.min.js"></script>
 	<script type="text/javascript" src="editkpi.js"></script>

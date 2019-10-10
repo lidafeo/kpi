@@ -1,129 +1,144 @@
-//Схемы БД
-const User = require("../Scheme/users.js");
-const KpiSchema = require("../Scheme/kpi.js");
-const UserValue = require("../Scheme/uservalue.js");
-const Structure = require("../Scheme/structure.js");
-
 const fs = require("fs");
 
-let dateToString = require('../date.js').dateToString;
-let timeToString = require('../date.js').timeToString;
-let cookieKpi = require('../writecookie.js').cookieKpi;
+let writeLogs = require('../logs');
+let additFunc = require('../additional');
+
+let DBs = require('../db/select.js');
+let DBu = require('../db/update.js');
 
 //страница проверки ПЭДов
 exports.verify = function(req, res) {
 	let level = req.session.level;
 	let department = req.session.department;
 	let faculty = req.session.faculty;
-	Structure.findOne({faculty: faculty}, function(err, doc) {
-		KpiSchema.find({}, function(err, kpi) {
-			if(err) return console.log(err);
-			let obj = cookieKpi(res, kpi);
-
-			let propKpi = getPropKpi(obj);
-			
-			let dep = [];
-			if (doc) dep = doc.department;
-			else dep.push(department);
-			User.find({level: {$lt: level}, department: {$in: dep}}, function(err, users) {
-				res.render('verify', {section: propKpi.section, subtype: propKpi.subtype, 
-					number: propKpi.number, worker: users, mypage: false});
-			});
-		});
-	});
-};
-
-//страница проректора (проверка подтверждений ПЭДов)
-exports.prorector = function(req, res) {
-	let level = req.session.level;
-	//if(req.session.level != 3) ;
-	KpiSchema.find({}, function(err, kpi) {
-		if(err) return console.log(err);
-		let obj = cookieKpi(res, kpi);
-		let propKpi = getPropKpi(obj);
-		
-		User.find({level: {$lt: level}}, function(err, users) {
-			res.render('verify', {section: propKpi.section, subtype: propKpi.subtype, 
-				number: propKpi.number, worker: users, mypage: true});
-		});
-	});
-};
-
-//проверка выполненных ПЭДов
-exports.POSTverify = function(req, res) {
-	let section = req.body.section;
-	let subtype = req.body.subtype;
-	let number = req.body.number;
-	let userName = req.body.name;
-	let positionNumber;
-	let name;
-	if(subtype) name = section[0] + '.' + subtype[0] + '.' + number;
-	else name = section[0] + '.' + number;
-	let prom = new Promise( function(resolve, reject) {
-		User.findOne({name: userName}, function(err, user) {
-			if(err) console.log(err);
-			if(!user) return reject('Нет такого сотрудника');
-			resolve(user.positionNumber);
-		});
-	});
-	prom.then(function(positionNumber) {
-		KpiSchema.findOne({name: name}, function(err, kpi) {
-			if(err) return console.log(err);
-			if(kpi.substrings[0].balls[positionNumber] != 0) {
-				UserValue.find({nameUser: userName, nameKpi: name, invalid: false}, 
-					function(err, uservalues) {
-					if(err) return console.log(err);
-					modifydate(uservalues);
-					res.render("partials/verifyVal", {kpi: uservalues, desc: kpi,
-						textErr: false});
+	try {
+		switch(level) {
+			//проректор
+			case 3:
+				DBs.selectStructure().then(result => {
+					let structure = result;
+					let facultyArr = additFunc.getFaculty(structure);
+					let departmentArr = additFunc.getDepartment(facultyArr[0], structure);
+					res.render('verify', {faculty: facultyArr, department: departmentArr, mypage: true});
+				}).catch(err => {
+					console.log(err);
 				});
-			}
-			else {
-				res.render("partials/verifyVal", {kpi: [], 
-					textErr: "Этот ПЭД недоступен для этой должности"});
-			}
-		});
-	}, function(err) {
-		res.render("partials/verifyVal", {kpi: [], textErr: "Сотрудник не найден"});
-	});
+				break;
+			//декан
+			case 2:
+				DBs.selectDepartments(faculty).then(result => {
+					let facultyArr = [];
+					facultyArr.push(faculty);
+					let departmentArr = [];
+					for(let i = 0; i < result.length; i++) {
+						departmentArr.push(result[i].department);
+					}
+					res.render('verify', {faculty: facultyArr, department: departmentArr, mypage: false});
+				}).catch(err => {
+					console.log(err);
+				});
+				break;
+			//зав. кафедрой
+			case 1:
+				let facultyArr = [];
+				let departmentArr = [];
+				facultyArr.push(faculty);
+				departmentArr.push(department);
+				res.render('verify', {faculty: facultyArr, department: departmentArr, mypage: false});
+				break;
+			//другие
+			default:
+				throw new Error("Server Error: no permissions");
+				break;
+		}
+	} catch (e) {
+		return console.log("Ошибка доступа");
+	}
 };
+
+
+//получение таблицы для проверки
+exports.POSTverify = function(req, res) {
+	let faculty = req.body.faculty;
+	let department = req.body.department;
+	let name = req.body.name;
+	let position = req.body.position;
+	//находим значения ПЭД выбранного сотрудника
+	DBs.selectValueKpiByNameAndPosition(name, position, faculty, department).then(result => {
+		if(result.length == 0) {
+			res.render("partials/verifyVal", {kpi: [], textErr: "Нет добавленных действительных значений"});
+		}
+		else {
+			modifydate(result);
+			res.render("partials/verifyVal", {kpi: result, textErr: false});
+		}
+	}).catch(err => {
+		console.log(err);
+	});
+}
 
 //помечаем ПЭДы как недействительные
 exports.POSTinvalid = function(req, res) {
 	let invalidKpi = req.body.kpi;
+	let chooseUser = req.body.user;
 	let name = req.session.userName;
 	console.log(invalidKpi);
-	let prom = new Promise(function(resolve, reject) {
+	new Promise(function(resolve, reject) {
 		for(let i = 0; i < invalidKpi.length; i++) {
-			UserValue.findByIdAndUpdate(invalidKpi[i].id, {invalidInfo: 
-				{text: invalidKpi[i].comment, author: name}, invalid: true}, function(err, doc) {
-				if(err) reject('err');
-				console.log('Обновленный объект ', doc);
-				
+			DBu.updateValueInvalid(invalidKpi[i].id, name, invalidKpi[i].comment).then(result => {
+				console.log(result);
 				//записываем логи
-				let date = new Date();
-				let strTime = timeToString(date);
-				let namefile = dateToString(date) + '.txt';
 				let text = invalidKpi[i].comment.split(';').join('.');
-				fs.appendFileSync("./logs/" + namefile, strTime + " " + name +
-					" сделал(а) отметку о недействительности ПЭДа " + doc.nameKpi + " пользователя " + 
-					doc.nameUser +" по следующей причине: " + text + ";\r\n");
+				writeLogs(name, "сделал(а) отметку о недействительности ПЭД " + invalidKpi[i].name + 
+					" пользователя " + chooseUser + " по следующей причине: " + invalidKpi[i].comment);
+				resolve('ok');
+			}).catch(err => {
+				console.log(err);
+				reject('err');
 			});
 		}
-		resolve('ok');
-	});
-	prom.then(function(result) {
+	}).then(result => {
 		res.send(result);
-	}, function(error) {
+	}).catch(error => {
 		res.send(error);
 	});
 };
+
+//получить сотрудников кафедры
+exports.POSTgetworkers = function(req, res) {
+	let level = req.session.level;
+	let faculty = req.body.faculty;
+	let department = req.body.department;
+	DBs.selectUserFromDepartment(faculty, department, level).then(result => {
+		res.render('partials/workersdep', {worker: result});
+	}).catch(err => {
+		console.log(err);
+	});
+
+}
+
+//получить структуру
+exports.POSTgetstructure = function(req, res) {
+	DBs.selectStructure().then(result => {
+		let structure = {faculty: [], department: []};
+		for(let i = 0; i < result.length; i ++) {
+			if(structure.faculty.indexOf(result[i].faculty) == -1) {
+				structure.faculty.push(result[i].faculty);
+				structure.department[structure.faculty.indexOf(result[i].faculty)] = [];
+			}
+			structure.department[structure.faculty.indexOf(result[i].faculty)].push(result[i].department);
+		}
+		res.json(structure);
+	}).catch(err => {
+		console.log(err);
+	});
+}
+
 
 //преобразование даты к нормальному виду
 function modifydate(arrObj) {
 	for(let i = 0; i < arrObj.length; i++) {
 		modifyOneDate(arrObj[i], 'date');
-		modifyOneDate(arrObj[i], 'startDate');
 	}
 }
 
@@ -135,20 +150,4 @@ function modifyOneDate (obj, prop) {
 	if(objDate < 10) objDate = "0" + objDate;
 	if(objMonth < 10) objMonth = "0" + objMonth;
 	obj['modify' + prop] = objDate + '.' + objMonth + '.' + objYear;
-}
-
-function getPropKpi(obj) {
-	let section = [];
-	let subtype = [];
-	let number;
-	for(key in obj) {
-		if(section.indexOf(key.split('_')[0]) == -1)
-			section.push(key.split('_')[0]);
-		if(key.split('_')[0] == section[0]){
-			subtype.push(key.split('_')[1]);
-			if(key.split('_')[1] == subtype[0])
-				number = obj[key];
-		}
-	}
-	return {section: section, subtype: subtype, number: number};
 }

@@ -1,28 +1,46 @@
 table {
-	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
-	font-size: 13px;
-	border-collapse: collapse;
+	width: 95%;
+	margin: 7px 0;
 	text-align: center;
+	border: 2px solid rgba(34,36,38,.1);
+    box-shadow: none;
+    border-radius: .28571429rem;
+    border-collapse: collapse;
+	border-spacing: 0;
+	font-size: 16px;
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
 }
 th {
-	background: #1C9675;
-	color: white;
+    border-spacing: 0;
+	box-shadow: none;
+	background: #f9fafb;
+	font-weight: normal;
 	padding: 10px 10px;
 }
 td:first-child {
 	padding: 10px 10px;
 }
+
+tr:nth-child(2n) {
+	background: #F9FAFB;}
+
 th, td {
-	border-style: solid;
-	border-width: 0 1px 1px 0;
 	border-color: white;
+	border: 1px solid rgba(34,36,38,.1);
+	padding: 5px;
 }
 td {
-	background: #E0DBC5;
+	background: rgba(244, 246, 248, 0.226);
 }
 .nametable {
-	color: #1C9675;
+	color: rgb(0, 0, 0);
 	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
-	font-size: 16px;
 	text-align: center;
+	margin: 15px 0 15px 0;
+}
+
+
+.razdel
+{
+	margin-right: 13%;
 }

@@ -1,24 +1,78 @@
 $(document).ready(function() {
+	let structure;
 
-	$('#submit').click(function(e) {
+	if($("#faculty > option").length > 1) {
+		$("#faculty").attr("disabled", true);
+		getStructure();
+	}
+
+	$.cookie("choosefaculty", $("#faculty").val());
+	$.cookie("choosedepartment", $("#department").val());
+	//нажатие на кнопку отправки на сервер сотрудника
+	$("body").on('click', "#submit", function(e) {
 		e.preventDefault();
-		let section = $("#section option:selected").text();
-		let subtype = $("#subtype option:selected").text();
-		let number = $("#number option:selected").text();
-		let name = $("#name").val();
+		let faculty = $.cookie("choosefaculty");
+		let department = $.cookie("choosedepartment");
+		let user = $("#name").val().split(', ');
+		let name = user[0];
+		let position = user[1];
+		if(!name && !$("p").is("#errormess"))
+			return $("#name").after('<p id="errormess" class="errormess">Выберите пользователя</p>');
+		if(name)
+			$("#errormess").remove();
+		//запоминаем выбранного пользователя
+		$("#chooseuser").val(name);
 
-		let sendValue = JSON.stringify({section: section, subtype: subtype, number: number,
-			name: name});
+		let sendValue = JSON.stringify({faculty: faculty, department: department, name: name,
+			position: position});
 		let request = new XMLHttpRequest();
 		//посылаем запрос на адрес "/editkpi"
 		request.open("POST", "/verify", true);
 		request.setRequestHeader("Content-Type", "application/json");
 		request.addEventListener("load", function() {
-			console.log(request.response); //смотрим ответ сервера
 			$('#tablekpi').html(request.response);
 		});
 		request.send(sendValue);
 	});
+
+	//изменение факультета
+	$('#faculty').change(function() {
+		let faculty = structure.faculty;
+		let chooseFaculty = $("#faculty option:selected").text();
+		let arrDep = structure.department[faculty.indexOf(chooseFaculty)];
+		let departmentHTML = "";
+		for(let i = 0; i < arrDep.length; i++) {
+			departmentHTML += "<option>" + arrDep[i] + "</option>";
+		}
+		$('#department').html(departmentHTML);
+	});
+
+	//очистка поля user
+	$("body").on('mousedown', "#name", function(e) {
+		$("#name").val("");
+	});
+
+	$("#choosedep").click(function(e) {
+		e.preventDefault();
+		$.cookie("choosefaculty", $("#faculty").val());
+		$.cookie("choosedepartment", $("#department").val());
+
+		let faculty = $("#faculty").val();
+		let department = $("#department").val();
+		if(!faculty || !department)
+			return alert("Заполните поля");
+		
+		let sendValue = JSON.stringify({faculty: faculty, department: department});
+		let request = new XMLHttpRequest();
+		//посылаем запрос на адрес "/editkpi"
+		request.open("POST", "/getworkers", true);
+		request.setRequestHeader("Content-Type", "application/json");
+		request.addEventListener("load", function() {
+			$("#usersdiv").html(request.response);
+		});
+		request.send(sendValue);
+	});
+
 	$("body").on('click', "#incorrect", function() {
 		let checkboxes = document.getElementsByName('checkbox');
 		//let value = [];
@@ -28,20 +82,35 @@ $(document).ready(function() {
 			if(checkboxes[i].checked) {
 				let id =  $("#hd" + i).val();
 				let comment = $("#comm" + i).val();
-				let obj = {id: id, comment: comment};
+				if(!comment)
+					return alert("Обязательное поле: комментарий");
+				let name_kpi = $("#kpi" + i).val();
+				let obj = {id: id, comment: comment, name: name_kpi};
 				incorrectKpi.push(obj);
 			}
 		}
-		let sendValue = JSON.stringify({kpi: incorrectKpi});
+		if(incorrectKpi.length == 0)
+			return alert("Выберите неверные значения");
+		let sendValue = JSON.stringify({kpi: incorrectKpi, user: $("#chooseuser").val()});
 		let request = new XMLHttpRequest();
 		//посылаем запрос на адрес "/editkpi"
 		request.open("POST", "/invalid", true);
 		request.setRequestHeader("Content-Type", "application/json");
 		request.addEventListener("load", function() {
-			console.log(request.response); //смотрим ответ сервера
 			document.querySelector('#submit').click();
 		});
 		request.send(sendValue);
 	});
-	//document.querySelector('#submit').click();
+
+	function getStructure() {
+		let request = new XMLHttpRequest();
+		//посылаем запрос на адрес "/editkpi"
+		request.open("POST", "/getstructure", true);
+		request.setRequestHeader("Content-Type", "application/json");
+		request.addEventListener("load", function() {
+			structure = JSON.parse(request.response);
+			$("#faculty").attr("disabled", false);
+		});
+		request.send();
+	}
 });

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Установка периода</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../admin/menu.css">
+	<link rel="stylesheet" type="text/css" href="../footer.css">
+	<link rel="stylesheet" type="text/css" href="../stylebut.css">
+	
+</head>
+<body>
+	<div class="wrapper">
+		<div class="content">
+			<%- include("partials/menuadmin.ejs") %>
+
+
+			<div class="formborderadmin">
+			<% if(setbool) {%>
+				<p style="margin: 1% auto;">Текущий период: с <%=period.date1Str + " по " + period.date2Str %></p>
+				<% if(!period.notify) {%>
+					<form action="/notify" method="post">
+						<input type="submit" class="buttonmypage" value="Оповестить работников">
+					</form><br>
+				<%} %>
+				<form action="/setperiod" method="post">
+					<input type="submit" class="buttonmypage" value="Удалить период">
+				</form>
+			<%} %>
+			<% if(!setbool) {%>
+				<p>Текущий период не установлен</p>
+				<p>Установить новый период:</p>
+				<div id="text"></div>
+				<form action="/setperiod" method="post">
+					с <input type="date" class="date" name="date1" id="date1" required>
+					 до <input type="date" class="date" name="date2" id="date2" required>
+					<input type="submit" id="sub" class="buttonmypage" value="Установить">
+				</form>
+			<%} %>
+		</div>
+		</div>
+
+		<div class="footer">
+			<%- include("../partials/footer.ejs") %>
+		</div>
+	</div>
+	
+	<script type="text/javascript" src="../jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src="../admin/setperiod.js"></script>
+
+
+</body>
+</html>

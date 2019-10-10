@@ -1,16 +1,16 @@
 <% if(kpi) {%>
-<h3>Текущие показатели ПЭД:</h3>
+<h3 class="tekuchiepokaz">Текущие показатели ПЭД:</h3>
 <table>
 	<tr>
-		<th>Шифр показателя эффективности</th>
-		<th>Показатель</th>
-		<th width="120">Оценка</th>
+		<th><h4>Шифр показателя эффективности</h4></th>
+		<th><h4>Показатель</h4></th>
+		<th width="120"><h4>Оценка</h4></th>
 	</tr>
 	<% for(let u = 0; u < kpi.length; u++) {%>
 		<% if(kpi[u].length != 0) {%>
 			<tr>
-				<td><%=kpi[u][0].section[0] + "." %></td>
-				<td colspan="2"><h4>Раздел <%=(u+1) + ". " + kpi[u][0].section %></h4></td>
+				<td><h4><%=kpi[u][0].section[0] + "." %></h4></td>
+				<td colspan="2"><h4 class="razdel">Раздел <%=(u+1) + ". " + kpi[u][0].section %></h4></td>
 			</tr>
 			<% for(let i = 0; i < kpi[u].length; i++) {%>
 				<% let arr = kpi[u]; %>
@@ -23,12 +23,12 @@
 				<%} %>
 				<% if(arr[i].type == 2) {%>
 					<tr>
-						<td rowspan=<%=(arr[i].substrings.length + 1) + "" %>><%=arr[i].name %></td>
+						<td rowspan=<%=(arr[i].count_criterion + 1) + "" %>><%=arr[i].name %></td>
 						<td colspan="2"><%=arr[i].description %></td>
 					</tr>
-					<% for(let j = 0; j < arr[i].substrings.length; j++) {%>
+					<% for(let j = 0; j < arr[i].count_criterion; j++) {%>
 					<tr>
-						<td><%=arr[i].substrings[j].description %></td>
+						<td><%=arr[i].criterion[j].description %></td>
 						<td><big><%=arr[i].userball[j] %></big></td>
 					</tr>
 					<%} %>
@@ -39,5 +39,5 @@
 </table>
 <%} %>
 <% if(!kpi) {%>
-<h4>Нет оценок</h4>
+<h3 class="bordernoozenok">Нет оценок</h3>
 <%} %>

@@ -3,45 +3,44 @@
 <head>
 	<title>Моя страница</title>
 	<meta charset="utf-8" />
+	<link rel="stylesheet" type="text/css" href="../list.css">
+	<link rel="stylesheet" type="text/css" href="../footer.css">
+	<link rel="stylesheet" type="text/css" href="../stylebut.css">
 </head>
 <body>
-	<form action="/exit" method="post">
-		<button class="exit">Выход</button>
-	</form>
-	<br/> 
-	<h1><div id="name"><%=name %>, <%=position %></div></h1>
-	<form name="date" action="/mypage" method="get">
-		<label>Период отчета с </label>
-		<input type="date" name="date1" id="date1" value=<%=date1 %>>
-		<label> по </label>
-		<input type="date" name="date2" id="date2" value=<%=date2 %>>
-		<button id="date">Вывести оценки ПЭД</button>
-	</form>
-	<div id="donekpi"><%- include("partials/donekpi.ejs") %></div>
-	<br/>
-	<a href="/editkpi">Отметить выполнение ПЭД</a>
-	<% if(level) {%>
-		<a href="/verify">Проверить подтверждения ПЭДов преподавателей</a>
-	<%} %>
+	<div class="wrapper">
+		<div class="content">
+			<form action="/exit" method="post">
+				<button class="exitt">Выход</button>
+			</form>
+			<br/> 
+			<h1><div id="name"><%=name %>, <%=position %></div></h1><br>
+			<% if(objperiod.notify) {%>
+				<p style="color: red; font-size: 20px;">Внимание! Скоро будет расчет премии за период с <%=objperiod.date1Str %> по <%=objperiod.date2Str %></p>
+				<br><br>
+			<%} %>
+			<form class="flexparent">
+			<a href="/editkpi" class="buttonmypage flexblocks" >Отметить выполнение ПЭД</a>
+			<a href="/valuekpi" class="buttonmypage flexblocks">Посмотреть добавленные значения</a>
+			<% if(level) {%>
+				<a href="/verify" class="buttonmypage flexblocks">Проверить подтверждения ПЭДов преподавателей</a>
+			<%} %>
+			<br>
+		</form>
+			<form name="date" action="/mypage" class="text" method="get">
+				<label>Период отчета с </label>
+				<input type="date" name="date1" id="date1" class="date" value=<%=date1 %> required>
+				<label> по </label>
+				<input type="date" name="date2" id="date2" class="date" value=<%=date2 %> required>
+				<button id="date" >Вывести оценки ПЭД за данный период</button>
+			</form>
+			<div id="donekpi"><%- include("partials/donekpi.ejs") %></div>
+			<br/>
+		</div>
 
-	<%- include("partials/footer.ejs") %>
-
-	<link rel="stylesheet" type="text/css" href="../list.css">
-	<style type="text/css">
-		button {
-			padding: 10px;
-		}
-		.exit {
-			float: right;
-		}
-		a {
-			border: 1px solid black;
-			background-color: #DCDCDC;
-			padding: 12px;
-			font-size: 18px;
-			text-decoration: none;
-			margin: 10px;
-		}
-	</style>
+		<div class="footer">
+			<%- include("partials/footer.ejs") %>
+		</div>
+	</div>
 </body>
 </html>

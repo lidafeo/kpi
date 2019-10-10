@@ -1,16 +1,22 @@
-<select name="section" id="section">
+<div class="flexblocks">
+	<select name="section" id="section" class="text">
 	<% for(let i = 0; i < section.length; i++) {%>
 		<option><%=section[i]%></option>
 	<%} %>
-</select>
-<select name="subtype" id="subtype">
+	</select>
+</div>
+
+<div class="flexblocks"><select name="subtype" id="subtype" class="text">
 	<% for(let i = 0; i < subtype.length; i++) {%>
 		<option><%=subtype[i]%></option>
 	<%} %>
-</select>
-<select name="number" id="number">
+	</select>
+</div>
+
+<div class="flexblocks"><select name="number" id="number" class="text">
 	<% for(let i = 0; i < number.length; i++) {%>
 	<option><%=number[i]%></option>
 	<%} %>
-</select>
-<button id="submit">Вывести значения показателей</button>
+	</select>
+</div>
+	<button id="submit" class="buttonbackheader flexblocks">Вывести значения показателей</button>

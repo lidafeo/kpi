@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Удаление ПЭДа</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="../admin/menu.css">
+	<link rel="stylesheet" type="text/css" href="../footer.css">
+	<link rel="stylesheet" type="text/css" href="../stylebut.css">
+	<link rel="stylesheet" type="text/css" href="../form.css">
+
+</head>
+<body>
+	<div class="wrapper">
+		<div class="content">
+			<%- include("partials/menuadmin.ejs") %>
+			<% if(action == 1) {%>
+				<p class="uspeshno">Успешно</p>
+			<%} %>
+			<% if(action == 2) {%>
+				<p class="errormess">Ошибка удаления ПЭДа</p>
+			<%} %>
+			<form name="deletekpi" action="/deletekpi"  class="formborderadmin" method="post">
+				<label for="name" class="text">Показатель эффективности</label>
+				<select name="name"  class="text" id="name">
+					<% for(let i = 0; i < kpi.length; i++) {%>
+					<option><%=kpi[i].name%></option>
+					<%} %>
+				</select>
+				<input type="submit" class="buttonmypage" name="submit" value="Удалить">
+			</form>
+		</div>
+
+		<div class="footer">
+			<%- include("../partials/footer.ejs") %>
+		</div>
+	</div>
+
+</body>
+</html>

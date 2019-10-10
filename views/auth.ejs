@@ -3,47 +3,39 @@
 <head>
 	<title>Вход в личный кабинет</title>
 	<meta charset="utf-8" />
+	<link rel="stylesheet" type="text/css" href="./form.css">
 </head>
 <body>
 	<div class="auth">
-	<span><header><img src="/img/logo.png" alt="Логотип МТУСИ"></header></span>
-	<form name="authorizForm" action="/user?form=index" method="POST">
-		<% if(checkpassword) {%>
-			<p class="errorpassword">Неправильно введен логин или пароль</p>
-		<%} %>
-		<span><h4>Введите данные</h4></span>
-		<label>Логин</label>
-		<input type="text" name="login"/><br>
-		<label>Пароль</label>
-		<input type="password" name="password"/>
-		<div align="center"><button id="submit">Войти</button></div>
+	<form name="authorizForm" action="/user" method="POST" class="form-add">
+		<div class="form-left-decoration"></div>
+		<div class="form-right-decoration"></div>
+		<div class="circle"></div>
+		<div class="form-inner">
+			<img src="/img/logo.png" alt="Логотип МТУСИ">
+			<h3>Введите данные</h3>
+			<% if(close) {%>
+				<p class="errortext">Доступ к личным кабинетам закрыт</p>
+			<%} %>
+			<% if(checkpassword) {%>
+				<p class="errortext">Неправильно введен логин или пароль</p>
+			<%} %>
+			<label>Логин</label>
+			<input type="text" name="login"/><br>
+			<label>Пароль</label>
+			<input type="password" name="password"/>
+			<input type="submit" name="submit" id="submit" value="Войти">
+		</div>
 	</form>
 	</div>
 	<style type="text/css">
-		body {
-			background: #E0DBC5;
+		body, html {
+			background: rgb(241, 241, 241);
 		}
-		button {
-			padding: 10px;
-			text-align: center;
-		}
-		form > * {
-			margin: 8px 0;
-		}
-		.errorpassword {
+		.errortext {
 			color: red;
 		}
-		.auth {
-			max-width: 300px;
-			max-height: 400px;
-			position: absolute;
-			left: 50%;
-			top: 50%;
-			margin: -200px 0 0 -150px;
-		}
-		.auth span {
-			text-align: center;
-		}
 	</style>
+	
 </body>
 </html>

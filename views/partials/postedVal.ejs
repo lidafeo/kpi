@@ -2,52 +2,85 @@
 	<p class="errormess">Этот ПЭД недоступен для Вашей должности</p>
 <%} %>
 <% if(!textErr) {%>
-	<h3><%=desc.description %></h3>
-	<% if(kpi.length != 0) {%>
-	<table>
-		<tr>
-			<th>Дата добавления</th>
-			<th>Дата реализации</th>
-			<th>Текст</th>
-			<th>Файл</th>
-			<% if(desc.type == 2) {%>
-				<th>Показатель</th>
+	<h3><%=desc[0].description %></h3>
+	<button id="plus">+</button>
+	<div id="plusdiv">
+		<form enctype="multipart/form-data" name="form1" action="/upload" method="post" style="flex-direction: column; display: flex; justify-content: flex-start;">
+			<hr/> 
+		<div style="margin-top: 10px;"><h4>Добавление нового значения</h4>
+			<input type="hidden" name="name" id="name">
+			<% if(desc[0].type == 2) {%>
+				<% for(let j = 0; j < desc[0].count_criterion; j++) {%>
+					<input type="radio" name="radio" id="radio" value=<%=j+""%> checked>
+					<%=desc[j].criterion_description %>
+				<%} %>
 			<%} %>
-			<th>Статус</th>
-			<th>Автор проверки</th>
-			<th>Пояснение от автора проверки</th>
-		</tr>
-		<% for(let i = 0; i < kpi.length; i++) {%>
+			</div>
+		<div style="margin-top: 10px;">  <label>Введите дату реализации ПЭДа</label>
+				<input type="date" name="date" id="datekpi" required>
+				<br/>
+			<% if(!desc[0].indicator_sum) {%> 
+			</div>
+		<div style="margin-top: 15px;"> <label>Значение: </label>
+			<input type="number" min="0" max="1000" name="value" id="value" required>
+			<%} %>
+			<% if(desc[0].indicator_sum) {%>
+			<input type="hidden" name="value" value="1" id="value">
+			<%} %>
+			</div>
+		<div style="margin-top: 20px;"> <label>Подтвердить: </label> 
+			<textarea name="text" id="text"></textarea> 
+			<br/><br/>
+			<input class="file" type="file" name="file" id="file">
+			<br/><br/>
+		</div>
+
+			<button id="addkpi" class="buttonmypage" style="width: 250px; margin-bottom: 10px;">Добавить показатель</button>
+		</form>
+	</div>
+	<% if(kpi.length != 0) {%>
+		<table>
 			<tr>
-				<td><%=kpi[i].modifydate %></td>
-				<td><%=kpi[i].modifystartDate%></td>
-				<td><%=kpi[i].text %></td>
-				<% if(kpi[i].file != "") {%>
-					<td><a href=<%="/sendfiles?file="+kpi[i]._id %> download=""><%=kpi[i].file %></a></td>
+				<th>Дата добавления</th>
+				<th>Дата реализации</th>
+				<th>Текст</th>
+				<th>Файл</th>
+				<% if(desc[0].type == 2) {%>
+					<th>Показатель</th>
 				<%} %>
-				<% if(kpi[i].file == "") {%>
-					<td>Файл не прикреплен</td>
-				<%} %>
-				<% if(desc.type == 2) {%>
-					<td><%=desc.substrings[kpi[i].number].description %></td>
-				<%} %>
-				<% if(kpi[i].invalid) {%>
-					<td class="errormess">Недействительно</td>
-					<td><%=kpi[i].invalidInfo.author %></td>
-					<td><%=kpi[i].invalidInfo.text %></td>
-				<%} %>
-				<% if(!kpi[i].invalid) {%>
-					<td>Выполнено</td>
-					<td></td>
-					<td></td>
-				<%} %>
+				<th>Статус</th>
+				<th>Автор проверки</th>
+				<th>Пояснение от автора проверки</th>
 			</tr>
-		<%} %>
-	</table>
+			<% for(let i = 0; i < kpi.length; i++) {%>
+				<tr>
+					<td><%=kpi[i].modifydate %></td>
+					<td><%=kpi[i].modifystart_date%></td>
+					<td><%=kpi[i].text %></td>
+					<% if(kpi[i].file != "") {%>
+						<td><a href=<%="/sendfiles?file="+kpi[i].id %> download=""><img src="/img/download.png" alt="Скачать файл"></a></td>
+					<%} %>
+					<% if(kpi[i].file == "") {%>
+						<td>Файл не прикреплен</td>
+					<%} %>
+					<% if(desc[0].type == 2) {%>
+						<td><%=desc[kpi[i].number_criterion].criterion_description %></td>
+					<%} %>
+					<% if(!kpi[i].valid) {%>
+						<td class="errormess">Недействительно</td>
+						<td><%=kpi[i].author_verify %></td>
+						<td><%=kpi[i].text_verify %></td>
+					<%} %>
+					<% if(kpi[i].valid) {%>
+						<td>Выполнено</td>
+						<td></td>
+						<td></td>
+					<%} %>
+				</tr>
+			<%} %>
+		</table>
 	<%} %>
 	<% if(kpi.length == 0) {%>
 		<p>Нет отмеченных ПЭДов</p>
 	<%} %>
-	<button id="plus">+</button>
-	<div id="plusdiv"></div>
 <%} %>

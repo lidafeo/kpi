@@ -1,27 +1,28 @@
 const formidable = require("formidable");
 const fs = require("fs");
 
-//Схемы БД
-const KpiSchema = require("../Scheme/kpi.js");
-const UserValue = require("../Scheme/uservalue.js");
+let DBs = require('../db/select.js');
+let DBi = require('../db/insert.js');
 
-let dateToString = require('../date.js').dateToString;
-let timeToString = require('../date.js').timeToString;
-let dateForInput = require('../date.js').dateForInput;
-let cookieKpi = require('../writecookie.js').cookieKpi;
+let dateModule = require('../date.js');
+let writeLogs = require('../logs');
+
+let getclose = require('./admin.js').getclose;
+let getObjPeriod = require('./admin.js').getObjPeriod;
 
 //главная страница пользователя
 exports.mypage = function(req, res) {
 	let name = req.session.userName;
-	//if(!name) res.redirect('/404');
+	let login = req.session.login;
 	let position = req.session.userPosition;
 	let level = req.session.level;
-	let positionNumber = req.session.positionNumber;
+	let numberGroup = req.session.numberGroup;
 
-	if(!(positionNumber + 1)) {
+	if(numberGroup == null) {
 		console.log("У пользователя нет ПЭДов");  
-		if(position == "Проректор") return res.redirect('/prorector');
-		if(position == "Администратор") return res.redirect('/admin');
+		if(level == 3) return res.redirect('/prorector');
+		if(level == 10) return res.redirect('/admin');
+		if(level == 11) return res.redirect('/pfu');
 	}
 
 	let date1 = req.query.date1;
@@ -32,46 +33,80 @@ exports.mypage = function(req, res) {
 		let dt1 = new Date();
 		let dt2 = new Date();
 		dt1.setMonth(dt1.getMonth() - 6);
-		date1 = dateForInput(dt1);
-		date2 = dateForInput(dt2);
+		date1 = dateModule.dateForInput(dt1);
+		date2 = dateModule.dateForInput(dt2);
 	}
 	let d1 = new Date(date1);
 	let d2 = new Date(date2);
 	//ищем опубликованные значения ПЭДов в заданный период
-	UserValue.find({nameUser: name, $or: [{startDate: {$lte: d2, $gte: d1}}, 
-			{finishDate: {$lte: d2, $gte: d1}}, {startDate: {$lte: d1}, finishDate: {$gte: d2}}], 
-			invalid: false}, 
-		function(err, uservalues) {
-		if(err) return console.log(err);
-		if(uservalues.length == 0) {
+	DBs.selectValueKpiUserInPeriod(login, dateModule.dateForInput(d1), dateModule.dateForInput(d2))
+	.then(result => {
+		let objPeriod = getObjPeriod();
+		if(result.length == 0) {
 			res.render("mypage", {name: name, position: position, kpi: null, date1: 
-				date1, date2: date2, level: level});
+				date1, date2: date2, level: level, objperiod: objPeriod});
 		}
 		else {
-			//Формирование массива названий ПЭДов
-			let namekpi = ArrOfKeyValues(uservalues, "nameKpi");
-			let OD = []; let ND = []; let RD = [];
+			new Promise((resolve, reject) => {
+				DBs.selectAllCriterion().then(result => {
+					let ArrObj = [];
+					let kpi = [];
+					for(let i = 0; i < result.length; i++) {
+						if(kpi.indexOf(result[i].name_kpi) == -1) {
+							ArrObj.push({nameKpi: result[i].name_kpi, criterion: []});
+							kpi.push(result[i].name_kpi);
+						}
+						let balls = [];
+						for(let j = 0; j < 6; j++){
+							balls.push(result[i][('ball_' + j)]);
+						}
+						ArrObj[kpi.indexOf(result[i].name_kpi)].criterion.push({nameCriterion: result[i].name_criterion,
+							startVal: result[i].start_val, finalVal: result[i].final_val, 
+							balls: balls, description: result[i].criterion_description});
+					}
+					resolve(ArrObj);
+				}).catch(err => {
+					console.log(err);
+				})
+			}).then(arrCriterion => {
+				let kpi = ArrOfKeyValues(arrCriterion, 'nameKpi');
+				//Формирование массива названий ПЭДов
+				let uservalues = result;
+				let arrkpi = [];
 
-			KpiSchema.find({name: {$in: namekpi}}, function(err, kpi) {
-				if(err) return console.log(err);
-				if(kpi == null) return;
+				let info = {};
+				let namekpi = uservalues[0].name_kpi;
+				let section = [];
 				//добавление к свойствам ПЭДов оценок пользователя
-				for(let i = 0; i < kpi.length; i ++) {
-					//добавление информации к ПЭДам и их сортировка
-					sortKpi(kpi, uservalues, i);
-					kpi[i].userball = calculateBall(kpi[i], positionNumber);
-					//сортировка по разделам деятельности
-					if(kpi[i].section == "Образовательная деятельность") OD.push(kpi[i]);
-					if(kpi[i].section == "Научная деятельность") ND.push(kpi[i]);
-					if(kpi[i].section == "Репутационная деятельность") RD.push(kpi[i]);
+				for(let i = 0; i <= uservalues.length; i ++) {
+					if(i == uservalues.length || namekpi != uservalues[i].name_kpi) {
+						//сортировка по разделам деятельности
+						if(section.indexOf(uservalues[i - 1].section) == -1) {
+							section.push(uservalues[i - 1].section);
+							arrkpi.push([]);
+						}
+						arrkpi[section.indexOf(uservalues[i - 1].section)].push(info);
+
+						info = {};
+					}
+					if(i != uservalues.length) {
+						namekpi = uservalues[i].name_kpi;
+						//добавление информации к ПЭДам
+						sortKpi(uservalues[i], info, arrCriterion[kpi.indexOf(namekpi)].criterion);
+						info.userball = calculateBall(info, numberGroup, 
+							arrCriterion[kpi.indexOf(namekpi)].criterion);
+					}
 				}
 				//устанавливаем правильный порядок вывода ПЭДов
-				OD.sort(sortArr);
-				ND.sort(sortArr);
-				res.render("mypage", {name: name, position: position, kpi: [OD, ND, RD],
-					date1: date1, date2: date2, level: level});
+				for(let i = 0; i < arrkpi.length; i++)
+					arrkpi[i].sort(sortArr);
+				//console.log(arrkpi);
+				res.render("mypage", {name: name, position: position, kpi: arrkpi,
+					date1: date1, date2: date2, level: level, objperiod: objPeriod});
 			});
 		}
+	}).catch(err => {
+		console.log(err);
 	});
 };
 
@@ -79,77 +114,87 @@ exports.mypage = function(req, res) {
 exports.editkpi = function(req, res) {
 	let name = req.session.userName;
 	let positionNumber = req.session.positionNumber;
-	KpiSchema.find({}, function(err, docs) {
-		if(err) return console.log(err);
-		let obj = cookieKpi(res, docs);
-		let section = [];
-		let subtype = [];
-		let number;
-		for(key in obj) {
-			if(section.indexOf(key.split('_')[0]) == -1)
-				section.push(key.split('_')[0]);
-			if(key.split('_')[0] == section[0]){
-				subtype.push(key.split('_')[1]);
-				if(key.split('_')[1] == subtype[0])
-					number = obj[key];
+	DBs.selectAllKpi().then(result => {
+		let obj = {};
+		for(let i = 0; i < result.length; i++) {
+			if(!obj[result[i].section])
+				obj[result[i].section] = {};
+			if(result[i].subtype) {
+				if(!obj[result[i].section][result[i].subtype])
+					obj[result[i].section][result[i].subtype] = [];
+				obj[result[i].section][result[i].subtype].push({name: result[i].name,
+				description: result[i].description});
+			}
+			else {
+				if(!obj[result[i].section]['nosubtype'])
+					obj[result[i].section]['nosubtype'] = [];
+				obj[result[i].section]['nosubtype'].push({name: result[i].name,
+				description: result[i].description});
 			}
 		}
-		res.render('editkpi', {section: section, subtype: subtype, number: number});
+		for(sect in obj) {
+			for(subt in obj[sect]) {
+				obj[sect][subt].sort(function(a, b) {
+					return (+a['name'].match(/\d/g).join('') > +b['name'].match(/\d/g).join('')) ? 1 : -1;
+				});
+			}
+		}
+		res.render('editkpi', {obj: obj});
+	}).catch(err => {
+		console.log(err);
 	});
 };
 
+//страница просмотра добавленных значений ПЭД
+exports.valuekpi = function(req, res) {
+	DBs.selectValueKpiUser(req.session.login).then(result => {
+		modifydate(result);
+		res.render('valuekpi', {kpi: result});
+	}).catch(err => {
+		console.log(err);
+	});
+}
+
 //прошлые подтверждения ПЭДА
 exports.POSTeditkpi = function(req, res) {
-	let section = req.body.section;
-	let subtype = req.body.subtype;
-	let number = req.body.number;
-	let positionNumber = req.session.positionNumber;
-	let UserName = req.session.userName;
-	let name;
-	if(subtype) name = section[0] + '.' + subtype[0] + '.' + number;
-	else name = section[0] + '.' + number;
-	console.log(name);
-	KpiSchema.findOne({name: name}, function(err, kpi) {
-		if(err) return console.log(err);
-		if(kpi.substrings[0].balls[positionNumber] != 0) {
-			UserValue.find({nameUser: UserName, nameKpi: name}, function(err, uservalues) {
-				if(err) return console.log(err);
-				modifydate(uservalues);
-				res.render("partials/postedVal", {kpi: uservalues, desc: kpi,
-					textErr: false});
+	let numberGroup = req.session.numberGroup;
+	let login = req.session.login;
+	DBs.selectOneKpi(req.body.name).then(kpi => {
+		if(kpi[0]['ball_' + numberGroup] != 0) {
+			DBs.selectValueKpiUserOneKpi(login, req.body.name).then(result => {
+				modifydate(result);
+				res.render("partials/postedVal", {kpi: result, desc: kpi, textErr: false});
+			}).catch(err => {
+				console.log(err);
 			});
 		}
 		else {
 			res.render("partials/postedVal", {kpi: [], textErr: true});
 		}
+	}).catch(err => {
+		console.log(err);
 	});
 };
 
 //отправка файла пользователю
 exports.sendfiles = function(req, res) {
 	let file = req.query.file;
-	UserValue.findOne({_id: file}, function(err, doc) {
+	DBs.selectValueKpiById(file).then(result => {
+		doc = result[0];
 		res.download("./sendfiles/" + file + '.' + doc.file.split('.').pop(), doc.file);
-	});	
-};
-
-//форма для отправки нового ПЭДа
-exports.POSTplus = function(req, res) {
-	let name = req.body.name;
-	KpiSchema.findOne({name: name}, function(err, kpi) {
-		if(err) return console.log(err);
-		res.render('partials/fillform', {kpi: kpi});
+	}).catch(err => {
+		console.log(err);
 	});
 };
 
-//отправка ПЭДа
+//отправка ПЭДа (добавление)
 exports.POSTupload = function(req, res) {
+	let login = req.session.login;
 	let name = req.session.userName;
+	let numberGroup = req.session.numberGroup;
 	let form = new formidable.IncomingForm();
 	form.parse(req, function(err, fields, files) {
 		if(err) return console.log(err);
-		console.log(fields);
-		console.log(files);
 
 		let filename = "";
 		if(!files.file && fields.text == "" || +fields.value == 0 || fields.date == "") 
@@ -158,36 +203,36 @@ exports.POSTupload = function(req, res) {
 		let radio = 0;
 		if(fields.radio) radio = fields.radio;
 		//находим в БД добавляемый ПЭД, чтобы узнать время его действия
-		KpiSchema.findOne({name: fields.name}, function(err, kpi) {
+		DBs.selectOneKpi(fields.name).then(result => {
+			let kpi = result[0];
 			let finishDate = new Date(fields.date);
 			if(files.file) filename = files.file.name;
-			finishDate.setMonth(finishDate.getMonth() + kpi.implementationPeriod);
-			let obj = {nameUser: name, nameKpi: fields.name, value: +fields.value, date: new Date(),
-				startDate: new Date(fields.date), finishDate: finishDate, text: fields.text, 
-				file: filename, number: radio};
-			UserValue.create(obj, function(err, doc) {
-				if(err) return console.log(err);
-				console.log("Сохранен объект uservalue", doc);
+			finishDate.setMonth(finishDate.getMonth() + kpi.action_time);
 
-				//записываем логи
-				let date = new Date();
-				let strTime = timeToString(date);
-				let namefile = dateToString(date) + '.txt';
-				fs.appendFileSync("./logs/" + namefile, strTime + " " + name + " добавил(а) " +
-					"новое значение ПЭДа " + doc.nameKpi + " равное " + doc.value +";\r\n");
-
-				res.send('ok');
-
-				if(files.file) {
-					filename = files.file.name;
-					let ext=filename.split('.').pop();
-					console.log(ext);
-					let readableStream = fs.createReadStream(files.file.path);
-					let writeableStream = fs.createWriteStream("./sendfiles/" +
-						doc._id + '.' +ext);
-					readableStream.pipe(writeableStream);
-				}
-			});
+			//try {
+				DBi.insertValueKpi(login, kpi.name, +fields.value, dateModule.dateForInput(new Date()), 
+					dateModule.dateForInput(new Date(fields.date)), dateModule.dateForInput(finishDate), 
+					fields.text, filename, radio).then(result => {
+						console.log("Сохранен объект uservalue");
+						res.send('ok');
+						//записываем логи
+						writeLogs(name, "добавил(а) новое значение ПЭД " + kpi.name + " равное " + fields.value);
+						let id = result.insertId;
+						//сохраняем прикрепленный файл
+						if(files.file) {
+							filename = files.file.name;
+							let ext = filename.split('.').pop();
+							let readableStream = fs.createReadStream(files.file.path);
+							let writeableStream = fs.createWriteStream("./sendfiles/" +
+								id + '.' + ext);
+							readableStream.pipe(writeableStream);
+						}
+				}).catch(err => {
+					console.log(err);
+				});
+			//} catch(e) {
+			//	return console.log("Ошибка: не удалось вставить запись в таблицу uservalue или получить id записи");
+			//}
 		});
 	});
 };
@@ -195,34 +240,42 @@ exports.POSTupload = function(req, res) {
 
 //сортировка и 
 //добавление доп информации по ПЭДам: количество подтвержденных, балл, дата подтверждения
-function sortKpi(kpi, uservalues, i) {
-	for(let j = 0; j < uservalues.length; j++) {
-		if(uservalues[j].nameKpi == kpi[i].name) {
-			if(kpi[i].type == 1) {
-				if(kpi[i].count) kpi[i].count++;
-				else {
-					kpi[i].count = 1;
-					kpi[i].ball = [];
-					kpi[i].date = [];
-				}
-			}
-			else {
-				if(!kpi[i].count) {
-					kpi[i].count = [];
-					kpi[i].ball = [];
-					kpi[i].date = [];
-					kpi[i].num = [];
-					for(let k = 0; k < kpi[i].substrings.length; k++)
-						kpi[i].count[k] = 0;
-				}
-				kpi[i].count[uservalues[j].number] ++;
-			}
-			kpi[i].ball.push(uservalues[j].value);
-			kpi[i].date.push(uservalues[j].date);
-			if (kpi[i].type == 2) {
-				kpi[i].num.push(uservalues[j].number);
-			}
+function sortKpi(uservalue, info, criterion) {
+
+	//копирование свойств
+	info.description = uservalue.description;
+	info.name = uservalue.name;
+	info.type = uservalue.type;
+	info.indicator_sum = uservalue.indicator_sum;
+	info.section = uservalue.section;
+	info.subtype = uservalue.subtype;
+	info.number = uservalue.number;
+	info.count_criterion = uservalue.count_criterion;
+	info.criterion = criterion;
+
+	if(uservalue.type == 1) {
+		if(info.count) info.count++;
+		else {
+			info.count = 1;
+			info.ball = [];
+			info.date = [];
 		}
+	}
+	else {
+		if(!info.count) {
+			info.count = [];
+			info.ball = [];
+			info.date = [];
+			info.num = [];
+			for(let k = 0; k < uservalue.count_criterion; k++)
+				info.count[k] = 0;
+		}
+		info.count[uservalue.number_criterion] ++;
+	}
+	info.ball.push(uservalue.value);
+	info.date.push(uservalue.date);
+	if (uservalue.type == 2) {
+		info.num.push(uservalue.number_criterion);
 	}
 }
 
@@ -230,7 +283,7 @@ function sortKpi(kpi, uservalues, i) {
 function modifydate(arrObj) {
 	for(let i = 0; i < arrObj.length; i++) {
 		modifyOneDate(arrObj[i], 'date');
-		modifyOneDate(arrObj[i], 'startDate');
+		modifyOneDate(arrObj[i], 'start_date');
 	}
 }
 
@@ -245,7 +298,7 @@ function modifyOneDate (obj, prop) {
 }
 
 //вычисление оценки
-function calculateBall(kpi, positionNumber) {
+function calculateBall(kpi, numberGroup, criterion) {
 	let value;
 	let ball = [];
 	//ставим оценку ПЭДу первого типа
@@ -253,10 +306,10 @@ function calculateBall(kpi, positionNumber) {
 		//находим балл
 		value = getBall (kpi);
 		//вычисляем оценку
-		for(let i = 0; i < kpi.substrings.length; i++) {
-			if(!kpi.substrings[i].criterion[1]) kpi.substrings[i].criterion.push(Infinity);
-			if(value >= kpi.substrings[i].criterion[0] && value <= kpi.substrings[i].criterion[1]) {
-				ball[0] = kpi.substrings[i].balls[positionNumber];
+		for(let i = 0; i < criterion.length; i++) {
+			if(!criterion[i].finalVal) criterion[i].finalVal = Infinity;
+			if(value >= criterion[i].startVal && value <= criterion[i].finalVal) {
+				ball[0] = criterion[i].balls[numberGroup];
 			}
 			else if(!ball[0]) ball[0] = 0;
 		}
@@ -264,12 +317,13 @@ function calculateBall(kpi, positionNumber) {
 	//ставим оценку ПЭДу второго типа
 	else {
 		//находим и вычисляем оценку для каждой подстроки
-		for(let i = 0; i < kpi.substrings.length; i++) {
+		for(let i = 0; i < criterion.length; i++) {
 			value = getBall(kpi, i);
-			if(!kpi.substrings[i].criterion[1]) kpi.substrings[i].criterion.push(Infinity);
-			if(value >= kpi.substrings[i].criterion[0] && value <= kpi.substrings[i].criterion[1]) {
-				if(kpi.num[i] == i) 
-					ball.push(kpi.substrings[i].balls[positionNumber]);
+			if(!criterion[i].finalVal) criterion[i].finalVal = Infinity;
+			if(value >= criterion[i].startVal && value <= criterion[i].finalVal) {
+				if(kpi.num.indexOf(i) != -1) {
+					ball.push(criterion[i].balls[numberGroup]);
+				}
 				else ball.push(0);
 			}
 			else ball.push(0);
@@ -281,33 +335,33 @@ function calculateBall(kpi, positionNumber) {
 //функция вычисления балла
 function getBall (kpi, k) {
 	let value = 0;
-	if(kpi.indicatorsSumm) {
+	if(kpi.indicator_sum) {
 		if(kpi.type == 1) value = kpi.count;
 		else value = kpi.count[k];
 	}
 	else {
 		let date = new Date(0);	
-		for(let i = 0; i < kpi.count; i++)
+		for(let i = 0; i < kpi.count; i++) {
 			if(kpi.type == 1 || kpi.type == 2 && kpi.num[i] == k)
 				if(kpi.date[i] > date) {
 					value = kpi.ball[i];
 					date = kpi.date[i];
 				}
+		}
 	}
 	return value;
 }
 
 //сортировка названий ПЭДов
 function sortArr(a, b) {
-	let num1 = + a.name.replace(/\D/g, "");
-	let num2 = + b.name.replace(/\D/g, "");
-	let str1 = a.name.replace(/\d/g, "");
-	let str2 = b.name.replace(/\d/g, "");
-	if(str1 == str2) return num1 - num2;
-	else return (str1 > str2)? 1 : -1;
+	if(a.section > b.section) return 1;
+	if(a.section < b.section) return -1;
+	if(a.subtype > b.subtype) return 1;
+	if(a.subtype < b.subtype) return -1;
+	return (a.number - b.number);
 }
 
-//Формирование массива значений одного ключа из массива объектов
+//Формирование массива значений из массива объектов одного ключа
 function ArrOfKeyValues(arrObj, key) {
 	let arr = [];
 	arr.push(arrObj[0][key]);

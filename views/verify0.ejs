@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Проверка значений</title>
+	<meta charset="utf-8" />
+	<link rel="stylesheet" type="text/css" href="../footer.css">
+	<link rel="stylesheet" type="text/css" href="../stylebut.css">
+	<link rel="stylesheet" type="text/css" href="../list.css">
+	<link rel="stylesheet" type="text/css" href="editkpi.css">
+
+</head>
+<body>
+	<div class="wrapper">
+		<header>
+				<% if(worker.length == 0) {%>
+					<p class="errormess">Нет доступных сотрудников</p>
+					<%} %>
+				<% if(worker.length != 0) {%>
+			<form name="editform" class="formborder flexparent" style="margin-top: 6%;" action="/verify" method="post">
+				<div class="flexblocks">
+						<label for="worker" class="text">Сотрудник:</label>
+						<input name="worker" list="worker" id="name" class="text" style="width: 250px;">
+						<datalist id="worker" >
+							<% for(let i = 0; i < worker.length; i++) {%>
+							<option><%=worker[i].name%></option>
+							<%} %>
+						</datalist>
+					</div>	
+						<%- include("partials/findnumber.ejs") %>
+					</form>
+
+						<% if(mypage) {%>
+							<form action="/exit" method="post">
+								<button class="exitt" style="margin: -56px 4px 0 0;" >Выход</button></form>
+						<%} %>
+						<% if(!mypage) {%>
+							<a href="/mypage" class="exitt" style="margin: -56px 4px 0 0;">Назад</a>
+						<%} %> 
+				
+				
+			</header>
+
+		<div class="content">
+			
+			<div id="tablekpi" ></div>
+			<%} %>
+		</div>
+
+		<div class="footer"></div>
+			<%- include("partials/footer.ejs") %>
+		</div>
+	</div>
+
+	<% if(worker.length != 0) {%>
+	<script type="text/javascript" src="../jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src="../verify/verify.js"></script>
+	<script type="text/javascript" src="../findnumber.js"></script>
+	<%} %>
+</body>
+</html>

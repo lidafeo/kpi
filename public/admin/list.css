@@ -2,6 +2,7 @@ table {
 	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
 	font-size: 13px;
 	border-collapse: collapse;
+	overflow-x: auto;
 	text-align: center;
 }
 th {

@@ -1,13 +1,13 @@
-<form name="adduser" action="/adduser" method="post" class="add">
+<form name="adduser" action="/adduser" method="post" class="form-add" style="margin-top: 5%;">
 	<div class="form-left-decoration"></div>
 	<div class="form-right-decoration"></div>
 	<div class="circle"></div>
 	<div class="form-inner">
 		<h3>Добавить пользователя</h3>
-		<div class="errormess" id="error"></div>
+		<div class="" id="error"></div>
 		<div>
 			<label>ФИО</label>
-			<input type="text" name="name" id="name" placeholder="ФИО">
+			<input type="text" name="name" id="name" placeholder="Иванов Иван Иванович" required>
 		</div>
 		<div>
 			<label>Должность</label>
@@ -18,24 +18,33 @@
 			</select>
 		</div>
 		<div id="facultydiv">
-			<label>Факультет</label>
-			<select name="faculty" id="faculty">
-				<option></option>
-			</select>
+			<% if(faculty.length != 0) {%>
+				<label>Факультет</label>
+				<select name="faculty" id="faculty">
+					<% for(let i = 0; i < faculty.length; i++) {%>
+						<option><%=faculty[i]%></option>
+					<%} %>
+				</select>
+			<%}%>
 		</div>
+		<input type="hidden" name="numdepartment" id="numdepartment">
 		<div id="departmentdiv">
 			<label>Кафедра</label>
-			<select name="department" id="department">
-				<option></option>
-			</select>
+			<% for(let i = 0; i < department.length; i++) {%>
+				<select name="department" id=<%="department"+i%>>
+					<% for(let j = 0; j < department[i].length; j++) {%>
+						<option><%=department[i][j]%></option>
+					<%} %>
+				</select>
+			<%} %>
 		</div>
 		<div>
 			<label>login</label>
-			<input type="text" name="login" id="login" placeholder="login">
+			<input type="text" name="login" id="login" placeholder="ivanov" required>
 		</div>
 		<div>
 			<label>Пароль</label>
-			<input type="text" name="password" id="password" placeholder="password" autocomplete="off">
+			<input type="text" name="password" id="password" placeholder="password" autocomplete="off" required>
 		</div>
 		<input type="submit" name="submit" id="add" value="Добавить">
 	</div>
