@@ -26,11 +26,11 @@
 				<%} %>
 				<td><%=kpi[i].value %></td>
 				<td><%=kpi[i].text %></td>
-				<% if(kpi[i].file != null) {%>
-					<td><a href=<%="/sendfiles?file="+kpi[i].id %> download=""><%=kpi[i].file %></a></td>
+				<% if(kpi[i].file) {%>
+					<td><a href=<%="/sendfiles?file="+kpi[i].id %> download=""><img src="/img/download.png" alt="Скачать файл"></a></td>
 				<%} %>
-				<% if(kpi[i].file == null) {%>
-					<td>Файл не прикреплен</td>
+				<% if(!kpi[i].file) {%>
+					<td></td>
 				<%} %>
 				<td><input type="checkbox" name="checkbox" value=<%=i + ""%>></td>
 				<td><input type="text" name="comment" id=<%="comm" + i%>></td>

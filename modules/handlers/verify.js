@@ -22,6 +22,7 @@ exports.verify = function(req, res) {
 					res.render('verify', {faculty: facultyArr, department: departmentArr, mypage: true});
 				}).catch(err => {
 					console.log(err);
+					res.status(500).render('500');
 				});
 				break;
 			//декан
@@ -36,6 +37,7 @@ exports.verify = function(req, res) {
 					res.render('verify', {faculty: facultyArr, department: departmentArr, mypage: false});
 				}).catch(err => {
 					console.log(err);
+					res.status(500).render('500');
 				});
 				break;
 			//зав. кафедрой
@@ -52,7 +54,8 @@ exports.verify = function(req, res) {
 				break;
 		}
 	} catch (e) {
-		return console.log("Ошибка доступа");
+		console.log("Ошибка доступа");
+		res.status(500).render('500');
 	}
 };
 
@@ -74,6 +77,7 @@ exports.POSTverify = function(req, res) {
 		}
 	}).catch(err => {
 		console.log(err);
+		res.status(500).render('500');
 	});
 }
 
@@ -113,6 +117,7 @@ exports.POSTgetworkers = function(req, res) {
 		res.render('partials/workersdep', {worker: result});
 	}).catch(err => {
 		console.log(err);
+		res.status(500).render('500');
 	});
 
 }
@@ -131,6 +136,7 @@ exports.POSTgetstructure = function(req, res) {
 		res.json(structure);
 	}).catch(err => {
 		console.log(err);
+		res.status(500).render('500');
 	});
 }
 

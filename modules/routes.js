@@ -16,7 +16,6 @@ module.exports = function(app) {
 
 	app.post('/exit', main.exit);
 	app.get('/exit', main.exit);
-	app.get('/404', main.notfound);
 
 	app.post('/user', urlencodedParser, main.auth);
 	app.use(main.checkaccount);
@@ -70,26 +69,28 @@ module.exports = function(app) {
 	app.post('/getlogs', jsonParser, admin.getlogs);
 	app.post('/notify', jsonParser, admin.notify);
 	//app.post('/getdepartment', jsonParser, admin.POSTgetdepartment);
+
+	app.use(main.notfound);
 }
 
 //проверка прав доступа к страницам
 
 function rightImplementKpi (req, res, next) {
-	if(req.session.rights.pps == 0) res.redirect('/404');
+	if(req.session.rights.pps == 0) res.status(404).render("404");
 	else next();
 }
 
 function rightVerify (req, res, next) {
-	if(req.session.rights.head == 0) res.redirect('/404');
+	if(req.session.rights.head == 0) res.status(404).render("404");
 	else next();
 }
 
 function rightAdmin (req, res, next) {
-	if(req.session.rights.admin == 0) res.redirect('/404');
+	if(req.session.rights.admin == 0) res.status(404).render("404");
 	else next();
 }
 
 function rightPfu (req, res, next) {
-	if(req.session.rights.pfu == 0) res.redirect('/404');
+	if(req.session.rights.pfu == 0) res.status(404).render("404");
 	else next();
 }

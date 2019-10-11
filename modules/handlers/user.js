@@ -67,7 +67,8 @@ exports.mypage = function(req, res) {
 					resolve(ArrObj);
 				}).catch(err => {
 					console.log(err);
-				})
+					res.status(500).render('500');
+				});
 			}).then(arrCriterion => {
 				let kpi = ArrOfKeyValues(arrCriterion, 'nameKpi');
 				//Формирование массива названий ПЭДов
@@ -107,6 +108,7 @@ exports.mypage = function(req, res) {
 		}
 	}).catch(err => {
 		console.log(err);
+		res.status(500).render('500');
 	});
 };
 
@@ -142,6 +144,7 @@ exports.editkpi = function(req, res) {
 		res.render('editkpi', {obj: obj});
 	}).catch(err => {
 		console.log(err);
+		res.status(500).render('500');
 	});
 };
 
@@ -152,6 +155,7 @@ exports.valuekpi = function(req, res) {
 		res.render('valuekpi', {kpi: result});
 	}).catch(err => {
 		console.log(err);
+		res.status(500).render('500');
 	});
 }
 
@@ -166,6 +170,7 @@ exports.POSTeditkpi = function(req, res) {
 				res.render("partials/postedVal", {kpi: result, desc: kpi, textErr: false});
 			}).catch(err => {
 				console.log(err);
+				res.status(500).render('500');
 			});
 		}
 		else {
@@ -173,6 +178,7 @@ exports.POSTeditkpi = function(req, res) {
 		}
 	}).catch(err => {
 		console.log(err);
+		res.status(500).render('500');
 	});
 };
 
@@ -184,6 +190,7 @@ exports.sendfiles = function(req, res) {
 		res.download("./sendfiles/" + file + '.' + doc.file.split('.').pop(), doc.file);
 	}).catch(err => {
 		console.log(err);
+		res.status(500).render('500');
 	});
 };
 
@@ -229,6 +236,7 @@ exports.POSTupload = function(req, res) {
 						}
 				}).catch(err => {
 					console.log(err);
+					res.status(500).render('500');
 				});
 			//} catch(e) {
 			//	return console.log("Ошибка: не удалось вставить запись в таблицу uservalue или получить id записи");

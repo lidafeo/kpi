@@ -98,9 +98,11 @@ exports.getReport = function(req, res) {
 					objPeriod.date2.split("-").reverse().join('_') + '.xlsx', res);
 		}).catch(err => {
 			console.log(err);
+			res.status(500).render('500');
 		});
 	}).catch(err => {
 		console.log(err);
+		res.status(500).render('500');
 	});
 }
 

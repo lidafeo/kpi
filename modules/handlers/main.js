@@ -46,6 +46,8 @@ exports.auth = function(req, res) {
 		}
 		else
 			res.render("auth", {checkpassword: true, close: false});
+	}).catch(err => {
+		res.status(500).render('500');
 	});
 };
 
@@ -81,7 +83,7 @@ exports.exit = function(req, res) {
 
 //404
 exports.notfound = function(req, res) {
-	res.render('404');
+	res.status(404).render('404');
 }
 
 //проверка введенного логина
@@ -97,9 +99,11 @@ function checkPassword(login, password) {
 				res(result[0]);
 			}).catch(function(error) {
 				console.log(error);
+				rej();
 			});
 		}).catch(err => {
 			console.log(err);
+			rej();
 		});
 	});
 } 

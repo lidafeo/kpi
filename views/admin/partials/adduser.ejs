@@ -30,13 +30,11 @@
 		<input type="hidden" name="numdepartment" id="numdepartment">
 		<div id="departmentdiv">
 			<label>Кафедра</label>
-			<% for(let i = 0; i < department.length; i++) {%>
-				<select name="department" id=<%="department"+i%>>
-					<% for(let j = 0; j < department[i].length; j++) {%>
-						<option><%=department[i][j]%></option>
+				<select name="department" id="department">
+					<% for(let i = 0; i < department.length; i++) {%>
+						<option><%=department[i]%></option>
 					<%} %>
 				</select>
-			<%} %>
 		</div>
 		<div>
 			<label>login</label>

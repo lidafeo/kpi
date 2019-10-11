@@ -86,11 +86,7 @@
 	line-height: 35px;
 	font-family: 'Roboto', sans-serif;
 }
-.errormess {
-	color: red;
-	line-height: 40px;
-	font-family: 'Roboto', sans-serif;
-}
+
 .form-inner input[type="submit"] {
 	margin: 20px auto 0 auto;
 	background: #1C9675;
@@ -99,6 +95,7 @@
 	color: white;
 	font-size: 14px;
 	width: 80%;
+	padding: 5px;
 }
 .form-inner h3 {
 	margin-top: 0;
@@ -185,4 +182,32 @@ textarea {
 	color: white;
 	font-size: 18px;
 	width: 80px;
+}
+
+.uspeshno{
+	color: green;
+	position: relative;
+	width: 50%;
+	margin: 5% auto;
+	text-align: center;  
+	padding: 1%;
+	border-radius: 20px;
+	border: 1px solid #A1B9D5;
+	font-size: 16px;
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	box-shadow: 0 2px 4px 1px rgba(0,0,0,0.2), 1px 3px 15px 1px rgba(0,0,0,0.1);
+}
+
+.errormess {
+	color: red;
+	position: relative;
+	width: 50%;
+	margin: 5% auto;
+	text-align: center;  
+	padding: 1%;
+	font-size: 16px;
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	border-radius: 20px;
+	border: 1px solid #A1B9D5;
+	box-shadow: 0 2px 4px 1px rgba(0,0,0,0.2), 1px 3px 15px 1px rgba(0,0,0,0.1);
 }

@@ -50,7 +50,7 @@ exports.getObjPeriod = function() {
 
 //проверка прав админа
 exports.checkadmin = function(req, res, next) {
-	if(req.session.level != 10) return res.redirect('/404');
+	if(req.session.level != 10) return res.status(404).render("404");
 	else next();
 }
 
@@ -60,6 +60,7 @@ exports.getusers = function(req, res) {
 		res.render('admin/listusers', {users: users});
 	}).catch(err => {
 		console.log(err);
+		res.status(500).render('500');
 	});
 	
 }
@@ -70,22 +71,20 @@ exports.adduser = function(req, res) {
 	if(req.query.action == 'ok') action = 1;
 	if(req.query.action == 'err') action = 2;
 	DBs.selectAllPosition().then(pos => {
-		DBs.selectStructure().then(result => {
+		DBs.selectStructure().then(structure => {
 
-			let structure = result;
 			let facultyArr = additFunc.getFaculty(structure);
-			res.cookie("faculty", JSON.stringify(facultyArr));
-			let departmentArr = [];
-			for(let i = 0; i < facultyArr.length; i++)
-				departmentArr.push(additFunc.getDepartment(facultyArr[i], structure));
+			let departmentArr = additFunc.getDepartment(facultyArr[0], structure);
 			
 			res.render('admin/adduser', {positions: pos, action: action, faculty: facultyArr, 
 				department: departmentArr});
 		}).catch(err => {
 			console.log(err);
+			res.status(500).render('500');
 		});
 	}).catch(err => {
 		console.log(err);
+		res.status(500).render('500');
 	});
 };
 
@@ -106,6 +105,7 @@ exports.deleteuser = function(req, res) {
 		res.render('admin/deleteuser', {users: users, action: action});
 	}).catch(err => {
 		console.log(err);
+		res.status(500).render('500');
 	});
 };
 
@@ -128,6 +128,7 @@ exports.getkpi = function(req, res) {
 		res.render('admin/listkpi', {kpi: kpi});
 	}).catch(err => {
 		console.log(err);
+		res.status(500).render('500');
 	});
 }
 
@@ -140,6 +141,7 @@ exports.addkpi = function(req, res) {
 		res.render('admin/addkpi', {section: section, action: action});
 	}).catch(err => {
 		console.log(err);
+		res.status(500).render('500');
 	});
 };
 
@@ -152,6 +154,7 @@ exports.deletekpi = function(req, res) {
 		res.render('admin/deletekpi', {kpi: result, action: action});
 	}).catch(err => {
 		console.log(err);
+		res.status(500).render('500');
 	});
 };
 
@@ -164,7 +167,8 @@ exports.editballs = function(req, res) {
 		res.render('admin/editballs', {kpi: result, choose: false, action: action});
 	}).catch(err => {
 		console.log(err);
-	})
+		res.status(500).render('500');
+	});
 };
 
 //страница администратора
@@ -217,6 +221,7 @@ exports.getballusers = function(req, res) {
 		res.render('admin/tableuservalue', {balls: result});
 	}).catch(err => {
 		console.log(err);
+		res.status(500).render('500');
 	});
 }
 
@@ -263,6 +268,7 @@ exports.POSTadduser = function(req, res) {
 	}).catch(function(error) {
 		console.log("Error saving user: ");
 		console.log(error);
+		res.status(500).render('500');
 	});
 };
 
@@ -322,10 +328,16 @@ exports.POSTadduserfile = function(req, res) {
 exports.POSTdeleteuser = function(req, res) {
 	let login = req.body.user;
 	DBd.deleteUser(login).then(result => {
-		console.log("Удален пользователь: ", login);
-		//записываем логи
-		writeLogs(req.session.userName, "удалил(а) пользователя " + login);
-		res.redirect('/admin/deleteuser?action=ok');
+		if(result.affectedRows > 0) {
+			console.log("Удален пользователь: ", login);
+			//записываем логи
+			writeLogs(req.session.userName, "удалил(а) пользователя " + login);
+			res.redirect('/admin/deleteuser?action=ok');
+		}
+		else {
+			console.log("Нет такого пользователя: " + login);
+			res.redirect('/admin/deleteuser?action=err');
+		}
 	}).catch(err => {
 		console.log(err);
 		res.redirect('/admin/deleteuser?action=err');
@@ -340,6 +352,7 @@ exports.POSTcloseaccount = function(req, res) {
 	close = true;
 	res.redirect('admin/closeaccount');
 }
+
 //открыть кабинеты
 exports.POSTopenaccount = function(req, res) {
 	let date = new Date();
@@ -459,10 +472,16 @@ exports.POSTaddkpi = function(req, res) {
 //Удаление ПЭДа
 exports.POSTdeletekpi = function(req, res) {
 	DBd.deleteKpi(req.body.name).then(result => {
-		console.log("Удален объект kpi ", req.body.name);
-		//записываем логи
-		writeLogs(req.session.userName, "удалил(а) ПЭД " + req.body.name);
-		res.redirect('admin/deletekpi?action=ok');
+		if(result.affectedRows > 0) {
+			console.log("Удален объект kpi ", req.body.name);
+			//записываем логи
+			writeLogs(req.session.userName, "удалил(а) ПЭД " + req.body.name);
+			res.redirect('admin/deletekpi?action=ok');
+		}
+		else {
+			console.log("Такого ПЭД нет: " + req.body.name);
+			res.redirect('admin/deletekpi?action=err');
+		}
 	}).catch(err => {
 		console.log(err);
 		res.redirect('admin/deletekpi?action=err');
@@ -508,7 +527,7 @@ exports.POSTeditballs = function(req, res) {
 				type: result[0].type, name: result[0].name, description: result[0].description});
 	}).catch(err => {
 		console.log(err);
-		res.redirect('500');
+		res.status(500).render('500');
 	});
 };
 
@@ -517,26 +536,3 @@ exports.notify = function(req, res) {
 	objPeriod.notify = true;
 	res.redirect('/admin/setperiod');
 }
-
-/*
-//Получение факультетов
-exports.POSTgetfaculty = function(req, res) {
-	Structure.find({}, function(err, doc) {
-		let faculty = [];
-		for(let i = 0; i < doc.length; i++)
-			faculty.push(doc[i].faculty);
-		res.send(faculty.join('_,'));
-	});
-};
-*/
-
-/*
-//сортировка названий ПЭДов
-function sortArr(a, b) {
-	if(a.section > b.section) return 1;
-	if(a.section < b.section) return -1;
-	if(a.subtype > b.subtype) return 1;
-	if(a.subtype < b.subtype) return -1;
-	return (a.number - b.number);
-}
-*/

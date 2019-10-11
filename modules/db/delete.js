@@ -4,7 +4,7 @@ const query = require('../connectdb');
 
 //удаление пользователя
 exports.deleteUser = function(login) {
-	return query("DELETE FROM user WHERE login='" + login + "'");
+	return query("DELETE FROM users WHERE login='" + login + "'");
 }
 
 

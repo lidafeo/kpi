@@ -16,8 +16,11 @@ $(document).ready(function() {
 		let user = $("#name").val().split(', ');
 		let name = user[0];
 		let position = user[1];
-		if(!name && !$("p").is("#errormess"))
-			return $("#name").after('<p id="errormess" class="errormess">Выберите пользователя</p>');
+		if(!name) {
+			if(!$("p").is("#errormess"))
+				$("#name").after('<p id="errormess" class="errormess">Выберите пользователя</p>');
+			return;
+		}
 		if(name)
 			$("#errormess").remove();
 		//запоминаем выбранного пользователя
@@ -64,7 +67,7 @@ $(document).ready(function() {
 		
 		let sendValue = JSON.stringify({faculty: faculty, department: department});
 		let request = new XMLHttpRequest();
-		//посылаем запрос на адрес "/editkpi"
+		//посылаем запрос на адрес "/getworkers"
 		request.open("POST", "/getworkers", true);
 		request.setRequestHeader("Content-Type", "application/json");
 		request.addEventListener("load", function() {
@@ -93,7 +96,7 @@ $(document).ready(function() {
 			return alert("Выберите неверные значения");
 		let sendValue = JSON.stringify({kpi: incorrectKpi, user: $("#chooseuser").val()});
 		let request = new XMLHttpRequest();
-		//посылаем запрос на адрес "/editkpi"
+		//посылаем запрос на адрес "/invalid"
 		request.open("POST", "/invalid", true);
 		request.setRequestHeader("Content-Type", "application/json");
 		request.addEventListener("load", function() {
@@ -102,10 +105,17 @@ $(document).ready(function() {
 		request.send(sendValue);
 	});
 
+	if($("#department").attr("disabled") == "disabled") {
+		(async function() {
+			let chooseDep = await $("#choosedep").click();
+			$("#choosedep").remove();
+		})();
+	}
+
 	function getStructure() {
 		let request = new XMLHttpRequest();
-		//посылаем запрос на адрес "/editkpi"
-		request.open("POST", "/getstructure", true);
+		//посылаем запрос на адрес "/structure.json"
+		request.open("GET", "/structure.json", true);
 		request.setRequestHeader("Content-Type", "application/json");
 		request.addEventListener("load", function() {
 			structure = JSON.parse(request.response);

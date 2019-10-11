@@ -61,7 +61,7 @@
 						<td><a href=<%="/sendfiles?file="+kpi[i].id %> download=""><img src="/img/download.png" alt="Скачать файл"></a></td>
 					<%} %>
 					<% if(kpi[i].file == "") {%>
-						<td>Файл не прикреплен</td>
+						<td></td>
 					<%} %>
 					<% if(desc[0].type == 2) {%>
 						<td><%=desc[kpi[i].number_criterion].criterion_description %></td>

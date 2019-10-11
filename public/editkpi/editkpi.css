@@ -81,16 +81,26 @@ header {
 }
 .page {
 	display: grid;
-	grid-template-columns: 230px 1fr;
-	grid-gap: 40px;
-	padding: 10px;
+	grid-template-columns: max-content auto;
+	grid-gap: 10px;
+	margin: 10px 3px 5px 0px;
 }
-
+@media(max-width: 1250px) {
+	div.page{
+		grid-template-columns: auto minmax(150px, 2.33fr); ;
+   }
+ }
+ @media(max-width: 1510px) {
+	div.page{
+		grid-template-columns: auto minmax(200px, 2.33fr);
+   }
+ }
 .tablekpiborder
 {
 	border: 2px solid #A1B9D5;
 	font-size: 16px;
 	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
 	box-shadow: 0 2px 4px 1px rgba(0,0,0,0.2), 1px 3px 15px 1px rgba(0,0,0,0.1);
-	padding: 2%
+	padding: 1%;
+	width: 99%;
 }
