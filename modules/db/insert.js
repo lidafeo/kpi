@@ -1,29 +1,27 @@
 const query = require('../connectdb');
 
-//USERVALUE
+//USERVALUES
 
 //добавить значение ПЭД
 exports.insertValueKpi = function(login, name_kpi, value, date, start_date, finish_date, text, file, number_criterion) {
+	let arr = [login, name_kpi, value, date, start_date, finish_date, text, file, number_criterion];
 	return query("INSERT INTO uservalues(login_user, name_kpi, value, date, start_date, finish_date, " +
-		"text, file, number_criterion) VALUES('" + login + "', '" + name_kpi + "', " + value + ", DATE('" + date +
-		"'), DATE('" + start_date + "'), DATE('" + finish_date + "'), '" + text + "', '" + file + "', " +
-		number_criterion + ")");
+	"text, file, number_criterion) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)", arr);
 }
 
 
-//USER
+//USERS
 
 //добавление пользователя
 exports.insertUser = function(name, position, faculty, department, login, password) {
-	return query("INSERT INTO users VALUES ('" + name + "', '" + position + "', " + checkSrtForNull(faculty) + 
-		", " + checkSrtForNull(department) + ", '" + login + "', '" + password + "')");
+	let arr = [name, position, faculty, department, login, password];
+	return query("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?)", arr);
 }
 
 //добавление пользователя с объекта
 exports.insertUserFromObj = function(user) {
-	return query("INSERT INTO users VALUES ('" + user.name + "', '" + user.position + "', " + 
-		checkSrtForNull(user.faculty) + ", " + checkSrtForNull(user.department) + ", '" + user.login + 
-		"', '" + user.password + "')");
+	let arr = [user.name, user.position, user.faculty, user.department, user.login, user.password];
+	return query("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?)", arr);
 }
 
 //KPI
@@ -31,25 +29,35 @@ exports.insertUserFromObj = function(user) {
 //добавление kpi
 exports.insertKpi = function(name, section, subtype, number, count_criterion, description, type, 
 	indicator_sum, action_time) {
-	return query("INSERT INTO kpi VALUES ('" + name + "', '" + section + "', " + checkSrtForNull(subtype) + 
-		", " + number + ", " + count_criterion + ", '" + description + "', " + type + ", " + 
-		indicator_sum + ", " + action_time + ")");
+		let arr = [name, section, subtype, number, count_criterion, description, type, indicator_sum, action_time];
+	return query("INSERT INTO kpi VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", arr);
 }
 
 
-//CRITERION
+//CRITERIONS
 
 //добавление criterion
 exports.insertCriterion = function(criterion) {
-	let SQLballs = "" + criterion.balls[0];
-	for(let i = 1; i < 6; i ++)
-		SQLballs += ", " + criterion.balls[i];
-	return query("INSERT INTO criterions VALUES (NULL, '" + criterion.name_kpi + "', '" + criterion.name_criterion + 
-		"', " + criterion.number_criterion + ", " + checkSrtForNull(criterion.description) + ", " + 
-		criterion.start_val + ", " + criterion.final_val + ", " + SQLballs + ")");
+	let arr = [criterion.name_kpi, criterion.name_criterion, criterion.number_criterion, criterion.description,
+		criterion.start_val, criterion.final_val];
+		let balls = criterion.balls;
+	return new Promise((resolve, reject) => {
+		query("INSERT INTO criterions VALUES (NULL, ?, ?, ?, ?, ?, ?)", arr).then(result => {
+			for(let i = 0; i < balls.length; i++)
+				balls[i][0] = result.insertId;
+			Promise.all(balls.map(insertBalls)).then(result => {
+				resolve(result);
+			}).catch(err => {
+				console.log(err);
+				reject(err);
+			});
+		}).catch(err => {
+			console.log(err);
+			reject(err);
+		});
+	});
 }
 
-
-function checkSrtForNull(str) {
-	return str ? ("'" + str + "'") : str;
+function insertBalls(ball) {
+	return query("INSERT INTO balls VALUES (?, ?, ?)", ball);
 }

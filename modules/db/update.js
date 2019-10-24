@@ -12,10 +12,16 @@ exports.updateValueInvalid = function(id, author, text) {
 //CRITERION
 
 //изменяем оценки ПЭД
-exports.updateBallOfCriterion = function(criterion) {
-	let balls = "ball_0=" + criterion.balls[0];
-	for(let i = 1; i < 6; i++)
-		balls += ", ball_" + i + "=" + criterion.balls[i];
-	return query("UPDATE criterions SET " + balls + " WHERE name_kpi='" + criterion.name_kpi + 
-		"' AND number_criterion=" + criterion.number_criterion);
+exports.updateBallOfCriterion = function(ball) {
+	return query("UPDATE balls SET ball=" + ball[2] + " WHERE id_criterion=" + ball[0] + 
+		" AND position='" + ball[1] + "'");
+}
+
+
+//BALLS
+
+//добавляем баллы
+exports.updateBalls = function(ball) {
+	return query("UPDATE balls SET ball=" + ball.ball + " WHERE id_criterion=" + ball.id_criterion + 
+	" AND position=" + ball.position);
 }

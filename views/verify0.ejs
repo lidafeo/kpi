@@ -16,9 +16,9 @@
 					<p class="errormess">Нет доступных сотрудников</p>
 					<%} %>
 				<% if(worker.length != 0) {%>
-			<form name="editform" class="formborder flexparent" style="margin-top: 6%;" action="/verify" method="post">
+			<form name="editform" class="formborder flexparent text" style="margin-top: 8px;" action="/verify" method="post">
 				<div class="flexblocks">
-						<label for="worker" class="text">Сотрудник:</label>
+						<label for="worker" >Сотрудник:</label>
 						<input name="worker" list="worker" id="name" class="text" style="width: 250px;">
 						<datalist id="worker" >
 							<% for(let i = 0; i < worker.length; i++) {%>
@@ -31,10 +31,10 @@
 
 						<% if(mypage) {%>
 							<form action="/exit" method="post">
-								<button class="exitt" style="margin: -56px 4px 0 0;" >Выход</button></form>
+								<button class="exitt" >Выход</button></form>
 						<%} %>
 						<% if(!mypage) {%>
-							<a href="/mypage" class="exitt" style="margin: -56px 4px 0 0;">Назад</a>
+							<a href="/mypage" class="exitt">Назад</a>
 						<%} %> 
 				
 				

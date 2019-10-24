@@ -114,18 +114,24 @@ exports.getkpi = function(req, res) {
 	DBs.selectAllKpiWithCriterion().then(result => {
 		let section = [];
 		let kpi = [];
+		let positions = [];
+
 		for(let i = 0; i < result.length; i++) {
-			let balls = [];
-			for(let j = 0; j < 6; j++)
-				balls.push(result[i][('ball_' + j)]);
-			result[i].balls = balls;
-			if(section.indexOf(result[i].section) == -1){
-				section.push(result[i].section);
+			let name = result[i].name;
+			let arr = [];
+			while (i != result.length && name == result[i].name) {
+				arr.push(result[i]);
+				i++;
+			}
+			i--;
+			let oneKpi = getKpiObj(arr, positions);
+			if(section.indexOf(oneKpi.section) == -1) {
+				section.push(oneKpi.section);
 				kpi.push([]);
 			}
-			kpi[section.indexOf(result[i].section)].push(result[i]);
+			kpi[section.indexOf(oneKpi.section)].push(oneKpi);
 		}
-		res.render('admin/listkpi', {kpi: kpi});
+		res.render('admin/listkpi', {kpi: kpi, positions: positions});
 	}).catch(err => {
 		console.log(err);
 		res.status(500).render('500');
@@ -138,7 +144,12 @@ exports.addkpi = function(req, res) {
 	if(req.query.action == 'ok') action = 1;
 	if(req.query.action == 'err') action = 2;
 	DBs.selectAllSection().then(section => {
-		res.render('admin/addkpi', {section: section, action: action});
+		DBs.selectPositionWithBalls().then(positions => {
+			res.render('admin/addkpi', {section: section, action: action, positions: positions});
+		}).catch(err => {
+			console.log(err);
+			res.status(500).render('500');
+		});
 	}).catch(err => {
 		console.log(err);
 		res.status(500).render('500');
@@ -265,9 +276,9 @@ exports.POSTadduser = function(req, res) {
 		});
 	}).then(function() {
 		console.log("Пароль успешно хеширован");
-	}).catch(function(error) {
+	}).catch(function(err) {
 		console.log("Error saving user: ");
-		console.log(error);
+		console.log(err);
 		res.status(500).render('500');
 	});
 };
@@ -386,87 +397,92 @@ exports.POSTaddkpi = function(req, res) {
 	else indicator_sum = 0;
 	if(req.body.subtype == '-')  subtype = null;
 
-	//insertKpi (name, section, subtype, number, count_criterion, description, type, indicator_sum, action_time)
-	DBi.insertKpi(req.body.name, req.body.section, subtype, +req.body.number, +req.body.count,
-		req.body.desc, +req.body.type, indicator_sum, +req.body.implementationPeriod).then(result => {
-			console.log("Добавлен ПЭД");
+	DBs.selectPositionWithBalls().then(positions => {
+		//insertKpi (name, section, subtype, number, count_criterion, description, type, indicator_sum, action_time)
+		DBi.insertKpi(req.body.name, req.body.section, subtype, +req.body.number, +req.body.count,
+			req.body.desc, +req.body.type, indicator_sum, +req.body.implementationPeriod).then(result => {
+				console.log("Добавлен ПЭД", req.body.name);
 
-			//теперь добавляем критерри ПЭД в БД
-			let criterions = [];
+				//теперь добавляем критерри ПЭД в БД
+				let criterions = [];
 
-			let typecrit, n, a, b, namecriterion, description, start_val, final_val;
-			if(+req.body.count == 1) {
-				typecrit = req.body.typecrit;
-				n = +req.body.n;
-				a = +req.body.a;
-				b = +req.body.b;
-				namecriterion = req.body.namecriterion;
-				description = req.body.description;
-				if(!namecriterion) namecriterion = req.body.typecrit;
-			}
-
-			//собираем массив объектов с информацией о критериях
-			for(let i = 0; i < +req.body.count; i++) {
-
-				let criterion = {};
-
-				if(+req.body.count != 1) {
-					typecrit = req.body.typecrit[i];
-					n = +req.body.n[i];
-					a = +req.body.a[i];
-					b = +req.body.b[i];
-					namecriterion = req.body.namecriterion[i];
-					description = req.body.description[i];
-					if(!namecriterion) namecriterion = req.body.typecrit[i];
-				}
-				if(req.body.type == '1')
-					description = null;
-
-				if(typecrit == 'Да/Нет') {
-					start_val = 1;
-					final_val = null;
-				}
-				if(typecrit == 'Не менее n') {
-					start_val = n;
-					final_val = null;
-				}
-				if(typecrit == 'От a до b') {
-					start_val = a;
-					final_val = b;
+				let typecrit, n, a, b, namecriterion, description, start_val, final_val;
+				if(+req.body.count == 1) {
+					typecrit = req.body.typecrit;
+					n = +req.body.n;
+					a = +req.body.a;
+					b = +req.body.b;
+					namecriterion = req.body.namecriterion;
+					description = req.body.description;
+					if(!namecriterion) namecriterion = req.body.typecrit;
 				}
 
-				criterion.name_kpi = req.body.name;
-				criterion.name_criterion = namecriterion;
-				criterion.number_criterion = i;
-				criterion.description = description;
-				criterion.start_val = start_val;
-				criterion.final_val = final_val;
+				//собираем массив объектов с информацией о критериях
+				for(let i = 0; i < +req.body.count; i++) {
 
-				let balls = [];
-				for(let j = 1; j < 7; j ++) {
-					let gn = 'g' + j;
-					let ball = +req.body[gn][i];
-					if(+req.body.count == 1) ball = +req.body[gn];
-					balls.push(ball);
+					let ballsArr = [];
+					let criterion = {};
+					let ballsObj = {};
+
+					if(+req.body.count != 1) {
+						typecrit = req.body.typecrit[i];
+						n = +req.body.n[i];
+						a = +req.body.a[i];
+						b = +req.body.b[i];
+						namecriterion = req.body.namecriterion[i];
+						description = req.body.description[i];
+						if(!namecriterion) namecriterion = req.body.typecrit[i];
+					}
+					if(req.body.type == '1')
+						description = null;
+
+					if(typecrit == 'Да/Нет') {
+						start_val = 1;
+						final_val = null;
+					}
+					if(typecrit == 'Не менее n') {
+						start_val = n;
+						final_val = null;
+					}
+					if(typecrit == 'От a до b') {
+						start_val = a;
+						final_val = b;
+					}
+
+					criterion.name_kpi = req.body.name;
+					criterion.name_criterion = namecriterion;
+					criterion.number_criterion = i;
+					criterion.description = description;
+					criterion.start_val = start_val;
+					criterion.final_val = final_val;
+
+					for(let j = 0; j < positions.length; j ++) {
+						let ball = +req.body[positions[j].position][i];
+						if(+req.body.count == 1) ball = +req.body[positions[j].position];
+						ballsArr.push([0, positions[j].position, ball]);
+					}
+					criterion.balls = ballsArr;
+					criterions.push(criterion);
 				}
-				criterion.balls = balls;
-				criterions.push(criterion);
-			}
 
-			Promise.all(criterions.map(DBi.insertCriterion)).then(result => {
-				console.log("Критерии ПЭД успешно добавлены");
-				//записываем логи
-				writeLogs(req.session.userName, "добавил(а) ПЭД " + req.body.name);
-				console.log("Сохранен объект kpi");
-				res.redirect('/admin/addkpi?action=ok');
+				Promise.all(criterions.map(DBi.insertCriterion)).then(result => {
+					console.log("Критерии ПЭД успешно добавлены");
+					//записываем логи
+					writeLogs(req.session.userName, "добавил(а) ПЭД " + req.body.name);
+					console.log("Сохранен объект kpi");
+					res.redirect('/admin/addkpi?action=ok');
+				}).catch(err => {
+					console.log("Скорее всего такой ПЭД уже есть");
+					res.redirect('/admin/addkpi?action=err');
+				});
 			}).catch(err => {
-				console.log("Скорее всего такой ПЭД уже есть");
+				console.log(err);
 				res.redirect('/admin/addkpi?action=err');
 			});
-		}).catch(err => {
-			console.log(err);
-			res.redirect('/admin/addkpi?action=err');
-		});
+	}).catch(err => {
+		console.log(err);
+		res.status(500).render('500');
+	});
 };
 
 //Удаление ПЭДа
@@ -490,23 +506,30 @@ exports.POSTdeletekpi = function(req, res) {
 
 //Изменение оценок ПЭДа
 exports.POSTeditballskpi = function(req, res) {
-	let balls = req.body.balls;
+	let idArr = req.body.id;
 	let arrballs = [];
-	let number_criterion = 0;
-	for(let i = 0; i < balls.length; i = i + 6) {
-		arrBall = [];
-		for(let j = i; j < i + 6; j++) {
-			arrBall.push(balls[j]);
-			if(!+balls[j]) return res.redirect('admin/editballs?action=err');
+	let countCrit = +req.body.countcrit;
+	DBs.selectPositionWithBalls().then(positions => {
+		for(let i = 0; i < countCrit; i++) {
+			for(let j = 0; j < positions.length; j++) {
+				let ball = +req.body[positions[j].position][i];
+				let id = idArr[i];
+				if(countCrit == 1) {
+					ball = +req.body[positions[j].position];
+					id = +idArr;
+				}
+				arrballs.push([id, positions[j].position, ball]);
+			}
 		}
-		arrballs.push({name_kpi: req.body.name, number_criterion: number_criterion, balls: arrBall});
-		number_criterion ++;
-	}
-	Promise.all(arrballs.map(DBu.updateBallOfCriterion)).then(result => {
-		console.log("Оценки успешно изменены", req.body.name);
-		//записываем логи
-		writeLogs(req.session.userName, "изменил(а) оценки ПЭД " + req.body.name);
-		res.redirect('admin/editballs?action=ok');
+		Promise.all(arrballs.map(DBu.updateBallOfCriterion)).then(result => {
+			console.log("Оценки успешно изменены", req.body.name);
+			//записываем логи
+			writeLogs(req.session.userName, "изменил(а) оценки ПЭД " + req.body.name);
+			res.redirect('admin/editballs?action=ok');
+		}).catch(err => {
+			console.log(err);
+			res.redirect('admin/editballs?action=err');
+		});
 	}).catch(err => {
 		console.log(err);
 		res.redirect('admin/editballs?action=err');
@@ -516,15 +539,11 @@ exports.POSTeditballskpi = function(req, res) {
 //Выбор ПЭДа на изменение его оценок
 exports.POSTeditballs = function(req, res) {
 	DBs.selectOneKpi(req.body.name).then(result => {
-		for(let i = 0; i < result.length; i++) {
-			let balls = [];
-			for(let j = 0; j < 6; j++) {
-				balls.push(result[i][("ball_" + j)]);
-			}
-			result[i].balls = balls;
-		}
-		res.render('admin/editballs', {choose: true, arr: result, 
-				type: result[0].type, name: result[0].name, description: result[0].description});
+		let positions = [];
+		let kpi = getKpiObj(result, positions);
+		res.render('admin/editballs', {choose: true, arr: kpi.lines, positions: positions, 
+			count_criterion: result[0].count_criterion, type: result[0].type, name: result[0].name, 
+			description: result[0].description});
 	}).catch(err => {
 		console.log(err);
 		res.status(500).render('500');
@@ -535,4 +554,34 @@ exports.POSTeditballs = function(req, res) {
 exports.notify = function(req, res) {
 	objPeriod.notify = true;
 	res.redirect('/admin/setperiod');
+}
+
+
+//получение их массива оценок объект одного ПЭД
+function getKpiObj(arr, positions) {
+	if(!positions)
+		positions = [];
+	let kpi = {};
+	for (key in arr[0]) {
+		if(key != 'ball' && key !='position')
+		kpi[key] = arr[0][key];
+	}
+	let lines = [];
+	for(let i = 0; i < arr.length; i++) {
+		let idCrit = arr[i].id;
+		let criterion = arr[i].name_criterion;
+		let desc = arr[i].criterion_description;
+		let balls = [];
+		while (i != arr.length && idCrit == arr[i].id) {
+			if(positions.indexOf(arr[i].position) == -1)
+				positions.push(arr[i].position);
+			balls[positions.indexOf(arr[i].position)] = arr[i].ball;
+			i++;
+		}
+		lines.push({name: criterion, description: desc, balls: balls, id: idCrit});
+		i--;
+	}
+	//kpi.count_criterion = lines.length;
+	kpi.lines = lines;
+	return kpi;
 }

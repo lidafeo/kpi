@@ -11,56 +11,59 @@
 <body>
 	<div class="wrapper">
 		<header>
-			<form name="editform" class="formborder flexparent" style="margin-top: 6%;" action="/verify" method="post">
-				<div class="flexblocks">
-					<label>Факультет</label>
-					<% if(faculty.length == 1) {%>
-						<input type="text" name="faculty" id="faculty" value="<%=faculty[0]%>" style="width: 300px;" disabled>
-					<%} %>
-					<% if(faculty.length > 1) {%>
-						<select name="faculty" id="faculty">
-							<% for(let i = 0; i < faculty.length; i++) {%>
-								<option><%=faculty[i]%></option>
-							<%} %>
-						</select>
-					<%} %>
-
-					<label>Кафедра</label>
-					<% if(department.length == 1) {%>
-						<input type="text" name="department" id="department" value="<%=department[0]%>" style="width: 500px;" disabled>
-					<%} %>
-					<% if(department.length > 1) {%>
-						<select name="department" id="department">
-							<% for(let i = 0; i < department.length; i++) {%>
-								<option><%=department[i]%></option>
-							<%} %>
-						</select>
-					<%} %>
-					<button id="choosedep">Выбрать кафедру</button>
-					<br>
-
-					<div id="usersdiv"></div>
-
-				</div>
-			</form>
-
+			
 			<% if(mypage) {%>
 				<form action="/exit" method="post">
-					<button class="exitt" style="margin: -56px 4px 0 0;" >Выход</button></form>
+					<button class="exitt" >Выход</button></form>
 			<%} %>
 			<% if(!mypage) {%>
-				<a href="/mypage" class="exitt" style="margin: -56px 4px 0 0;">Назад</a>
+				<a href="/mypage" class="exitt" >Назад</a>
 			<%} %> 
 				
 		</header>
 
 		<div class="content">
-			
+			<form name="editform" class="formborder flexparent" style="margin-top: 8px; justify-content: center; width: 90%;" action="/verify" method="post">
+				<div class="flexblocks text">
+					<label>Факультет</label>
+					<% if(faculty.length == 1) {%>
+						<input type="text" name="faculty" class="text" id="faculty" value="<%=faculty[0]%>" style="width: 350px;" disabled>
+					<%} %>
+					<% if(faculty.length > 1) {%>
+						<select name="faculty" class="text" id="faculty">
+							<% for(let i = 0; i < faculty.length; i++) {%>
+								<option><%=faculty[i]%></option>
+							<%} %>
+						</select>
+					<%} %>
+				</div>
+
+				<div class="flexblocks text"><label>Кафедра</label>
+					<% if(department.length == 1) {%>
+						<input type="text" class="text" name="department" id="department" value="<%=department[0]%>" style="width: 350px;" disabled>
+					<%} %>
+					<% if(department.length > 1) {%>
+						<select name="department" class="text" id="department" style="width: 300px;">
+							<% for(let i = 0; i < department.length; i++) {%>
+								<option><%=department[i]%></option>
+							<%} %>
+						</select>
+					<%} %>
+					<button id="choosedep" class="buttonmypage">Выбрать кафедру</button></div>
+
+					<br>
+
+				<div class="flexblocks"><div id="usersdiv"></div>
+				</div>
+
+				
+			</form>
+
 			<div id="tablekpi" ></div>
 
 		</div>
 
-		<div class="footer"></div>
+		<div class="footer">
 			<%- include("partials/footer.ejs") %>
 		</div>
 	</div>

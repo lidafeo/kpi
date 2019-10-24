@@ -42,9 +42,11 @@ exports.selectAllValueKpi = function() {
 }
 //получить значения ПЭД пользователя
 exports.selectValueKpiUser = function(login) {
-	return query("SELECT *, uservalues.id id FROM uservalues, kpi, criterions WHERE uservalues.name_kpi=kpi.name AND " +
+	return query("SELECT uservalues.*, type, criterion_description FROM uservalues, kpi, criterions " +
+		"WHERE uservalues.name_kpi=kpi.name AND " +
 		"kpi.name=criterions.name_kpi AND criterions.number_criterion=uservalues.number_criterion AND " +
-		"login_user='" + login + "' ORDER BY date");
+		"login_user='" + login + "' " +
+		"ORDER BY date");
 }
 
 //получить действующие значения ПЭД пользователя в заданный период
@@ -53,12 +55,13 @@ exports.selectValueKpiUserInPeriod = function(userName, date1, date2) {
 		"login_user='" + userName + "' AND ((start_date BETWEEN DATE('" + date1 + "') AND DATE('" + date2 + 
 		"')) OR (finish_date BETWEEN DATE('" + date1 + "') AND DATE('" + date2 + 
 		"')) OR ((start_date <= DATE('" + date1 + "')) AND (finish_date >= DATE('" + date2 + "')))) " +
-		"ORDER BY section ASC, subtype ASC, number DESC");
+		"ORDER BY section ASC, subtype ASC, number ASC, uservalues.number_criterion ASC");
 }
 
 //получить значения одного ПЭД пользователя
 exports.selectValueKpiUserOneKpi = function(login, name_kpi) {
-	return query("SELECT * FROM uservalues WHERE name_kpi='" + name_kpi + "' AND login_user='" + login + "'");
+	return query("SELECT * FROM uservalues " +
+		"WHERE name_kpi='" + name_kpi + "' AND login_user='" + login + "'");
 }
 
 //получить значение одного ПЭД по id
@@ -90,13 +93,23 @@ exports.selectAllKpi = function() {
 
 //получить все ПЭД с критериями
 exports.selectAllKpiWithCriterion = function() {
-	return query("SELECT * FROM kpi, criterions WHERE kpi.name=criterions.name_kpi ORDER BY section ASC, "+
-		"subtype ASC, number ASC, number_criterion ASC");
+	return query("SELECT * FROM kpi, criterions, balls, positions WHERE kpi.name=criterions.name_kpi AND " +
+	"balls.id_criterion=criterions.id AND balls.position=positions.position " +
+	"ORDER BY section ASC, subtype ASC, number ASC, name ASC, id_criterion ASC, positions.number_group ASC, balls.position ASC");
 }
 
 //получить один ПЭД
-exports.selectOneKpi = function(name) {
-	return query("SELECT * FROM kpi, criterions WHERE kpi.name=criterions.name_kpi AND kpi.name='" + name + "'");
+exports.selectOneKpi = function(name, position) {
+	return query("SELECT * FROM kpi, criterions, balls WHERE kpi.name=criterions.name_kpi AND kpi.name='" + 
+	name + "' AND balls.id_criterion=criterions.id AND balls.position='" + position + "' " +
+	"ORDER BY id ASC");
+}
+
+//получить один ПЭД с баллами
+exports.selectOneKpiWithBalls = function(name) {
+	return query("SELECT * FROM kpi, criterions, balls, positions WHERE kpi.name=criterions.name_kpi AND kpi.name='" + 
+	name + "' AND balls.position=positions.position AND balls.id_criterion=criterions.id " +
+	"ORDER BY id_criterion ASC, positions.number_group ASC, balls.position ASC");
 }
 
 //получить отделы
@@ -108,36 +121,46 @@ exports.selectAllSection = function() {
 //CRITERION
 
 //Получить все критерии
-exports.selectAllCriterion = function() {
-	return query("SELECT * FROM criterions ORDER BY name_kpi");
+exports.selectAllCriterion = function(position) {
+	return query("SELECT * FROM criterions, balls WHERE id=id_criterion AND position='" + position + 
+	"' ORDER BY name_kpi, criterions.number_criterion ASC");
 }
 
 
 //POSITION
 
+//Получить все должности
 exports.selectAllPosition = function() {
-	return query("SELECT * FROM positions ORDER BY level ASC");
+	return query("SELECT * FROM positions ORDER BY number_group ASC, position ASC");
 }
 
-
+//выбрать должности, у которых есть ПЭД
+exports.selectPositionWithBalls = function() {
+	return query("SELECT * FROM positions WHERE number_group IS NOT NULL ORDER BY number_group ASC, position ASC");
+}
 
 
 exports.forReportPFU = function(date1, date2) {
-	return query("SELECT *, users.name name_user, kpi.name name_kpi FROM users, uservalues, positions, criterions, " + 
-		"kpi WHERE users.position=positions.position AND positions.number_group is NOT NULL AND " +
-		"users.login=uservalues.login_user AND kpi.name=uservalues.name_kpi AND valid=1 AND " +
-		"criterions.name_kpi=kpi.name AND ((type=1 AND ((criterions.start_val<=uservalues.value) AND " +
-		"((criterions.final_val>=uservalues.value) OR (criterions.final_val is NULL)))) OR (type=2 AND " +
-		"uservalues.number_criterion=criterions.number_criterion)) AND ((uservalues.start_date BETWEEN DATE('" + 
-		date1 + "') AND DATE('" + date2 + "')) OR (uservalues.finish_date BETWEEN DATE('" + date1 + 
-		"') AND DATE('" + date2 + "')) OR ((uservalues.start_date <= DATE('" + date1 + 
-		"')) AND (uservalues.finish_date >= DATE('" + date2 + "')))) " +
-		"ORDER BY users.name ASC, kpi.section ASC, kpi.subtype ASC, kpi.number ASC, uservalues.number_criterion");
+
+	let q = "WHERE (start_date BETWEEN DATE('" + date1 + "') AND DATE('" + date2 + "')) OR ((finish_date BETWEEN DATE('" +
+	date1 + "') AND DATE('" + date2 + "')) OR ((start_date <= DATE('" + date1 + "')) AND (finish_date >= DATE('" + 
+	date2 + "'))))";
+
+	return query("SELECT UV.name_kpi name_kpi, users.name name_user, login, COUNT(DISTINCT id) cou, value, type, " +
+	"indicator_sum, number_criterion, substring_index(group_concat(value order by date desc), ',', 1) as valuemaxdate " +
+	"FROM uservalues UV " +
+	"INNER JOIN kpi ON kpi.name=UV.name_kpi " +
+	"INNER JOIN users ON  users.login=UV.login_user "+ 
+	q + " " +
+	"GROUP BY name_kpi, login, number_criterion " +
+	"ORDER BY name_user ASC, users.login ASC, section ASC, subtype ASC, number ASC, number_criterion");
 }
 
 exports.selectKpiAndUser = function() {
-	return query("SELECT kpi.name name_kpi, users.name name_user, type, count_criterion, login, users.position, " +
-		"faculty, department, number_group FROM users, kpi, positions WHERE positions.position=users.position AND " +
-		"positions.number_group IS NOT NULL " +
-		"ORDER BY users.name ASC, section ASC, subtype ASC, number ASC");
+	return query("SELECT kpi.name name_kpi, users.name name_user, type, users.position, count_criterion, login, " +
+		"faculty, department, number_group, indicator_sum, start_val, final_val, ball, number_criterion " +
+		"FROM users, kpi, positions, criterions, balls " +
+		"WHERE positions.number_group IS NOT NULL AND positions.position=users.position AND " +
+		"criterions.name_kpi=kpi.name AND balls.position=positions.position AND balls.id_criterion=criterions.id " +
+		"ORDER BY users.name ASC, section ASC, subtype ASC, number ASC, number_criterion ASC");
 }

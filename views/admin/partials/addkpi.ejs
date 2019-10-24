@@ -9,11 +9,11 @@
 		<div class="input__container" id="infokpi">
 			<div>
 				<label>Шифр</label>
-				<input type="text" name="name" id="name" class="notempty" placeholder="Шифр" autocomplete="off" required>
+				<input type="text" name="name" id="name" class="notempty" placeholder="О.Д.1" autocomplete="off" required>
 			</div>
 			<div>
 				<label>Раздел</label>
-				<input name="section" list="section" id="inputsection" class="notempty" placeholder="Раздел" autocomplete="off" required>
+				<input name="section" list="section" id="inputsection" class="notempty" placeholder="Образовательная деятельность" autocomplete="off" required>
 			</div>
 
 			<datalist id="section">
@@ -31,11 +31,11 @@
 			</div>
 			<div>
 				<label>Номер</label>
-				<input type="number" name="number" id="number" class="figure" placeholder="номер" autocomplete="off" required>
+				<input type="number" name="number" id="number" class="figure" placeholder="1" autocomplete="off" required>
 			</div>
 			<div>
 				<label>Показатель</label>
-				<p><textarea name="desc" id="desc" class="notempty" required></textarea></p>
+				<p><textarea name="desc" id="desc" class="notempty" placeholder="Качество знаний студентов по дисциплинам" required></textarea></p>
 			</div>
 			<div>
 				<label>Время действия подтверждения ПЭДа (в месяцах)</label>
@@ -76,7 +76,7 @@
 					</div>
 					<div>
 						<label>Описание критерия</label>
-						<p><textarea name="namecriterion" id="namecriterion" class="notempty"></textarea></p>
+						<p><textarea name="namecriterion" id="namecriterion" placeholder="Не менее 60%" class="notempty"></textarea></p>
 					</div>
 					<div>
 						<label>Тип</label>
@@ -104,30 +104,12 @@
 				
 				<label>Оценки по группам пользователей:</label>
 				<div class="input__container">
-					<div>
-						<label>Декан</label>
-						<input type="number" name="g1" id="g1" class="figure" placeholder="оценка" autocomplete="off" required>
-					</div>
-					<div>
-						<label>Зав.кафедрой</label>
-						<input type="number" name="g2" id="g2" class="figure" placeholder="оценка" autocomplete="off" required>
-					</div>
-					<div>
-						<label>Профессор</label>
-						<input type="number" name="g3" id="g3" class="figure" placeholder="оценка" autocomplete="off" required>
-					</div>
-					<div>
-						<label>Доцент</label>
-						<input type="number" name="g4" id="g4" class="figure" placeholder="оценка" autocomplete="off" required>
-					</div>
-					<div>
-						<label>Ст.преподаватель</label>
-						<input type="number" name="g5" id="g5" class="figure" placeholder="оценка" autocomplete="off" required>
-					</div>
-					<div>
-						<label>Ассистент/преподаватель</label>
-						<input type="number" name="g6" id="g6" class="figure" placeholder="оценка" autocomplete="off" required>
-					</div>
+					<% for(let i = 0; i < positions.length; i++) {%>
+						<div>
+							<label><%=positions[i].position%></label>
+							<input type="number" name="<%=positions[i].position%>" id="<%=positions[i].position%>" class="figure" placeholder="0" autocomplete="off" required>
+						</div>
+					<%} %>
 				</div>
 			</div>
 		</div>

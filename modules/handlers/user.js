@@ -48,7 +48,7 @@ exports.mypage = function(req, res) {
 		}
 		else {
 			new Promise((resolve, reject) => {
-				DBs.selectAllCriterion().then(result => {
+				DBs.selectAllCriterion(position).then(result => {
 					let ArrObj = [];
 					let kpi = [];
 					for(let i = 0; i < result.length; i++) {
@@ -56,13 +56,9 @@ exports.mypage = function(req, res) {
 							ArrObj.push({nameKpi: result[i].name_kpi, criterion: []});
 							kpi.push(result[i].name_kpi);
 						}
-						let balls = [];
-						for(let j = 0; j < 6; j++){
-							balls.push(result[i][('ball_' + j)]);
-						}
 						ArrObj[kpi.indexOf(result[i].name_kpi)].criterion.push({nameCriterion: result[i].name_criterion,
 							startVal: result[i].start_val, finalVal: result[i].final_val, 
-							balls: balls, description: result[i].criterion_description});
+							ball: result[i].ball, description: result[i].criterion_description});
 					}
 					resolve(ArrObj);
 				}).catch(err => {
@@ -94,8 +90,7 @@ exports.mypage = function(req, res) {
 						namekpi = uservalues[i].name_kpi;
 						//добавление информации к ПЭДам
 						sortKpi(uservalues[i], info, arrCriterion[kpi.indexOf(namekpi)].criterion);
-						info.userball = calculateBall(info, numberGroup, 
-							arrCriterion[kpi.indexOf(namekpi)].criterion);
+						info.userball = calculateBall(info, arrCriterion[kpi.indexOf(namekpi)].criterion);
 					}
 				}
 				//устанавливаем правильный порядок вывода ПЭДов
@@ -161,10 +156,11 @@ exports.valuekpi = function(req, res) {
 
 //прошлые подтверждения ПЭДА
 exports.POSTeditkpi = function(req, res) {
-	let numberGroup = req.session.numberGroup;
+	let position = req.session.userPosition;
 	let login = req.session.login;
-	DBs.selectOneKpi(req.body.name).then(kpi => {
-		if(kpi[0]['ball_' + numberGroup] != 0) {
+	console.log(position);
+	DBs.selectOneKpi(req.body.name, position).then(kpi => {
+		if(kpi[0].ball != 0) {
 			DBs.selectValueKpiUserOneKpi(login, req.body.name).then(result => {
 				modifydate(result);
 				res.render("partials/postedVal", {kpi: result, desc: kpi, textErr: false});
@@ -210,7 +206,7 @@ exports.POSTupload = function(req, res) {
 		let radio = 0;
 		if(fields.radio) radio = fields.radio;
 		//находим в БД добавляемый ПЭД, чтобы узнать время его действия
-		DBs.selectOneKpi(fields.name).then(result => {
+		DBs.selectOneKpiWithBalls(fields.name).then(result => {
 			let kpi = result[0];
 			let finishDate = new Date(fields.date);
 			if(files.file) filename = files.file.name;
@@ -265,14 +261,14 @@ function sortKpi(uservalue, info, criterion) {
 		if(info.count) info.count++;
 		else {
 			info.count = 1;
-			info.ball = [];
+			info.val = [];
 			info.date = [];
 		}
 	}
 	else {
 		if(!info.count) {
 			info.count = [];
-			info.ball = [];
+			info.val = [];
 			info.date = [];
 			info.num = [];
 			for(let k = 0; k < uservalue.count_criterion; k++)
@@ -280,7 +276,7 @@ function sortKpi(uservalue, info, criterion) {
 		}
 		info.count[uservalue.number_criterion] ++;
 	}
-	info.ball.push(uservalue.value);
+	info.val.push(uservalue.value);
 	info.date.push(uservalue.date);
 	if (uservalue.type == 2) {
 		info.num.push(uservalue.number_criterion);
@@ -306,7 +302,7 @@ function modifyOneDate (obj, prop) {
 }
 
 //вычисление оценки
-function calculateBall(kpi, numberGroup, criterion) {
+function calculateBall(kpi, criterion) {
 	let value;
 	let ball = [];
 	//ставим оценку ПЭДу первого типа
@@ -317,7 +313,7 @@ function calculateBall(kpi, numberGroup, criterion) {
 		for(let i = 0; i < criterion.length; i++) {
 			if(!criterion[i].finalVal) criterion[i].finalVal = Infinity;
 			if(value >= criterion[i].startVal && value <= criterion[i].finalVal) {
-				ball[0] = criterion[i].balls[numberGroup];
+				ball[0] = criterion[i].ball;
 			}
 			else if(!ball[0]) ball[0] = 0;
 		}
@@ -330,7 +326,7 @@ function calculateBall(kpi, numberGroup, criterion) {
 			if(!criterion[i].finalVal) criterion[i].finalVal = Infinity;
 			if(value >= criterion[i].startVal && value <= criterion[i].finalVal) {
 				if(kpi.num.indexOf(i) != -1) {
-					ball.push(criterion[i].balls[numberGroup]);
+					ball.push(criterion[i].ball);
 				}
 				else ball.push(0);
 			}
@@ -352,7 +348,7 @@ function getBall (kpi, k) {
 		for(let i = 0; i < kpi.count; i++) {
 			if(kpi.type == 1 || kpi.type == 2 && kpi.num[i] == k)
 				if(kpi.date[i] > date) {
-					value = kpi.ball[i];
+					value = kpi.val[i];
 					date = kpi.date[i];
 				}
 		}

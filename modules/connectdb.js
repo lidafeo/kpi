@@ -9,11 +9,15 @@ const pool = mariadb.createPool({
 	connectionLimit: 5
 });
 
-module.exports = async function (query) {
+module.exports = async function (query, obj) {
 	let conn;
 	try {
 		conn = await pool.getConnection();
-		let rows = conn.query(query);
+		let rows;
+		if(obj)
+			rows = conn.query(query, obj);
+		else
+			rows = conn.query(query);
 		return rows;
 	} catch (err) {
 		throw err;
@@ -21,16 +25,3 @@ module.exports = async function (query) {
 		if(conn) conn.end();
 	}
 }
-//let connect = pool.getConnection;//().then(conn => {
-	/*conn.query("SELECT 1 as val").then((rows) => {
-		console.log(rows);
-		conn.end();
-	}).catch(err => {
-		console.log(err);
-		conn.end();
-	})
-}).catch(err => {
-	console.log("not connected: " + err);
-});*/
-//module.exports = pool;
-//module.exports = connect;

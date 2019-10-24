@@ -1,14 +1,14 @@
 <input type="hidden" name="chooseuser" id="chooseuser">
 <% if(worker.length == 0 ) {%>
-	<p>Нет сотрудников</p>
+	<p class="text" style="color:red; margin-left: 5px;">Нет сотрудников</p>
 <%}%>
 <% if(worker.length != 0 ) {%>
 	<label for="worker" class="text">Сотрудник:</label>
-	<input name="worker" list="worker" id="name" class="text" required style="width: 300px;">
+	<input name="worker" list="worker" id="name" class="text" required autocomplete="off" style="width: 300px;">
 	<datalist id="worker" >
 		<% for(let i = 0; i < worker.length; i++) {%>
 			<option><%=(worker[i].name + ", " + worker[i].position)%></option>
 		<%} %>
 	</datalist>
-	<button id="submit">Выбрать сотрудника</button>
+	<button id="submit" class="buttonmypage">Выбрать сотрудника</button>
 <%}%>

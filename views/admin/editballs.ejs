@@ -55,18 +55,20 @@
 							<th>Ассистент/преподаватель</th>
 						</tr>
 						<% for(let i = 0; i < arr.length; i++) {%>
+							<input type="hidden" name="id" value="<%=arr[i].id%>">
 							<tr>
 								<% if(type == 2) {%>
-									<td><%=arr[i].criterion_description %></td>
+									<td><%=arr[i].description %></td>
 								<%} %>
-								<td><%=arr[i].name_criterion %></td>
+								<td><%=arr[i].name %></td>
 								<% for(let k = 0; k < arr[i].balls.length; k++) {%>
-									<td><input type="number" min="0" max="1000" name="balls" style="width: 50px;" class="inp" value=<%=arr[i].balls[k] + "" %> required></td>
+									<td><input type="number" min="0" max="1000" name="<%=positions[k]%>" style="width: 50px;" class="inp" value="<%=arr[i].balls[k]%>" required></td>
 								<%} %>
 							</tr>
 						<%} %>
 					</table>
-					<input type="submit" class="buttonmypage" name="submit" value="Изменить">
+					<input type="hidden" name="countcrit" value="<%=count_criterion%>">
+					<input type="submit" class="buttonmypage" id="submit" value="Изменить">
 				</form>
 			<%} %>
 			<br>
@@ -76,6 +78,9 @@
 			<%- include("../partials/footer.ejs") %>
 		</div>
 	</div>
+
+	<script type="text/javascript" src="../jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src="../admin/editballs.js"></script>
 
 </body>
 </html>

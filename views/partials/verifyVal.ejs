@@ -1,17 +1,17 @@
 <% if(textErr) {%>
-	<p class="errormess"><%=textErr%></p>
+	<p class="errormess text"><%=textErr%></p>
 <%} %>
 <% if(!textErr) {%>
 	<% if(kpi.length != 0) {%>
-	<table border="3">
+	<table style="width: 60%; margin: 20px 5px 20px 0px;">
 		<tr>
-			<td>Дата</td>
-			<td>ПЭД</td>
-			<td>Значение</td>
-			<td>Текст</td>
-			<td>Файл</td>
-			<td>Отметить, как неверные</td>
-			<td>Комментарий</td>
+			<td><h4>Дата</h4></td>
+			<td><h4>ПЭД</h4></td>
+			<td><h4>Значение</h4></td>
+			<td><h4>Текст</h4></td>
+			<td><h4>Файл</h4></td>
+			<td><h4>Отметить, как неверные</h4></td>
+			<td><h4>Комментарий</h4></td>
 		</tr>
 		<% for(let i = 0; i < kpi.length; i++) {%>
 			<tr id=<%="tr" + i %>>
@@ -33,13 +33,13 @@
 					<td></td>
 				<%} %>
 				<td><input type="checkbox" name="checkbox" value=<%=i + ""%>></td>
-				<td><input type="text" name="comment" id=<%="comm" + i%>></td>
+				<td><input type="text" name="comment" class="text" id=<%="comm" + i%>></td>
 			</tr>
 		<%} %>
 	</table>
 	<%} %>
 	<% if(kpi.length == 0) {%>
-		<p class="errormess" style="color:black">Нет отмеченных ПЭД</p>
+		<p class="errormess formborder" style="color:red">Нет отмеченных ПЭД</p>
 	<%} %>
 	<% if(kpi.length != 0) {%>
 		<button id="incorrect" class="buttonmypage">Подтвердить неверные ПЭД</button>
