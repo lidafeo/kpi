@@ -41,8 +41,6 @@ exports.getReport = function(req, res) {
 			let userone = kpi[0].login;
 			let countKpi = 0;
 			let numUservalue = 0;
-			for(let i = 0; i < uservalue.length; i++)
-				console.log(uservalue[i]);
 			let user;
 			let n = 1, m = 5;
 			let sum = 0;
@@ -96,7 +94,11 @@ exports.getReport = function(req, res) {
 			}
 			ws.cell(n, m).number(sum).style(style)
 			ws.cell(1, 5 + countKpi).string('Сумма').style(style).style({font:{bold: true}});
-			ws.column(1).setWidth(50);
+
+			ws.column(1).setWidth(35);
+			ws.column(2).setWidth(30);
+			ws.column(3).setWidth(42);
+			ws.column(4).setWidth(20);
 
 			wb.write(objPeriod.date1.split("-").reverse().join('_') + '-' + 
 					objPeriod.date2.split("-").reverse().join('_') + '.xlsx', res);

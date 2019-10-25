@@ -1,4 +1,3 @@
-const fs = require("fs");
 const bcrypt = require("bcrypt");
 
 let DBs = require('../db/select.js');
@@ -20,6 +19,7 @@ exports.auth = function(req, res) {
 	//проверяем login и password
 	checkPassword(login, password).then(function(result) {
 		if(result){
+			
 			//запоминаем данные сессии
 			req.session.userName = result.name;
 			req.session.login = result.login;
@@ -35,11 +35,9 @@ exports.auth = function(req, res) {
 			rights.pfu = result.func_pfu;
 			req.session.rights = rights;
 
-
 			//проверка доступа к личному кабинету
 			let closeAccount = getclose();
-			if(closeAccount && req.session.userPosition != 'Администратор' && 
-				req.session.userPosition != 'ПФУ')
+			if(closeAccount && result.func_pps)
 				return res.render("auth", {checkpassword: false, close: true});
 
 			res.redirect('/mypage');
@@ -55,8 +53,7 @@ exports.auth = function(req, res) {
 exports.checkaccount = function(req, res, next) {
 	//проверка доступа к личному кабинету
 	let closeAccount = getclose();
-	if(closeAccount && req.session.userPosition != 'Администратор' && 
-		req.session.userPosition != 'ПФУ')
+	if(closeAccount && req.session.rights.pps)
 		return res.redirect("/exit");
 	else next();
 };

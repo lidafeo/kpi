@@ -7,7 +7,6 @@ let DBi = require('../db/insert.js');
 let dateModule = require('../date.js');
 let writeLogs = require('../logs');
 
-let getclose = require('./admin.js').getclose;
 let getObjPeriod = require('./admin.js').getObjPeriod;
 
 //главная страница пользователя
@@ -17,7 +16,6 @@ exports.mypage = function(req, res) {
 	let position = req.session.userPosition;
 	let level = req.session.level;
 	let numberGroup = req.session.numberGroup;
-
 	if(numberGroup == null) {
 		console.log("У пользователя нет ПЭДов");  
 		if(level == 3) return res.redirect('/prorector');
@@ -96,7 +94,6 @@ exports.mypage = function(req, res) {
 				//устанавливаем правильный порядок вывода ПЭДов
 				for(let i = 0; i < arrkpi.length; i++)
 					arrkpi[i].sort(sortArr);
-				//console.log(arrkpi);
 				res.render("mypage", {name: name, position: position, kpi: arrkpi,
 					date1: date1, date2: date2, level: level, objperiod: objPeriod});
 			});
@@ -159,7 +156,7 @@ exports.POSTeditkpi = function(req, res) {
 	let position = req.session.userPosition;
 	let login = req.session.login;
 	console.log(position);
-	DBs.selectOneKpi(req.body.name, position).then(kpi => {
+	DBs.selectBallOneKpi(req.body.name, position).then(kpi => {
 		if(kpi[0].ball != 0) {
 			DBs.selectValueKpiUserOneKpi(login, req.body.name).then(result => {
 				modifydate(result);
@@ -193,7 +190,6 @@ exports.sendfiles = function(req, res) {
 //отправка ПЭДа (добавление)
 exports.POSTupload = function(req, res) {
 	let login = req.session.login;
-	let name = req.session.userName;
 	let numberGroup = req.session.numberGroup;
 	let form = new formidable.IncomingForm();
 	form.parse(req, function(err, fields, files) {
@@ -206,20 +202,19 @@ exports.POSTupload = function(req, res) {
 		let radio = 0;
 		if(fields.radio) radio = fields.radio;
 		//находим в БД добавляемый ПЭД, чтобы узнать время его действия
-		DBs.selectOneKpiWithBalls(fields.name).then(result => {
+		DBs.selectOneKpi(fields.name).then(result => {
 			let kpi = result[0];
 			let finishDate = new Date(fields.date);
 			if(files.file) filename = files.file.name;
 			finishDate.setMonth(finishDate.getMonth() + kpi.action_time);
 
-			//try {
 				DBi.insertValueKpi(login, kpi.name, +fields.value, dateModule.dateForInput(new Date()), 
 					dateModule.dateForInput(new Date(fields.date)), dateModule.dateForInput(finishDate), 
 					fields.text, filename, radio).then(result => {
 						console.log("Сохранен объект uservalue");
 						res.send('ok');
 						//записываем логи
-						writeLogs(name, "добавил(а) новое значение ПЭД " + kpi.name + " равное " + fields.value);
+						writeLogs(login, "добавил(а) новое значение ПЭД " + kpi.name + " равное " + fields.value);
 						let id = result.insertId;
 						//сохраняем прикрепленный файл
 						if(files.file) {
@@ -234,9 +229,6 @@ exports.POSTupload = function(req, res) {
 					console.log(err);
 					res.status(500).render('500');
 				});
-			//} catch(e) {
-			//	return console.log("Ошибка: не удалось вставить запись в таблицу uservalue или получить id записи");
-			//}
 		});
 	});
 };

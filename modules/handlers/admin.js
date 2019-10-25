@@ -266,8 +266,7 @@ exports.POSTadduser = function(req, res) {
 		//insertUser(name, position, faculty, department, login, password)
 		DBi.insertUser(name, position, faculty, department, login, password).then(result => {
 			//запись логов
-			writeLogs(req.session.userName, "добавил(а) нового пользователя: должность - " + 
-				position + ", ФИО - " + name);
+			writeLogs(req.session.login, "добавил(а) нового пользователя: login - " + login);
 			console.log("Сохранен объект user");
 			res.redirect('/admin/adduser?action=ok');
 		}).catch(err => {
@@ -326,8 +325,7 @@ exports.POSTadduserfile = function(req, res) {
 			user.password = await bcrypt.hash(user.password, BCRYPT_SALT_ROUNDS);
 			let result = DBi.insertUserFromObj(user);
 			//записываем логи
-			writeLogs(req.session.userName, "добавил(а) нового пользователя: должность - " + 
-				user.position + ", ФИО - " + user.name);
+			writeLogs(req.session.login, "добавил(а) нового пользователя: login - " + user.login);
 			console.log("Сохранен объект user", user.login);
 		})).then(result => {
 			res.redirect('/admin/adduserfile?action=ok');
@@ -342,7 +340,7 @@ exports.POSTdeleteuser = function(req, res) {
 		if(result.affectedRows > 0) {
 			console.log("Удален пользователь: ", login);
 			//записываем логи
-			writeLogs(req.session.userName, "удалил(а) пользователя " + login);
+			writeLogs(req.session.login, "удалил(а) пользователя " + login);
 			res.redirect('/admin/deleteuser?action=ok');
 		}
 		else {
@@ -359,7 +357,7 @@ exports.POSTdeleteuser = function(req, res) {
 exports.POSTcloseaccount = function(req, res) {
 	let date = new Date();
 	//записываем логи
-	writeLogs(req.session.userName, "закрыл(а) личные кабинеты ППС");
+	writeLogs(req.session.login, "закрыл(а) личные кабинеты ППС");
 	close = true;
 	res.redirect('admin/closeaccount');
 }
@@ -368,7 +366,7 @@ exports.POSTcloseaccount = function(req, res) {
 exports.POSTopenaccount = function(req, res) {
 	let date = new Date();
 	//записываем логи
-	writeLogs(req.session.userName, "открыл(а) личные кабинеты ППС");
+	writeLogs(req.session.login, "открыл(а) личные кабинеты ППС");
 	close = false;
 	res.redirect('admin/closeaccount');
 }
@@ -384,7 +382,7 @@ exports.POSTsetperiod = function(req, res) {
 	else {
 		objPeriod.setDate(date1, date2);
 		//записываем логи
-		writeLogs(req.session.userName, "установил(а) период для отчета с " + 
+		writeLogs(req.session.login, "установил(а) период для отчета с " + 
 			date1.split('-').reverse().join('.') + " по " + date2.split('-').reverse().join('.'));
 	}
 	res.redirect('/admin/setperiod');
@@ -468,7 +466,7 @@ exports.POSTaddkpi = function(req, res) {
 				Promise.all(criterions.map(DBi.insertCriterion)).then(result => {
 					console.log("Критерии ПЭД успешно добавлены");
 					//записываем логи
-					writeLogs(req.session.userName, "добавил(а) ПЭД " + req.body.name);
+					writeLogs(req.session.login, "добавил(а) ПЭД " + req.body.name);
 					console.log("Сохранен объект kpi");
 					res.redirect('/admin/addkpi?action=ok');
 				}).catch(err => {
@@ -491,7 +489,7 @@ exports.POSTdeletekpi = function(req, res) {
 		if(result.affectedRows > 0) {
 			console.log("Удален объект kpi ", req.body.name);
 			//записываем логи
-			writeLogs(req.session.userName, "удалил(а) ПЭД " + req.body.name);
+			writeLogs(req.session.login, "удалил(а) ПЭД " + req.body.name);
 			res.redirect('admin/deletekpi?action=ok');
 		}
 		else {
@@ -524,7 +522,7 @@ exports.POSTeditballskpi = function(req, res) {
 		Promise.all(arrballs.map(DBu.updateBallOfCriterion)).then(result => {
 			console.log("Оценки успешно изменены", req.body.name);
 			//записываем логи
-			writeLogs(req.session.userName, "изменил(а) оценки ПЭД " + req.body.name);
+			writeLogs(req.session.login, "изменил(а) оценки ПЭД " + req.body.name);
 			res.redirect('admin/editballs?action=ok');
 		}).catch(err => {
 			console.log(err);
@@ -538,7 +536,7 @@ exports.POSTeditballskpi = function(req, res) {
 
 //Выбор ПЭДа на изменение его оценок
 exports.POSTeditballs = function(req, res) {
-	DBs.selectOneKpi(req.body.name).then(result => {
+	DBs.selectOneKpiWithBalls(req.body.name).then(result => {
 		let positions = [];
 		let kpi = getKpiObj(result, positions);
 		res.render('admin/editballs', {choose: true, arr: kpi.lines, positions: positions, 
