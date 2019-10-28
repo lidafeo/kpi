@@ -62,12 +62,9 @@ exports.verify = function(req, res) {
 
 //получение таблицы для проверки
 exports.POSTverify = function(req, res) {
-	let faculty = req.body.faculty;
-	let department = req.body.department;
-	let name = req.body.name;
-	let position = req.body.position;
+	let login = req.body.name;
 	//находим значения ПЭД выбранного сотрудника
-	DBs.selectValueKpiByNameAndPosition(name, position, faculty, department).then(result => {
+	DBs.selectValueKpiByLogin(login).then(result => {
 		if(result.length == 0) {
 			res.render("partials/verifyVal", {kpi: [], textErr: "Нет добавленных действительных значений"});
 		}
@@ -85,14 +82,14 @@ exports.POSTverify = function(req, res) {
 exports.POSTinvalid = function(req, res) {
 	let invalidKpi = req.body.kpi;
 	let chooseUser = req.body.user;
-	let name = req.session.userName;
+	let name = req.session.login;
 	console.log(invalidKpi);
 	new Promise(function(resolve, reject) {
 		for(let i = 0; i < invalidKpi.length; i++) {
 			DBu.updateValueInvalid(invalidKpi[i].id, name, invalidKpi[i].comment).then(result => {
 				console.log(result);
 				//записываем логи
-				writeLogs(req.session.login, "сделал(а) отметку о недействительности ПЭД " + invalidKpi[i].name + 
+				writeLogs(name, "сделал(а) отметку о недействительности ПЭД " + invalidKpi[i].name + 
 					" пользователя " + chooseUser + " по следующей причине: " + invalidKpi[i].comment);
 				resolve('ok');
 			}).catch(err => {

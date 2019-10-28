@@ -8,26 +8,27 @@ $(document).ready(function() {
 
 	$.cookie("choosefaculty", $("#faculty").val());
 	$.cookie("choosedepartment", $("#department").val());
+
+	var data = {}; 
+	$("#worker option").each(function(i, el) {  
+		data[$(el).data("value")] = $(el).val();
+	});
 	//нажатие на кнопку отправки на сервер сотрудника
 	$("body").on('click', "#submit", function(e) {
 		e.preventDefault();
-		let faculty = $.cookie("choosefaculty");
-		let department = $.cookie("choosedepartment");
-		let user = $("#name").val().split(', ');
-		let name = user[0];
-		let position = user[1];
-		if(!name) {
+		let chooseUser = $("#name").val();
+		let name = $('#worker [value="' + chooseUser + '"]').data('value');
+		if(!chooseUser) {
 			if(!$("p").is("#errormess"))
 				$("#name").after('<p id="errormess" class="errormess">Выберите пользователя</p>');
 			return;
 		}
-		if(name)
+		if(chooseUser)
 			$("#errormess").remove();
 		//запоминаем выбранного пользователя
 		$("#chooseuser").val(name);
 
-		let sendValue = JSON.stringify({faculty: faculty, department: department, name: name,
-			position: position});
+		let sendValue = JSON.stringify({name: name});
 		let request = new XMLHttpRequest();
 		//посылаем запрос на адрес "/editkpi"
 		request.open("POST", "/verify", true);

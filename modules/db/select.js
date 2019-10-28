@@ -18,7 +18,7 @@ exports.selectUserWithPositionInfo = async function(login) {
 
 //получить всех пользователей из данного факультета/кафедры
 exports.selectUserFromDepartment = function(faculty, department, level) {
-	return query("SELECT name, users.position FROM users " +
+	return query("SELECT name, users.position, login FROM users " +
 		"INNER JOIN positions ON users.position=positions.position " +
 		"WHERE (department=? OR (faculty=? AND department is NULL)) AND level<?", 
 		[department, faculty, level]);
@@ -46,7 +46,7 @@ exports.selectDepartments = function(faculty) {
 exports.selectAllValueKpi = function() {
 	return query("SELECT * FROM uservalues " +
 		"ORDER BY id DESC " +
-		"LIMIT 50");
+		"LIMIT 100");
 }
 
 //получить значения ПЭД пользователя
@@ -73,7 +73,9 @@ exports.selectValueKpiUserInPeriod = function(userName, date1, date2) {
 //получить значения одного ПЭД пользователя
 exports.selectValueKpiUserOneKpi = function(login, name_kpi) {
 	return query("SELECT * FROM uservalues " +
-		"WHERE name_kpi=? AND login_user=?", 
+		"WHERE name_kpi=? AND login_user=? " +
+		"ORDER BY date DESC " +
+		"LIMIT 50", 
 		[name_kpi, login]);
 }
 
@@ -85,19 +87,15 @@ exports.selectValueKpiById = function(id) {
 }
 
 //получить значения ПЭД для пользователя по имени, должности, факультету, кафедре
-exports.selectValueKpiByNameAndPosition = function(name, position, faculty, department) {
-	let SQLdepartment = "='" + department + "'";
-	if(position == "Декан")
-		SQLdepartment = " IS NULL";
+exports.selectValueKpiByLogin = function(login) {
 	return query("SELECT uservalues.id, uservalues.name_kpi, value, date, text, file, type, " +
 		"criterion_description description " +
 		"FROM uservalues " +
-		"INNER JOIN users ON users.login=uservalues.login_user " +
 		"INNER JOIN kpi ON kpi.name=uservalues.name_kpi " +
 		"INNER JOIN criterions ON criterions.name_kpi=kpi.name AND " +
 			"criterions.number_criterion=uservalues.number_criterion " +
-		"WHERE users.name=? AND position=? AND faculty=? AND department" + SQLdepartment + " AND valid=1", 
-		[name, position, faculty]);
+		"WHERE login_user=? AND valid=1", 
+		[login]);
 }
 
 

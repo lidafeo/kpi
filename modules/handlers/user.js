@@ -155,7 +155,6 @@ exports.valuekpi = function(req, res) {
 exports.POSTeditkpi = function(req, res) {
 	let position = req.session.userPosition;
 	let login = req.session.login;
-	console.log(position);
 	DBs.selectBallOneKpi(req.body.name, position).then(kpi => {
 		if(kpi[0].ball != 0) {
 			DBs.selectValueKpiUserOneKpi(login, req.body.name).then(result => {
