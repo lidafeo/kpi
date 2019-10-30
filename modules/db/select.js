@@ -51,10 +51,11 @@ exports.selectAllValueKpi = function() {
 
 //получить значения ПЭД пользователя
 exports.selectValueKpiUser = function(login) {
-	return query("SELECT uservalues.*, type, criterion_description FROM uservalues " +
+	return query("SELECT uservalues.*, type, criterion_description, users.name name_author FROM uservalues " +
 		"INNER JOIN kpi ON kpi.name=uservalues.name_kpi " +
 		"INNER JOIN criterions ON criterions.name_kpi=kpi.name AND " +
 			"criterions.number_criterion=uservalues.number_criterion " +
+		"LEFT JOIN users ON users.login=uservalues.author_verify " +
 		"WHERE login_user=? " + 
 		"ORDER BY date DESC", 
 		login);
@@ -72,7 +73,8 @@ exports.selectValueKpiUserInPeriod = function(userName, date1, date2) {
 
 //получить значения одного ПЭД пользователя
 exports.selectValueKpiUserOneKpi = function(login, name_kpi) {
-	return query("SELECT * FROM uservalues " +
+	return query("SELECT uservalues.*, users.name name_author FROM uservalues " +
+		"LEFT JOIN users ON users.login=uservalues.author_verify " +
 		"WHERE name_kpi=? AND login_user=? " +
 		"ORDER BY date DESC " +
 		"LIMIT 50", 
