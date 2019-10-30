@@ -94,7 +94,8 @@ exports.selectValueKpiByLogin = function(login) {
 		"INNER JOIN kpi ON kpi.name=uservalues.name_kpi " +
 		"INNER JOIN criterions ON criterions.name_kpi=kpi.name AND " +
 			"criterions.number_criterion=uservalues.number_criterion " +
-		"WHERE login_user=? AND valid=1", 
+		"WHERE login_user=? AND valid=1 " +
+		"ORDER BY date DESC", 
 		[login]);
 }
 

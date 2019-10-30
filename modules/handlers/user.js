@@ -17,7 +17,7 @@ exports.mypage = function(req, res) {
 	let level = req.session.level;
 	let numberGroup = req.session.numberGroup;
 	if(numberGroup == null) {
-		console.log("У пользователя нет ПЭДов");  
+		console.log("У пользователя нет ПЭД");  
 		if(level == 3) return res.redirect('/prorector');
 		if(level == 10) return res.redirect('/admin');
 		if(level == 11) return res.redirect('/pfu');
@@ -106,8 +106,6 @@ exports.mypage = function(req, res) {
 
 //страница добавления значений ПЭДов
 exports.editkpi = function(req, res) {
-	let name = req.session.userName;
-	let positionNumber = req.session.positionNumber;
 	DBs.selectAllKpi().then(result => {
 		let obj = {};
 		for(let i = 0; i < result.length; i++) {
