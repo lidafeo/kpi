@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Проверка значений</title>
+	<meta charset="utf-8" />
+	<link rel="stylesheet" type="text/css" href="../footer.css">
+	<link rel="stylesheet" type="text/css" href="../stylebut.css">
+	<link rel="stylesheet" type="text/css" href="../list.css">
+
+</head>
+<body>
+	<div class="wrapper">
+		<header>
+			
+			<% if(mypage) {%>
+				<form action="/exit" method="post">
+					<button class="exitt" >Выход</button></form>
+			<%} %>
+			<% if(!mypage) {%>
+				<a href="/mypage" class="exitt" >Назад</a>
+			<%} %> 
+				
+		</header>
+
+		<div class="content">
+			<form name="editform" class="formborder flexparent" style="margin-top: 8px; justify-content: center; width: 90%;" action="/verify" method="post">
+				<div class="flexblocks text">
+					<label>Факультет</label>
+					<% if(faculty.length == 1) {%>
+						<input type="text" name="faculty" class="text" id="faculty" value="<%=faculty[0]%>" style="width: 350px;" disabled>
+					<%} %>
+					<% if(faculty.length > 1) {%>
+						<select name="faculty" class="text" id="faculty">
+							<% for(let i = 0; i < faculty.length; i++) {%>
+								<option><%=faculty[i]%></option>
+							<%} %>
+						</select>
+					<%} %>
+				</div>
+
+				<div class="flexblocks text"><label>Кафедра</label>
+					<% if(department.length == 1) {%>
+						<input type="text" class="text" name="department" id="department" value="<%=department[0]%>" style="width: 350px;" disabled>
+					<%} %>
+					<% if(department.length > 1) {%>
+						<select name="department" class="text" id="department" style="width: 300px;">
+							<% for(let i = 0; i < department.length; i++) {%>
+								<option><%=department[i]%></option>
+							<%} %>
+						</select>
+					<%} %>
+					<button id="choosedep" class="buttonmypage">Выбрать кафедру</button></div>
+
+					<br>
+
+				<div class="flexblocks"><div id="usersdiv"></div>
+				</div>
+
+				
+			</form>
+
+			<div id="tablekpi" ></div>
+
+		</div>
+
+		<div class="footer">
+			<%- include("../partials/footer.ejs") %>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="../jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src="../carhartl-jquery-cookie-92b7715/jquery.cookie.js"></script>
+	<script type="text/javascript" src="../verify/verify.js"></script>
+	<script type="text/javascript" src="../findnumber.js"></script>
+</body>
+</html>

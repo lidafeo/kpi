@@ -19,10 +19,10 @@ exports.verify = function(req, res) {
 					let structure = result;
 					let facultyArr = additFunc.getFaculty(structure);
 					let departmentArr = additFunc.getDepartment(facultyArr[0], structure);
-					res.render('verify', {faculty: facultyArr, department: departmentArr, mypage: true});
+					res.render('head/page_verify', {faculty: facultyArr, department: departmentArr, mypage: true});
 				}).catch(err => {
 					console.log(err);
-					res.status(500).render('500');
+					res.status(500).render('error/500');
 				});
 				break;
 			//декан
@@ -34,10 +34,10 @@ exports.verify = function(req, res) {
 					for(let i = 0; i < result.length; i++) {
 						departmentArr.push(result[i].department);
 					}
-					res.render('verify', {faculty: facultyArr, department: departmentArr, mypage: false});
+					res.render('head/page_verify', {faculty: facultyArr, department: departmentArr, mypage: false});
 				}).catch(err => {
 					console.log(err);
-					res.status(500).render('500');
+					res.status(500).render('error/500');
 				});
 				break;
 			//зав. кафедрой
@@ -46,7 +46,7 @@ exports.verify = function(req, res) {
 				let departmentArr = [];
 				facultyArr.push(faculty);
 				departmentArr.push(department);
-				res.render('verify', {faculty: facultyArr, department: departmentArr, mypage: false});
+				res.render('head/page_verify', {faculty: facultyArr, department: departmentArr, mypage: false});
 				break;
 			//другие
 			default:
@@ -55,7 +55,7 @@ exports.verify = function(req, res) {
 		}
 	} catch (e) {
 		console.log("Ошибка доступа");
-		res.status(500).render('500');
+		res.status(500).render('error/500');
 	}
 };
 
@@ -66,15 +66,15 @@ exports.POSTverify = function(req, res) {
 	//находим значения ПЭД выбранного сотрудника
 	DBs.selectValueKpiByLogin(login).then(result => {
 		if(result.length == 0) {
-			res.render("partials/verifyVal", {kpi: [], textErr: "Нет добавленных действительных значений"});
+			res.render("head/partials/table_for_verify", {kpi: [], textErr: "Нет добавленных действительных значений"});
 		}
 		else {
 			modifydate(result);
-			res.render("partials/verifyVal", {kpi: result, textErr: false});
+			res.render("head/partials/table_for_verify", {kpi: result, textErr: false});
 		}
 	}).catch(err => {
 		console.log(err);
-		res.status(500).render('500');
+		res.status(500).render('error/500');
 	});
 }
 
@@ -110,10 +110,10 @@ exports.POSTgetworkers = function(req, res) {
 	let faculty = req.body.faculty;
 	let department = req.body.department;
 	DBs.selectUserFromDepartment(faculty, department, level).then(result => {
-		res.render('partials/workersdep', {worker: result});
+		res.render('head/partials/list_workers_division', {worker: result});
 	}).catch(err => {
 		console.log(err);
-		res.status(500).render('500');
+		res.status(500).render('error/500');
 	});
 
 }
@@ -132,7 +132,7 @@ exports.POSTgetstructure = function(req, res) {
 		res.json(structure);
 	}).catch(err => {
 		console.log(err);
-		res.status(500).render('500');
+		res.status(500).render('error/500');
 	});
 }
 

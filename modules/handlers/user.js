@@ -41,7 +41,7 @@ exports.mypage = function(req, res) {
 	.then(result => {
 		let objPeriod = getObjPeriod();
 		if(result.length == 0) {
-			res.render("mypage", {name: name, position: position, kpi: null, date1: 
+			res.render("pps/main_page", {name: name, position: position, kpi: null, date1: 
 				date1, date2: date2, level: level, objperiod: objPeriod});
 		}
 		else {
@@ -61,7 +61,7 @@ exports.mypage = function(req, res) {
 					resolve(ArrObj);
 				}).catch(err => {
 					console.log(err);
-					res.status(500).render('500');
+					res.status(500).render('error/500');
 				});
 			}).then(arrCriterion => {
 				let kpi = ArrOfKeyValues(arrCriterion, 'nameKpi');
@@ -94,13 +94,13 @@ exports.mypage = function(req, res) {
 				//устанавливаем правильный порядок вывода ПЭДов
 				for(let i = 0; i < arrkpi.length; i++)
 					arrkpi[i].sort(sortArr);
-				res.render("mypage", {name: name, position: position, kpi: arrkpi,
+				res.render("pps/main_page", {name: name, position: position, kpi: arrkpi,
 					date1: date1, date2: date2, level: level, objperiod: objPeriod});
 			});
 		}
 	}).catch(err => {
 		console.log(err);
-		res.status(500).render('500');
+		res.status(500).render('error/500');
 	});
 };
 
@@ -131,10 +131,10 @@ exports.editkpi = function(req, res) {
 				});
 			}
 		}
-		res.render('editkpi', {obj: obj});
+		res.render('pps/page_add_value_kpi', {obj: obj});
 	}).catch(err => {
 		console.log(err);
-		res.status(500).render('500');
+		res.status(500).render('error/500');
 	});
 };
 
@@ -142,10 +142,10 @@ exports.editkpi = function(req, res) {
 exports.valuekpi = function(req, res) {
 	DBs.selectValueKpiUser(req.session.login).then(result => {
 		modifydate(result);
-		res.render('valuekpi', {kpi: result});
+		res.render('pps/page_values_kpi', {kpi: result});
 	}).catch(err => {
 		console.log(err);
-		res.status(500).render('500');
+		res.status(500).render('error/500');
 	});
 }
 
@@ -157,18 +157,18 @@ exports.POSTeditkpi = function(req, res) {
 		if(kpi[0].ball != 0) {
 			DBs.selectValueKpiUserOneKpi(login, req.body.name).then(result => {
 				modifydate(result);
-				res.render("partials/postedVal", {kpi: result, desc: kpi, textErr: false});
+				res.render("pps/partials/table_posted_values", {kpi: result, desc: kpi, textErr: false});
 			}).catch(err => {
 				console.log(err);
-				res.status(500).render('500');
+				res.status(500).render('error/500');
 			});
 		}
 		else {
-			res.render("partials/postedVal", {kpi: [], textErr: true});
+			res.render("pps/partials/table_posted_values", {kpi: [], textErr: true});
 		}
 	}).catch(err => {
 		console.log(err);
-		res.status(500).render('500');
+		res.status(500).render('error/500');
 	});
 };
 
@@ -180,7 +180,7 @@ exports.sendfiles = function(req, res) {
 		res.download("./sendfiles/" + file + '.' + doc.file.split('.').pop(), doc.file);
 	}).catch(err => {
 		console.log(err);
-		res.status(500).render('500');
+		res.status(500).render('error/500');
 	});
 };
 
@@ -224,7 +224,7 @@ exports.POSTupload = function(req, res) {
 						}
 				}).catch(err => {
 					console.log(err);
-					res.status(500).render('500');
+					res.status(500).render('error/500');
 				});
 		});
 	});

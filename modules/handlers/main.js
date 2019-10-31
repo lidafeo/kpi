@@ -45,7 +45,7 @@ exports.auth = function(req, res) {
 		else
 			res.render("auth", {checkpassword: true, close: false});
 	}).catch(err => {
-		res.status(500).render('500');
+		res.status(500).render('error/500');
 	});
 };
 
@@ -80,7 +80,7 @@ exports.exit = function(req, res) {
 
 //404
 exports.notfound = function(req, res) {
-	res.status(404).render('404');
+	res.status(404).render('error/404');
 }
 
 //проверка введенного логина

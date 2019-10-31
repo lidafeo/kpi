@@ -50,17 +50,17 @@ exports.getObjPeriod = function() {
 
 //проверка прав админа
 exports.checkadmin = function(req, res, next) {
-	if(req.session.level != 10) return res.status(404).render("404");
+	if(req.session.level != 10) return res.status(404).render("error/404");
 	else next();
 }
 
 //получение списка работников
 exports.getusers = function(req, res) {
 	DBs.selectAllUsers().then(users => {
-		res.render('admin/listusers', {users: users});
+		res.render('admin/user/page_table_users', {users: users});
 	}).catch(err => {
 		console.log(err);
-		res.status(500).render('500');
+		res.status(500).render('error/500');
 	});
 	
 }
@@ -76,15 +76,15 @@ exports.adduser = function(req, res) {
 			let facultyArr = additFunc.getFaculty(structure);
 			let departmentArr = additFunc.getDepartment(facultyArr[0], structure);
 			
-			res.render('admin/adduser', {positions: pos, action: action, faculty: facultyArr, 
+			res.render('admin/user/page_add_user', {positions: pos, action: action, faculty: facultyArr, 
 				department: departmentArr});
 		}).catch(err => {
 			console.log(err);
-			res.status(500).render('500');
+			res.status(500).render('error/500');
 		});
 	}).catch(err => {
 		console.log(err);
-		res.status(500).render('500');
+		res.status(500).render('error/500');
 	});
 };
 
@@ -93,7 +93,7 @@ exports.adduserfile = function(req, res) {
 	let action = 0;
 	if(req.query.action == 'ok') action = 1;
 	if(req.query.action == 'err') action = 2;
-	res.render('admin/adduserfile', {action: action});
+	res.render('admin/user/page_add_users_from_file', {action: action});
 };
 
 //удаление сотрудника
@@ -102,10 +102,10 @@ exports.deleteuser = function(req, res) {
 	if(req.query.action == 'ok') action = 1;
 	if(req.query.action == 'err') action = 2;
 	DBs.selectAllUsers().then(users => {
-		res.render('admin/deleteuser', {users: users, action: action});
+		res.render('admin/user/page_delete_user', {users: users, action: action});
 	}).catch(err => {
 		console.log(err);
-		res.status(500).render('500');
+		res.status(500).render('error/500');
 	});
 };
 
@@ -131,10 +131,10 @@ exports.getkpi = function(req, res) {
 			}
 			kpi[section.indexOf(oneKpi.section)].push(oneKpi);
 		}
-		res.render('admin/listkpi', {kpi: kpi, positions: positions});
+		res.render('admin/kpi/page_table_kpi', {kpi: kpi, positions: positions});
 	}).catch(err => {
 		console.log(err);
-		res.status(500).render('500');
+		res.status(500).render('error/500');
 	});
 }
 
@@ -145,14 +145,14 @@ exports.addkpi = function(req, res) {
 	if(req.query.action == 'err') action = 2;
 	DBs.selectAllSection().then(section => {
 		DBs.selectPositionWithBalls().then(positions => {
-			res.render('admin/addkpi', {section: section, action: action, positions: positions});
+			res.render('admin/kpi/page_add_kpi', {section: section, action: action, positions: positions});
 		}).catch(err => {
 			console.log(err);
-			res.status(500).render('500');
+			res.status(500).render('error/500');
 		});
 	}).catch(err => {
 		console.log(err);
-		res.status(500).render('500');
+		res.status(500).render('error/500');
 	});
 };
 
@@ -162,10 +162,10 @@ exports.deletekpi = function(req, res) {
 	if(req.query.action == 'ok') action = 1;
 	if(req.query.action == 'err') action = 2;
 	DBs.selectAllKpi().then(result => {
-		res.render('admin/deletekpi', {kpi: result, action: action});
+		res.render('admin/kpi/page_delete_kpi', {kpi: result, action: action});
 	}).catch(err => {
 		console.log(err);
-		res.status(500).render('500');
+		res.status(500).render('error/500');
 	});
 };
 
@@ -175,10 +175,10 @@ exports.editballs = function(req, res) {
 	if(req.query.action == 'ok') action = 1;
 	if(req.query.action == 'err') action = 2;
 	DBs.selectAllKpi().then(result => {
-		res.render('admin/editballs', {kpi: result, choose: false, action: action});
+		res.render('admin/kpi/page_edit_balls_kpi', {kpi: result, choose: false, action: action});
 	}).catch(err => {
 		console.log(err);
-		res.status(500).render('500');
+		res.status(500).render('error/500');
 	});
 };
 
@@ -197,7 +197,7 @@ exports.main = function(req, res) {
 		else {
 			logs = data.split(';');
 		}
-		res.render('admin/admin', {logs: logs, date: dateHTML});
+		res.render('admin/main_page', {logs: logs, date: dateHTML});
 	});
 };
 
@@ -216,7 +216,7 @@ exports.getlogs = function(req, res) {
 		else {
 			logs = data.split(';');
 		}
-		res.render('admin/partials/getlogs', {logs: logs, date: dateHTML});
+		res.render('admin/partials/list_logs', {logs: logs, date: dateHTML});
 	});
 }
 
@@ -229,22 +229,22 @@ exports.getballusers = function(req, res) {
 			result[i].start_datestr = dateModule.dateToString(result[i].start_date).split('_').join('.');
 			result[i].finish_datestr = dateModule.dateToString(result[i].finish_date).split('_').join('.');
 		}
-		res.render('admin/tableuservalue', {balls: result});
+		res.render('admin/page_values_kpi', {balls: result});
 	}).catch(err => {
 		console.log(err);
-		res.status(500).render('500');
+		res.status(500).render('error/500');
 	});
 }
 
 //страница установки текущего периода
 exports.setperiod = function(req, res) {
-	res.render('admin/setperiod', {setbool: objPeriod.setbool, period: objPeriod});
+	res.render('admin/page_set_period', {setbool: objPeriod.setbool, period: objPeriod});
 }
 
 //страница закрытия/открытия кабинетов
 exports.closeaccount = function(req, res) {
-	if(close) res.render('admin/closeaccount', {op: false});
-	else res.render('admin/closeaccount', {op: true});
+	if(close) res.render('admin/page_close_account', {op: false});
+	else res.render('admin/page_close_account', {op: true});
 }
 
 //добавление пользователя
@@ -278,7 +278,7 @@ exports.POSTadduser = function(req, res) {
 	}).catch(function(err) {
 		console.log("Error saving user: ");
 		console.log(err);
-		res.status(500).render('500');
+		res.status(500).render('error/500');
 	});
 };
 
@@ -479,7 +479,7 @@ exports.POSTaddkpi = function(req, res) {
 			});
 	}).catch(err => {
 		console.log(err);
-		res.status(500).render('500');
+		res.status(500).render('error/500');
 	});
 };
 
@@ -539,12 +539,12 @@ exports.POSTeditballs = function(req, res) {
 	DBs.selectOneKpiWithBalls(req.body.name).then(result => {
 		let positions = [];
 		let kpi = getKpiObj(result, positions);
-		res.render('admin/editballs', {choose: true, arr: kpi.lines, positions: positions, 
+		res.render('admin/kpi/page_edit_balls_kpi', {choose: true, arr: kpi.lines, positions: positions, 
 			count_criterion: result[0].count_criterion, type: result[0].type, name: result[0].name, 
 			description: result[0].description});
 	}).catch(err => {
 		console.log(err);
-		res.status(500).render('500');
+		res.status(500).render('error/500');
 	});
 };
 

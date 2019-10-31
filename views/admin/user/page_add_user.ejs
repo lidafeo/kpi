@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Добавление пользователя</title>
+	<meta charset="utf-8" />
+	<link rel="stylesheet" type="text/css" href="../form.css">
+	<link rel="stylesheet" type="text/css" href="../admin/menu.css">
+	<link rel="stylesheet" type="text/css" href="../footer.css">
+	<link rel="stylesheet" type="text/css" href="../stylebut.css">
+</head>
+<body>
+	<div class="wrapper">
+		<div class="content">
+			<%- include("../partials/menu.ejs") %>
+			<br>
+			<% if(action == 1) {%>
+				<p class="uspeshno">Успешно</p>
+			<%} %>
+			<% if(action == 2) {%>
+				<p class="errormess">Ошибка добавления пользователя</p>
+			<%} %>
+			<%- include("partials/form_add_user.ejs") %>
+		</div>
+		
+		<div class="footer">
+			<%- include("../../partials/footer.ejs") %>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="../jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src="../carhartl-jquery-cookie-92b7715/jquery.cookie.js"></script>
+	<script type="text/javascript" src="../admin/adduser.js"></script>
+</body>
+</html>

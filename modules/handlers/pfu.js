@@ -9,7 +9,7 @@ let dateModule = require('../date.js');
 //главная страница ПФУ
 exports.pfu = function(req, res) {
 	let objPeriod = getObjPeriod();
-	res.render('pfu', {setbool: objPeriod.setbool, period: objPeriod});
+	res.render('pfu/page_pfu', {setbool: objPeriod.setbool, period: objPeriod});
 }
 
 //создание отчета
@@ -104,11 +104,11 @@ exports.getReport = function(req, res) {
 					objPeriod.date2.split("-").reverse().join('_') + '.xlsx', res);
 		}).catch(err => {
 			console.log(err);
-			res.status(500).render('500');
+			res.status(500).render('error/500');
 		});
 	}).catch(err => {
 		console.log(err);
-		res.status(500).render('500');
+		res.status(500).render('error/500');
 	});
 }
 

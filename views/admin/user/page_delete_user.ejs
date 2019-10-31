@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Удаление пользователя</title>
+	<meta charset="utf-8" />
+	<link rel="stylesheet" type="text/css" href="../admin/menu.css">
+	<link rel="stylesheet" type="text/css" href="../footer.css">
+	<link rel="stylesheet" type="text/css" href="../stylebut.css">
+	<link rel="stylesheet" type="text/css" href="../form.css">
+
+</head>
+<body>
+	<div class="wrapper">
+		<div class="content">
+			<%- include("../partials/menu.ejs") %>
+			<br>
+			<% if(action == 1) {%>
+				<p class="uspeshno">Успешно</p>
+			<%} %>
+			<% if(action == 2) {%>
+				<p class="errormess">Ошибка удаления</p>
+			<%} %>
+			<form name="deleteuser" action="/deleteuser" 
+			class="formborderadmin" method="post" autocomplete="off">
+				<label for="users">Сотрудник:</label>
+				<input name="user" list="users" style="width: 35%; font-size: 16px;" required>
+				<datalist id="users">
+					<% for(let i = 0; i < users.length; i++) {%>
+						<option value="<%=users[i].login%>"><%=(users[i].name + ", " + users[i].position)%></option>
+					<%} %>
+				</datalist>
+				<input type="submit" class="buttonmypage" name="sub" value="Удалить">
+			</form>
+		</div>
+		
+		<div class="footer">
+			<%- include("../../partials/footer.ejs") %>
+		</div>
+	</div>
+
+</body>
+</html>
