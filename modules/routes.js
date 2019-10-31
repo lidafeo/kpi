@@ -22,14 +22,13 @@ module.exports = function(app) {
 	app.use(main.checksession);
 
 	app.get('/mypage', user.mypage);
-	app.get('/editkpi', rightImplementKpi, user.editkpi);
-	app.post('/editkpi', jsonParser, user.POSTeditkpi);
+	app.get('/mypage/editkpi', rightImplementKpi, user.editkpi);
+	app.get('/mypage/valuekpi', rightImplementKpi, user.valuekpi);
 	app.get("/sendfiles", rightImplementKpi, user.sendfiles);
+	app.post('/editkpi', jsonParser, user.POSTeditkpi);
 	app.post('/upload', user.POSTupload);
-	app.get('/valuekpi', rightImplementKpi, user.valuekpi);
 
 	app.get('/verify', rightVerify, verify.verify);
-	app.get('/prorector', rightVerify, verify.verify);
 	app.post('/verify', jsonParser, verify.POSTverify);
 	app.post('/invalid', jsonParser, verify.POSTinvalid);
 	app.post('/getworkers', jsonParser, verify.POSTgetworkers);

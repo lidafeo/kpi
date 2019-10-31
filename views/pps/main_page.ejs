@@ -3,9 +3,9 @@
 <head>
 	<title>Моя страница</title>
 	<meta charset="utf-8" />
-	<link rel="stylesheet" type="text/css" href="../list.css">
-	<link rel="stylesheet" type="text/css" href="../footer.css">
-	<link rel="stylesheet" type="text/css" href="../stylebut.css">
+	<link rel="stylesheet" type="text/css" href="../general_style/list.css">
+	<link rel="stylesheet" type="text/css" href="../general_style/footer.css">
+	<link rel="stylesheet" type="text/css" href="../general_style/stylebut.css">
 </head>
 <body>
 	<div class="wrapper">
@@ -20,8 +20,8 @@
 				<br><br>
 			<%} %>
 			<form class="flexparent">
-			<a href="/editkpi" class="buttonmypage flexblocks" >Отметить выполнение ПЭД</a>
-			<a href="/valuekpi" class="buttonmypage flexblocks">Посмотреть добавленные значения</a>
+			<a href="/mypage/editkpi" class="buttonmypage flexblocks" >Отметить выполнение ПЭД</a>
+			<a href="/mypage/valuekpi" class="buttonmypage flexblocks">Посмотреть добавленные значения</a>
 			<% if(level) {%>
 				<a href="/verify" class="buttonmypage flexblocks">Проверить подтверждения ПЭДов преподавателей</a>
 			<%} %>

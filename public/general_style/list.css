@@ -1,0 +1,61 @@
+table {
+	width: auto;
+	margin: 5px;
+	text-align: center;
+	border: 2px solid rgba(34,36,38,.1);
+    box-shadow: none;
+    border-radius: .28571429rem;
+    border-collapse: collapse;
+	border-spacing: 0;
+	font-size: 16px;
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+}
+@media(max-width: 1600px) {
+	 table{
+	  font-size: 14px;
+	}
+  }
+@media(max-width: 980px) {
+     table{
+	  font-size: 11px;
+	}
+  }
+ 
+
+th {
+    border-spacing: 0;
+	box-shadow: none;
+	background: #f9fafb;
+	font-weight: normal;
+	padding: 10px 10px;
+}
+td:first-child {
+	padding: 10px 10px;
+}
+
+tr:nth-child(2n) {
+	background: #F9FAFB;}
+
+th, td {
+	border-color: white;
+	border: 1px solid rgba(34,36,38,.1);
+	padding: 5px;
+}
+td {
+	background: rgba(244, 246, 248, 0.226);
+}
+
+
+
+.nametable {
+	color: rgb(0, 0, 0);
+	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	text-align: center;
+	margin: 15px 0 15px 0;
+}
+
+
+.razdel
+{
+	margin-right: 13%;
+}

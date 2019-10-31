@@ -18,7 +18,7 @@ exports.mypage = function(req, res) {
 	let numberGroup = req.session.numberGroup;
 	if(numberGroup == null) {
 		console.log("У пользователя нет ПЭД");  
-		if(level == 3) return res.redirect('/prorector');
+		if(level == 3) return res.redirect('/verify');
 		if(level == 10) return res.redirect('/admin');
 		if(level == 11) return res.redirect('/pfu');
 	}
