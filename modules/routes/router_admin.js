@@ -14,7 +14,7 @@ adminRouter.use(admin.checkadmin);
 routerUser.get('/get_users', admin.getusers);
 routerUser.get('/delete_user', admin.deleteuser);
 routerUser.get('/add_user', admin.adduser);
-routerUser.get('/add_user_from_file', admin.adduserfile);
+routerUser.get('/add_users_from_file', admin.adduserfile);
 
 // admin/kpi
 routerKpi.get('/get_kpi', admin.getkpi);

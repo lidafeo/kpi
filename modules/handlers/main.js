@@ -31,6 +31,7 @@ exports.auth = function(req, res) {
 			let rights = {};
 			rights.pps = result.func_pps;
 			rights.head = result.func_head;
+			console.log(result.func_head);
 			rights.admin = result.func_admin;
 			rights.pfu = result.func_pfu;
 			req.session.rights = rights;

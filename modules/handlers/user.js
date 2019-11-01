@@ -175,6 +175,7 @@ exports.POSTeditkpi = function(req, res) {
 //отправка файла пользователю
 exports.sendfiles = function(req, res) {
 	let file = req.query.file;
+	console.log("Zahodit");
 	DBs.selectValueKpiById(file).then(result => {
 		doc = result[0];
 		res.download("./sendfiles/" + file + '.' + doc.file.split('.').pop(), doc.file);

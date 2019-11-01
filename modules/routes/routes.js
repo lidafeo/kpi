@@ -26,7 +26,7 @@ module.exports = function(app) {
 	app.get('/mypage', user.mypage);
 	app.get('/mypage/editkpi', rightImplementKpi, user.editkpi);
 	app.get('/mypage/valuekpi', rightImplementKpi, user.valuekpi);
-	app.get("/sendfiles", rightImplementKpi, user.sendfiles);
+	app.get("/sendfiles", rightPpsOrVerify, user.sendfiles);
 	app.post('/editkpi', jsonParser, user.POSTeditkpi);
 	app.post('/upload', user.POSTupload);
 
@@ -61,21 +61,26 @@ module.exports = function(app) {
 //проверка прав доступа к страницам
 
 function rightImplementKpi (req, res, next) {
-	if(req.session.rights.pps == 0) res.status(404).render("404");
+	if(req.session.rights.pps == 0) res.status(404).render("error/404");
 	else next();
 }
 
 function rightVerify (req, res, next) {
-	if(req.session.rights.head == 0) res.status(404).render("404");
+	if(req.session.rights.head == 0) res.status(404).render("error/404");
+	else next();
+}
+
+function rightPpsOrVerify (req, res, next) {
+	if(req.session.rights.head == 0 && req.session.rights.pps == 0) res.status(404).render("error/404");
 	else next();
 }
 
 function rightAdmin (req, res, next) {
-	if(req.session.rights.admin == 0) res.status(404).render("404");
+	if(req.session.rights.admin == 0) res.status(404).render("error/404");
 	else next();
 }
 
 function rightPfu (req, res, next) {
-	if(req.session.rights.pfu == 0) res.status(404).render("404");
+	if(req.session.rights.pfu == 0) res.status(404).render("error/404");
 	else next();
 }
