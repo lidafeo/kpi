@@ -27,7 +27,7 @@
 				<td><%=kpi[i].value %></td>
 				<td><%=kpi[i].text %></td>
 				<% if(kpi[i].file) {%>
-					<td><a href=<%="/sendfiles?file="+kpi[i].id %> download=""><img src="/img/download.png" alt="Скачать файл"></a></td>
+					<td><a href=<%="/upload_file?file="+kpi[i].id %> download=""><img src="/img/download.png" alt="Скачать файл"></a></td>
 				<%} %>
 				<% if(!kpi[i].file) {%>
 					<td></td>

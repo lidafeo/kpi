@@ -10,7 +10,7 @@
 <body>
 	<div class="wrapper">
 		<header>
-			<a href="/mypage" class="exitt">Назад</a>
+			<a href="/my_page" class="exitt">Назад</a>
 		</header>
 		<div class="content">
 			<h2>Значения ПЭД</h2>
@@ -36,7 +36,7 @@
 							<td><%=kpi[i].value%></td>
 							<td><%=kpi[i].text %></td>
 							<% if(kpi[i].file) {%>
-								<td><a href=<%="/sendfiles?file="+kpi[i].id %> download=""><img src="/img/download.png" alt="Скачать файл"></a></td>
+								<td><a href=<%="/upload_file?file="+kpi[i].id %> download=""><img src="/img/download.png" alt="Скачать файл"></a></td>
 							<%} %>
 							<% if(!kpi[i].file) {%>
 								<td></td>

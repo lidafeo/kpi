@@ -172,14 +172,29 @@ exports.deletekpi = function(req, res) {
 //страница изменения оценок ПЭДа
 exports.editballs = function(req, res) {
 	let action = 0;
-	if(req.query.action == 'ok') action = 1;
-	if(req.query.action == 'err') action = 2;
-	DBs.selectAllKpi().then(result => {
-		res.render('admin/kpi/page_edit_balls_kpi', {kpi: result, choose: false, action: action});
-	}).catch(err => {
-		console.log(err);
-		res.status(500).render('error/500');
-	});
+	let kpi = req.query.name;
+	if(kpi) {
+		DBs.selectOneKpiWithBalls(kpi).then(result => {
+			let positions = [];
+			let kpi = getKpiObj(result, positions);
+			res.render('admin/kpi/page_edit_balls_kpi', {choose: true, arr: kpi.lines, positions: positions, 
+				count_criterion: result[0].count_criterion, type: result[0].type, name: result[0].name, 
+				description: result[0].description});
+		}).catch(err => {
+			console.log(err);
+			res.status(500).render('error/500');
+		});
+	}
+	else {
+		if(req.query.action == 'ok') action = 1;
+		if(req.query.action == 'err') action = 2;
+		DBs.selectAllKpi().then(result => {
+			res.render('admin/kpi/page_edit_balls_kpi', {kpi: result, choose: false, action: action});
+		}).catch(err => {
+			console.log(err);
+			res.status(500).render('error/500');
+		});
+	}
 };
 
 //страница администратора
@@ -268,10 +283,10 @@ exports.POSTadduser = function(req, res) {
 			//запись логов
 			writeLogs(req.session.login, "добавил(а) нового пользователя: login - " + login);
 			console.log("Сохранен объект user");
-			res.redirect('/admin/adduser?action=ok');
+			res.redirect('/admin/users/add_user?action=ok');
 		}).catch(err => {
 			console.log("Скорее всего такой пользователь уже есть");
-			res.redirect('/admin/adduser?action=err');
+			res.redirect('/admin/users/add_user?action=err');
 		});
 	}).then(function() {
 		console.log("Пароль успешно хеширован");
@@ -291,7 +306,7 @@ exports.POSTadduserfile = function(req, res) {
 		let arr = ['xls', 'xlsx'];
 		let ext = files.file.name.split('.').pop();
 		if(!files.file || arr.indexOf(ext) == -1) 
-			return res.redirect('/admin/adduserfile?action=err');
+			return res.redirect('/admin/users/add_users_from_file?action=err');
 
 		let workbook = xlsx.readFile(files.file.path);
 		let first_sheet_name = workbook.SheetNames[0];
@@ -328,7 +343,7 @@ exports.POSTadduserfile = function(req, res) {
 			writeLogs(req.session.login, "добавил(а) нового пользователя: login - " + user.login);
 			console.log("Сохранен объект user", user.login);
 		})).then(result => {
-			res.redirect('/admin/adduserfile?action=ok');
+			res.redirect('/admin/users/add_users_from_file?action=ok');
 		});
 	});
 }
@@ -341,15 +356,15 @@ exports.POSTdeleteuser = function(req, res) {
 			console.log("Удален пользователь: ", login);
 			//записываем логи
 			writeLogs(req.session.login, "удалил(а) пользователя " + login);
-			res.redirect('/admin/deleteuser?action=ok');
+			res.redirect('/admin/users/delete_user?action=ok');
 		}
 		else {
 			console.log("Нет такого пользователя: " + login);
-			res.redirect('/admin/deleteuser?action=err');
+			res.redirect('/admin/users/delete_user?action=err');
 		}
 	}).catch(err => {
 		console.log(err);
-		res.redirect('/admin/deleteuser?action=err');
+		res.redirect('/admin/users/delete_user?action=err');
 	});
 };
 
@@ -359,7 +374,7 @@ exports.POSTcloseaccount = function(req, res) {
 	//записываем логи
 	writeLogs(req.session.login, "закрыл(а) личные кабинеты ППС");
 	close = true;
-	res.redirect('admin/closeaccount');
+	res.redirect('admin/close_account');
 }
 
 //открыть кабинеты
@@ -368,7 +383,7 @@ exports.POSTopenaccount = function(req, res) {
 	//записываем логи
 	writeLogs(req.session.login, "открыл(а) личные кабинеты ППС");
 	close = false;
-	res.redirect('admin/closeaccount');
+	res.redirect('admin/close_account');
 }
 
 //установка текущего периода
@@ -385,7 +400,7 @@ exports.POSTsetperiod = function(req, res) {
 		writeLogs(req.session.login, "установил(а) период для отчета с " + 
 			date1.split('-').reverse().join('.') + " по " + date2.split('-').reverse().join('.'));
 	}
-	res.redirect('/admin/setperiod');
+	res.redirect('/admin/set_period');
 }
 
 //добавление ПЭДа
@@ -468,14 +483,14 @@ exports.POSTaddkpi = function(req, res) {
 					//записываем логи
 					writeLogs(req.session.login, "добавил(а) ПЭД " + req.body.name);
 					console.log("Сохранен объект kpi");
-					res.redirect('/admin/addkpi?action=ok');
+					res.redirect('/admin/kpi/add_kpi?action=ok');
 				}).catch(err => {
 					console.log("Скорее всего такой ПЭД уже есть");
-					res.redirect('/admin/addkpi?action=err');
+					res.redirect('/admin/kpi/add_kpi?action=err');
 				});
 			}).catch(err => {
 				console.log(err);
-				res.redirect('/admin/addkpi?action=err');
+				res.redirect('/admin/kpi/add_kpi?action=err');
 			});
 	}).catch(err => {
 		console.log(err);
@@ -490,15 +505,15 @@ exports.POSTdeletekpi = function(req, res) {
 			console.log("Удален объект kpi ", req.body.name);
 			//записываем логи
 			writeLogs(req.session.login, "удалил(а) ПЭД " + req.body.name);
-			res.redirect('admin/deletekpi?action=ok');
+			res.redirect('admin/kpi/delete_kpi?action=ok');
 		}
 		else {
 			console.log("Такого ПЭД нет: " + req.body.name);
-			res.redirect('admin/deletekpi?action=err');
+			res.redirect('admin/kpi/delete_kpi?action=err');
 		}
 	}).catch(err => {
 		console.log(err);
-		res.redirect('admin/deletekpi?action=err');
+		res.redirect('admin/kpi/delete_kpi?action=err');
 	});
 }
 
@@ -523,14 +538,14 @@ exports.POSTeditballskpi = function(req, res) {
 			console.log("Оценки успешно изменены", req.body.name);
 			//записываем логи
 			writeLogs(req.session.login, "изменил(а) оценки ПЭД " + req.body.name);
-			res.redirect('admin/editballs?action=ok');
+			res.redirect('admin/kpi/edit_balls?action=ok');
 		}).catch(err => {
 			console.log(err);
-			res.redirect('admin/editballs?action=err');
+			res.redirect('admin/kpi/edit_balls?action=err');
 		});
 	}).catch(err => {
 		console.log(err);
-		res.redirect('admin/editballs?action=err');
+		res.redirect('admin/kpi/edit_balls?action=err');
 	});
 };
 
@@ -551,7 +566,7 @@ exports.POSTeditballs = function(req, res) {
 //Оповещение сотрудников о скором закрытии кабинетов
 exports.notify = function(req, res) {
 	objPeriod.notify = true;
-	res.redirect('/admin/setperiod');
+	res.redirect('/admin/set_period');
 }
 
 

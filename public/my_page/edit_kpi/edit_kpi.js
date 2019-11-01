@@ -9,7 +9,7 @@ $(document).ready(function() {
 		let sendValue = JSON.stringify({section: section, subtype: subtype, number: number});
 		let request = new XMLHttpRequest();
 		//посылаем запрос на адрес "/editkpi"
-		request.open("POST", "/editkpi", true);
+		request.open("POST", "/edit_kpi", true);
 		request.setRequestHeader("Content-Type", "application/json");
 		request.addEventListener("load", function() {
 			$('#tablekpi').html(request.response);
@@ -29,7 +29,7 @@ $(document).ready(function() {
 		let sendValue = JSON.stringify({name: elem});
 		let request = new XMLHttpRequest();
 		//посылаем запрос на адрес "/editkpi"
-		request.open("POST", "/editkpi", true);
+		request.open("POST", "/edit_kpi", true);
 		request.setRequestHeader("Content-Type", "application/json");
 		request.addEventListener("load", function() {
 			$('#tablekpi').html(request.response);

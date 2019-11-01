@@ -175,7 +175,6 @@ exports.POSTeditkpi = function(req, res) {
 //отправка файла пользователю
 exports.sendfiles = function(req, res) {
 	let file = req.query.file;
-	console.log("Zahodit");
 	DBs.selectValueKpiById(file).then(result => {
 		doc = result[0];
 		res.download("./sendfiles/" + file + '.' + doc.file.split('.').pop(), doc.file);
@@ -188,7 +187,6 @@ exports.sendfiles = function(req, res) {
 //отправка ПЭДа (добавление)
 exports.POSTupload = function(req, res) {
 	let login = req.session.login;
-	let numberGroup = req.session.numberGroup;
 	let form = new formidable.IncomingForm();
 	form.parse(req, function(err, fields, files) {
 		if(err) return console.log(err);

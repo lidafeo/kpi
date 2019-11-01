@@ -23,11 +23,11 @@ module.exports = function(app) {
 	app.use(main.checkaccount);
 	app.use(main.checksession);
 
-	app.get('/mypage', user.mypage);
-	app.get('/mypage/editkpi', rightImplementKpi, user.editkpi);
-	app.get('/mypage/valuekpi', rightImplementKpi, user.valuekpi);
-	app.get("/sendfiles", rightPpsOrVerify, user.sendfiles);
-	app.post('/editkpi', jsonParser, user.POSTeditkpi);
+	app.get('/my_page', user.mypage);
+	app.get('/my_page/edit_kpi', rightImplementKpi, user.editkpi);
+	app.get('/my_page/values_kpi', rightImplementKpi, user.valuekpi);
+	app.get('/upload_file', rightPpsOrVerify, user.sendfiles);
+	app.post('/edit_kpi', jsonParser, user.POSTeditkpi);
 	app.post('/upload', user.POSTupload);
 
 	app.get('/verify', rightVerify, verify.verify);
@@ -40,17 +40,18 @@ module.exports = function(app) {
 	app.post('/pfu', pfu.getReport);
 
 	app.use('/admin', adminRouter);
-	
-	app.post('/adduser', urlencodedParser, admin.POSTadduser);
-	app.post('/adduserfile', urlencodedParser, admin.POSTadduserfile);
-	app.post('/deleteuser', urlencodedParser, admin.POSTdeleteuser);
+
+	//app.post('/adduser', urlencodedParser, admin.POSTadduser);
+	//app.post('/adduserfile', urlencodedParser, admin.POSTadduserfile);
+	//app.post('/deleteuser', urlencodedParser, admin.POSTdeleteuser);
 	app.post('/closeaccount', urlencodedParser, admin.POSTcloseaccount);
 	app.post('/openaccount', urlencodedParser, admin.POSTopenaccount);
-	app.post('/setperiod', urlencodedParser, admin.POSTsetperiod);
+	app.post('/set_period', urlencodedParser, admin.POSTsetperiod);
 	app.post('/addkpi', urlencodedParser, admin.POSTaddkpi);
-	app.post('/deletekpi', urlencodedParser, admin.POSTdeletekpi);
-	app.post('/editballskpi', urlencodedParser, admin.POSTeditballskpi);
-	app.post('/editballs', urlencodedParser, admin.POSTeditballs);
+	//app.post('/deletekpi', urlencodedParser, admin.POSTdeletekpi);
+	app.post('/edit_balls_kpi', urlencodedParser, admin.POSTeditballskpi);
+	//app.post('/edit_balls', urlencodedParser, admin.POSTeditballs);
+
 
 	app.post('/getlogs', jsonParser, admin.getlogs);
 	app.post('/notify', jsonParser, admin.notify);

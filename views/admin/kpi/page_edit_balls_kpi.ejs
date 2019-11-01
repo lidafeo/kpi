@@ -21,19 +21,19 @@
 				<% if(action == 2) {%>
 					<p class="errormess">Ошибка изменения оценок</p>
 				<%} %>
-				<form name="editballs" class="formborderadmin" action="/editballs" method="post">
+				<form name="editballs" class="formborderadmin"  action="admin/kpi/edit_balls" method="GET">
 					
 					<label for="name" class="text">Показатель эффективности</label>
-					<select name="name" class="text" id="name">
+					<select name="name" class="text" id="namekpi" id="name">
 						<% for(let i = 0; i < kpi.length; i++) {%>
 						<option><%=kpi[i].name%></option>
 						<%} %>
 					</select>
-					<input type="submit" class="buttonmypage"  name="submit" value="Выбрать">
+					<input type="submit" class="buttonmypage" value="Выбрать">
 				</form>
 			<%} %>
 			<% if(choose) {%>
-				<form name="editballskpi" class="formborderadmin" style="width: 95%;" action="/editballskpi" method="post">
+				<form name="editballskpi" class="formborderadmin" style="width: 95%;" action="/edit_balls_kpi" method="post">
 					<input type="hidden" name="name" value=<%=name%>>
 					Выбранный ПЭД: <%=description%>
 					<br>

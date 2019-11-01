@@ -6,7 +6,7 @@ let getclose = require('./admin.js').getclose;
 
 exports.home = function(req, res) {
 	if(req.session.userName) 
-		return res.redirect('/mypage');
+		return res.redirect('/my_page');
 	res.render("auth", {checkpassword: false, close: false});
 };
 
@@ -31,7 +31,6 @@ exports.auth = function(req, res) {
 			let rights = {};
 			rights.pps = result.func_pps;
 			rights.head = result.func_head;
-			console.log(result.func_head);
 			rights.admin = result.func_admin;
 			rights.pfu = result.func_pfu;
 			req.session.rights = rights;
@@ -41,7 +40,7 @@ exports.auth = function(req, res) {
 			if(closeAccount && result.func_pps)
 				return res.render("auth", {checkpassword: false, close: true});
 
-			res.redirect('/mypage');
+			res.redirect('/my_page');
 		}
 		else
 			res.render("auth", {checkpassword: true, close: false});

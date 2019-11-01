@@ -20,14 +20,14 @@
 				<br><br>
 			<%} %>
 			<form class="flexparent">
-			<a href="/mypage/editkpi" class="buttonmypage flexblocks" >Отметить выполнение ПЭД</a>
-			<a href="/mypage/valuekpi" class="buttonmypage flexblocks">Посмотреть добавленные значения</a>
+			<a href="/my_page/edit_kpi" class="buttonmypage flexblocks" >Отметить выполнение ПЭД</a>
+			<a href="/my_page/values_kpi" class="buttonmypage flexblocks">Посмотреть добавленные значения</a>
 			<% if(level) {%>
 				<a href="/verify" class="buttonmypage flexblocks">Проверить подтверждения ПЭДов преподавателей</a>
 			<%} %>
 			<br>
 		</form>
-			<form name="date" action="/mypage" class="text" method="get">
+			<form name="date" action="/my_page" class="text" method="get">
 				<label>Период отчета с </label>
 				<input type="date" name="date1" id="date1" class="date" value=<%=date1 %> required>
 				<label> по </label>
