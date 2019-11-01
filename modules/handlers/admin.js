@@ -57,7 +57,7 @@ exports.checkadmin = function(req, res, next) {
 //получение списка работников
 exports.getusers = function(req, res) {
 	DBs.selectAllUsers().then(users => {
-		res.render('admin/user/page_table_users', {users: users});
+		res.render('admin/users/page_table_users', {users: users});
 	}).catch(err => {
 		console.log(err);
 		res.status(500).render('error/500');
@@ -76,7 +76,7 @@ exports.adduser = function(req, res) {
 			let facultyArr = additFunc.getFaculty(structure);
 			let departmentArr = additFunc.getDepartment(facultyArr[0], structure);
 			
-			res.render('admin/user/page_add_user', {positions: pos, action: action, faculty: facultyArr, 
+			res.render('admin/users/page_add_user', {positions: pos, action: action, faculty: facultyArr, 
 				department: departmentArr});
 		}).catch(err => {
 			console.log(err);
@@ -93,7 +93,7 @@ exports.adduserfile = function(req, res) {
 	let action = 0;
 	if(req.query.action == 'ok') action = 1;
 	if(req.query.action == 'err') action = 2;
-	res.render('admin/user/page_add_users_from_file', {action: action});
+	res.render('admin/users/page_add_users_from_file', {action: action});
 };
 
 //удаление сотрудника
@@ -102,7 +102,7 @@ exports.deleteuser = function(req, res) {
 	if(req.query.action == 'ok') action = 1;
 	if(req.query.action == 'err') action = 2;
 	DBs.selectAllUsers().then(users => {
-		res.render('admin/user/page_delete_user', {users: users, action: action});
+		res.render('admin/users/page_delete_user', {users: users, action: action});
 	}).catch(err => {
 		console.log(err);
 		res.status(500).render('error/500');
@@ -186,6 +186,7 @@ exports.editballs = function(req, res) {
 exports.main = function(req, res) {
 	let date = new Date();
 	let strDate = dateModule.dateToString(date);
+	console.log("ну почему");
 	let dateHTML = dateModule.dateForInput(date);
 	let namefile = strDate.split('.').join('_') + '.log';
 	fs.readFile("./log/" + namefile, "utf8", function(err, data) {

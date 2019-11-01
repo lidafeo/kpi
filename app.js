@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 
 //const fileUpload = require("express-fileupload");
 let credentials = require('./modules/credentials.js');
-let routes = require("./modules/routes.js");
+let routes = require("./modules/routes/routes.js");
 
 const app = express();
 
