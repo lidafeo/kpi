@@ -186,7 +186,6 @@ exports.editballs = function(req, res) {
 exports.main = function(req, res) {
 	let date = new Date();
 	let strDate = dateModule.dateToString(date);
-	console.log("ну почему");
 	let dateHTML = dateModule.dateForInput(date);
 	let namefile = strDate.split('.').join('_') + '.log';
 	fs.readFile("./log/" + namefile, "utf8", function(err, data) {

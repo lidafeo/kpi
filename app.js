@@ -1,17 +1,15 @@
 //подключаемые модули
 const express = require("express");
-const bodyParser = require("body-parser");
 
-//const fileUpload = require("express-fileupload");
+let config = require('./config/config.json').server;
 let credentials = require('./modules/credentials.js');
 let routes = require("./modules/routes/routes.js");
 
 const app = express();
 
 //запуск сервера
-app.listen(2000, function() {
-	console.log('Сервер запущен на http://localhost:2000;' + 
- ' нажмите Ctrl+C для завершения.')
+app.listen(config.port, function() {
+	console.log('Сервер запущен на ' + config.host + ':' + config.port, 'нажмите Ctrl+C для завершения.');
 });
 
 app.set("view engine", "ejs");
