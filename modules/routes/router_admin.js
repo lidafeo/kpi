@@ -24,9 +24,6 @@ routerUser.route('/add_user')
 routerUser.route('/add_users_from_file')
     .get(admin.adduserfile)
     .post(urlencodedParser, admin.POSTadduserfile);
-//routerUser.get('/delete_user', admin.deleteuser);
-//routerUser.get('/add_user', admin.adduser);
-//routerUser.get('/add_users_from_file', admin.adduserfile);
 
 // admin/kpi
 routerKpi.get('/get_kpi', admin.getkpi);
@@ -38,10 +35,7 @@ routerKpi.route('/delete_kpi')
     .post(urlencodedParser, admin.POSTdeletekpi);
 routerKpi.route('/edit_balls')
     .get(admin.editballs)
-    .post(urlencodedParser, admin.POSTeditballs);
-//routerKpi.get('/add_kpi', admin.addkpi);
-//routerKpi.get('/delete_kpi', admin.deletekpi);
-//routerKpi.get('/edit_balls', admin.editballs);
+    .post(urlencodedParser, admin.POSTeditballskpi);
 
 adminRouter.use('/users', routerUser);
 adminRouter.use('/kpi', routerKpi);

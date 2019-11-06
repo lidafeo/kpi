@@ -549,6 +549,7 @@ exports.POSTeditballskpi = function(req, res) {
 	});
 };
 
+/*
 //Выбор ПЭДа на изменение его оценок
 exports.POSTeditballs = function(req, res) {
 	DBs.selectOneKpiWithBalls(req.body.name).then(result => {
@@ -562,6 +563,7 @@ exports.POSTeditballs = function(req, res) {
 		res.status(500).render('error/500');
 	});
 };
+*/
 
 //Оповещение сотрудников о скором закрытии кабинетов
 exports.notify = function(req, res) {
