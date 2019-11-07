@@ -2,7 +2,7 @@ const bcrypt = require("bcrypt");
 
 let DBs = require('../db/select.js');
 
-let getclose = require('./admin.js').getclose;
+let getInfoClose = require('./admin.js').getInfoClose;
 
 exports.home = function(req, res) {
 	if(req.session.userName) 
@@ -36,7 +36,7 @@ exports.auth = function(req, res) {
 			req.session.rights = rights;
 
 			//проверка доступа к личному кабинету
-			let closeAccount = getclose();
+			let closeAccount = getInfoClose();
 			if(closeAccount && result.func_pps)
 				return res.render("auth", {checkpassword: false, close: true});
 
@@ -52,7 +52,7 @@ exports.auth = function(req, res) {
 //проверка открытия кабинетов
 exports.checkaccount = function(req, res, next) {
 	//проверка доступа к личному кабинету
-	let closeAccount = getclose();
+	let closeAccount = getInfoClose();
 	if(closeAccount && req.session.rights.pps)
 		return res.redirect("/exit");
 	else next();

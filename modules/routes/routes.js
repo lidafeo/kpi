@@ -41,21 +41,6 @@ module.exports = function(app) {
 
 	app.use('/admin', adminRouter);
 
-	//app.post('/adduser', urlencodedParser, admin.POSTadduser);
-	//app.post('/adduserfile', urlencodedParser, admin.POSTadduserfile);
-	//app.post('/deleteuser', urlencodedParser, admin.POSTdeleteuser);
-	app.post('/closeaccount', urlencodedParser, admin.POSTcloseaccount);
-	app.post('/openaccount', urlencodedParser, admin.POSTopenaccount);
-	app.post('/set_period', urlencodedParser, admin.POSTsetperiod);
-	app.post('/addkpi', urlencodedParser, admin.POSTaddkpi);
-	//app.post('/deletekpi', urlencodedParser, admin.POSTdeletekpi);
-	app.post('/edit_balls_kpi', urlencodedParser, admin.POSTeditballskpi);
-	//app.post('/edit_balls', urlencodedParser, admin.POSTeditballs);
-
-
-	app.post('/getlogs', jsonParser, admin.getlogs);
-	app.post('/notify', jsonParser, admin.notify);
-
 	app.use(main.notfound);
 }
 

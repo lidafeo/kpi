@@ -12,9 +12,12 @@
 	<div class="wrapper">
 		<div class="content">
 			<%- include("partials/menu.ejs") %>
-			<p class="namelist">История действий пользователей за
-				<input type="date" name="date" id="date" class="date" value=<%=date%>>
-			</p>
+			<form action="" method="get">
+				<p class="namelist">История действий пользователей за
+					<input type="date" name="date" id="date" class="date" value=<%=date%>>
+					<input type="submit" value="вывести историю пользователей">
+				</p>
+			</form>
 			<ul class="logs" id="logs">
 				<%- include("partials/list_logs.ejs") %>
 			</ul>

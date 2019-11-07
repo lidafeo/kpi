@@ -11,38 +11,48 @@ const routerUser = express.Router();
 const routerKpi = express.Router();
 
 // admin/...
-adminRouter.use(admin.checkadmin);
+adminRouter.use(admin.checkRightsAdmin);
 
 // admin/users
-routerUser.get('/get_users', admin.getusers);
+routerUser.get('/get_users', admin.getUsers);
 routerUser.route('/delete_user')
-    .get(admin.deleteuser)
-    .post(urlencodedParser, admin.POSTdeleteuser);
+    .get(admin.deleteUser)
+    .post(urlencodedParser, admin.POSTdeleteUser);
 routerUser.route('/add_user')
-    .get(admin.adduser)
-    .post(urlencodedParser, admin.POSTadduser);
+    .get(admin.addUser)
+    .post(urlencodedParser, admin.POSTaddUser);
 routerUser.route('/add_users_from_file')
-    .get(admin.adduserfile)
-    .post(urlencodedParser, admin.POSTadduserfile);
+    .get(admin.addUsersFromFile)
+    .post(urlencodedParser, admin.POSTaddUsersFromFile);
 
 // admin/kpi
-routerKpi.get('/get_kpi', admin.getkpi);
+routerKpi.get('/get_kpi', admin.getKpi);
 routerKpi.route('/add_kpi')
-    .get(admin.addkpi)
-    .post(urlencodedParser, admin.POSTaddkpi);
+    .get(admin.addKpi)
+    .post(urlencodedParser, admin.POSTaddKpi);
 routerKpi.route('/delete_kpi')
-    .get(admin.deletekpi)
-    .post(urlencodedParser, admin.POSTdeletekpi);
+    .get(admin.deleteKpi)
+    .post(urlencodedParser, admin.POSTdeleteKpi);
 routerKpi.route('/edit_balls')
-    .get(admin.editballs)
-    .post(urlencodedParser, admin.POSTeditballskpi);
+    .get(admin.editBallsKpi)
+    .post(urlencodedParser, admin.POSTeditBallsKpi);
 
 adminRouter.use('/users', routerUser);
 adminRouter.use('/kpi', routerKpi);
-adminRouter.get('/get_balls_of_users', admin.getballusers);
-adminRouter.get('/set_period', admin.setperiod);
-adminRouter.get('/close_accounts', admin.closeaccount);
+
+adminRouter.get('/get_balls_of_users', admin.getBallsUsers);
+adminRouter.route('/set_period')
+    .get(admin.setPeriod)
+    .post(urlencodedParser, admin.POSTsetPeriod);
+adminRouter.get('/close_accounts', admin.closeAccount);
 adminRouter.get('/', admin.main);
+
+adminRouter.post('/close_accounts', urlencodedParser, admin.POSTcloseAccounts);
+adminRouter.post('/open_accounts', urlencodedParser, admin.POSTopenAccounts);
+//app.post('/set_period', urlencodedParser, admin.POSTsetPeriod);
+adminRouter.post('/edit_balls_kpi', urlencodedParser, admin.POSTeditBallsKpi);
+//adminRouter.get('/getlogs', admin.main);
+adminRouter.post('/notify', admin.notify);
 
 module.exports = adminRouter;
 

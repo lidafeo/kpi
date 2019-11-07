@@ -16,13 +16,13 @@
 		<div class="content">
 				<br>
 				<br>
-			<div class="formborderadmin"><% if(setbool) {%>
+			<div class="formborderadmin"><% if(set) {%>
 				<p class="text">Текущий период: с <%=period.date1Str%> по <%=period.date2Str%></p>
 				<form action="/pfu" method="post">
 					<input type="submit" class="buttonmypage" value="Сформировать отчет за период">
 				</form>
 			<%} %> 
-			<% if(!setbool) {%>
+			<% if(!set) {%>
 				<div><p>Не был установлен период для отчета.</p>
 					<p>Обратитесь к администратору сайта.</p></div>
 			<%} %>

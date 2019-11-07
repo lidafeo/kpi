@@ -15,22 +15,22 @@
 
 
 			<div class="formborderadmin">
-			<% if(setbool) {%>
+			<% if(set) {%>
 				<p style="margin: 1% auto;">Текущий период: с <%=period.date1Str + " по " + period.date2Str %></p>
 				<% if(!period.notify) {%>
-					<form action="/notify" method="post">
+					<form action="/admin/notify" method="post">
 						<input type="submit" class="buttonmypage" value="Оповестить работников">
 					</form><br>
 				<%} %>
-				<form action="/set_period" method="post">
+				<form action="" method="post">
 					<input type="submit" class="buttonmypage" value="Удалить период">
 				</form>
 			<%} %>
-			<% if(!setbool) {%>
+			<% if(!set) {%>
 				<p>Текущий период не установлен</p>
 				<p>Установить новый период:</p>
 				<div id="text"></div>
-				<form action="/set_period" method="post">
+				<form action="" method="post">
 					с <input type="date" class="date" name="date1" id="date1" required>
 					 до <input type="date" class="date" name="date2" id="date2" required>
 					<input type="submit" id="sub" class="buttonmypage" value="Установить">

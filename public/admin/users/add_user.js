@@ -60,6 +60,7 @@ $(document).ready(function() {
 		else {
 			$('#facultydiv').show();
 			$("#faculty").attr("disabled", false);
+			$("#department").attr("disabled", false);
 			let str;
 			for(let i = 0; i < structure.faculty.length; i++)
 				str +="<option>" + structure.faculty[i] + "</option>";

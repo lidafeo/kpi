@@ -27,12 +27,12 @@
 				</tr>
 				<% for(let i = 0; i < balls.length; i++) {%>
 					<tr>
-						<td><%=balls[i].datestr %></td>
+						<td><%=balls[i].date_str %></td>
 						<td><%=balls[i].login_user %></td>
 						<td><%=balls[i].name_kpi %></td>
 						<td><%=balls[i].value %></td>
-						<td><%=balls[i].start_datestr %></td>
-						<td><%=balls[i].finish_datestr %></td>
+						<td><%=balls[i].start_date_str %></td>
+						<td><%=balls[i].finish_date_str %></td>
 						<% if(!balls[i].valid) {%>
 							<td><font color="red">Недействительно</font></td>
 							<td><%=balls[i].author_verify %></td>

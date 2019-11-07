@@ -9,7 +9,7 @@ let dateModule = require('../date.js');
 //главная страница ПФУ
 exports.pfu = function(req, res) {
 	let objPeriod = getObjPeriod();
-	res.render('pfu/page_pfu', {setbool: objPeriod.setbool, period: objPeriod});
+	res.render('pfu/page_pfu', {setbool: objPeriod.set, period: objPeriod});
 }
 
 //создание отчета
