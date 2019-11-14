@@ -1,12 +1,10 @@
-const fs = require("fs");
-
 let writeLogs = require('../logs');
 let additFunc = require('../additional');
 
 let DBs = require('../db/select.js');
 let DBu = require('../db/update.js');
 
-//страница проверки ПЭДов
+//GET-запрос страницы проверки ПЭДов
 exports.verify = function(req, res) {
 	let level = req.session.level;
 	let department = req.session.department;
@@ -60,7 +58,7 @@ exports.verify = function(req, res) {
 };
 
 
-//получение таблицы для проверки
+//POST-запрос на получение таблицы для проверки значений ПЭД ППС
 exports.POSTverify = function(req, res) {
 	let login = req.body.name;
 	//находим значения ПЭД выбранного сотрудника
@@ -69,7 +67,7 @@ exports.POSTverify = function(req, res) {
 			res.render("head/partials/table_for_verify", {kpi: [], textErr: "Нет добавленных действительных значений"});
 		}
 		else {
-			modifydate(result);
+			modifyDate(result);
 			res.render("head/partials/table_for_verify", {kpi: result, textErr: false});
 		}
 	}).catch(err => {
@@ -78,7 +76,7 @@ exports.POSTverify = function(req, res) {
 	});
 }
 
-//помечаем ПЭДы как недействительные
+//POST-запрос на пометку значения ПЭД как недействительное
 exports.POSTinvalid = function(req, res) {
 	let invalidKpi = req.body.kpi;
 	let chooseUser = req.body.user;
@@ -105,7 +103,7 @@ exports.POSTinvalid = function(req, res) {
 };
 
 //получить сотрудников кафедры
-exports.POSTgetworkers = function(req, res) {
+exports.POSTgetWorkers = function(req, res) {
 	let level = req.session.level;
 	let faculty = req.body.faculty;
 	let department = req.body.department;
@@ -119,7 +117,7 @@ exports.POSTgetworkers = function(req, res) {
 }
 
 //получить структуру
-exports.POSTgetstructure = function(req, res) {
+exports.POSTgetStructure = function(req, res) {
 	DBs.selectStructure().then(result => {
 		let structure = {faculty: [], department: []};
 		for(let i = 0; i < result.length; i ++) {
@@ -138,7 +136,7 @@ exports.POSTgetstructure = function(req, res) {
 
 
 //преобразование даты к нормальному виду
-function modifydate(arrObj) {
+function modifyDate(arrObj) {
 	for(let i = 0; i < arrObj.length; i++) {
 		modifyOneDate(arrObj[i], 'date');
 	}

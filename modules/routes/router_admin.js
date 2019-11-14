@@ -44,11 +44,14 @@ adminRouter.get('/get_balls_of_users', admin.getBallsUsers);
 adminRouter.route('/set_period')
     .get(admin.setPeriod)
     .post(urlencodedParser, admin.POSTsetPeriod);
-adminRouter.get('/close_accounts', admin.closeAccount);
+adminRouter.route('/close_accounts')
+    .get(admin.closeAccount)
+    .post(urlencodedParser, admin.POSTcloseAccounts)
+//adminRouter.get('/close_accounts', admin.closeAccount);
 adminRouter.get('/', admin.main);
 
-adminRouter.post('/close_accounts', urlencodedParser, admin.POSTcloseAccounts);
-adminRouter.post('/open_accounts', urlencodedParser, admin.POSTopenAccounts);
+//adminRouter.post('/close_accounts', urlencodedParser, admin.POSTcloseAccounts);
+//adminRouter.post('/open_accounts', urlencodedParser, admin.POSTopenAccounts);
 //app.post('/set_period', urlencodedParser, admin.POSTsetPeriod);
 adminRouter.post('/edit_balls_kpi', urlencodedParser, admin.POSTeditBallsKpi);
 //adminRouter.get('/getlogs', admin.main);

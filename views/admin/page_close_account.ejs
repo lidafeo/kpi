@@ -15,13 +15,13 @@
 			<div class="formborderadmin">
 			<% if(op) {%>
 				<p class="text">Кабинеты открыты</p>
-				<form name="close" action="/closeaccount" method="post">
+				<form name="close" action="" method="post">
 					<input type="submit" class="buttonmypage" value="Закрыть доступ к кабинетам">
 				</form>
 			<%} %>
 			<% if(!op) {%>
 				<p class="text">Кабинеты закрыты</p>
-				<form name="open" action="/openaccount" method="post">
+				<form name="open" action="" method="post">
 					<input type="submit" class="buttonmypage" value="Открыть доступ к кабинетам">
 				</form>
 			<%} %>

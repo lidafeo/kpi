@@ -2,7 +2,6 @@ let main = require('../handlers/main.js');
 let user = require('../handlers/user.js');
 let verify = require('../handlers/verify.js');
 let pfu = require('../handlers/pfu.js');
-let admin = require('../handlers/admin.js');
 
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -20,28 +19,28 @@ module.exports = function(app) {
 	app.get('/exit', main.exit);
 
 	app.post('/user', urlencodedParser, main.auth);
-	app.use(main.checkaccount);
-	app.use(main.checksession);
+	app.use(main.checkAccount);
+	app.use(main.checkSession);
 
-	app.get('/my_page', user.mypage);
-	app.get('/my_page/edit_kpi', rightImplementKpi, user.editkpi);
-	app.get('/my_page/values_kpi', rightImplementKpi, user.valuekpi);
-	app.get('/upload_file', rightPpsOrVerify, user.sendfiles);
-	app.post('/edit_kpi', jsonParser, user.POSTeditkpi);
+	app.get('/my_page', user.myPage);
+	app.get('/my_page/edit_kpi', rightImplementKpi, user.editKpi);
+	app.get('/my_page/values_kpi', rightImplementKpi, user.valueKpi);
+	app.get('/upload_file', rightPpsOrVerify, user.sendFile);
+	app.post('/edit_kpi', jsonParser, user.POSTeditKpi);
 	app.post('/upload', user.POSTupload);
 
 	app.get('/verify', rightVerify, verify.verify);
 	app.post('/verify', jsonParser, verify.POSTverify);
 	app.post('/invalid', jsonParser, verify.POSTinvalid);
-	app.post('/getworkers', jsonParser, verify.POSTgetworkers);
-	app.post('/getstructure', jsonParser, verify.POSTgetstructure);
+	app.post('/getworkers', jsonParser, verify.POSTgetWorkers);
+	app.post('/getstructure', jsonParser, verify.POSTgetStructure);
 
 	app.get('/pfu', rightPfu, pfu.pfu);
 	app.post('/pfu', pfu.getReport);
 
 	app.use('/admin', adminRouter);
 
-	app.use(main.notfound);
+	app.use(main.notFound);
 }
 
 //проверка прав доступа к страницам

@@ -9,7 +9,7 @@ let dateModule = require('../date.js');
 //главная страница ПФУ
 exports.pfu = function(req, res) {
 	let objPeriod = getObjPeriod();
-	res.render('pfu/page_pfu', {setbool: objPeriod.set, period: objPeriod});
+	res.render('pfu/page_pfu', {set: objPeriod.set, period: objPeriod});
 }
 
 //создание отчета
@@ -36,18 +36,18 @@ exports.getReport = function(req, res) {
 	let date2 = new Date(objPeriod.date2);
 
 
-	DBs.forReportPFU(dateModule.dateForInput(date1), dateModule.dateForInput(date2)).then(uservalue => {
+	DBs.forReportPFU(dateModule.dateForInput(date1), dateModule.dateForInput(date2)).then(userValues => {
 		DBs.selectKpiAndUser().then(kpi => {
-			let userone = kpi[0].login;
+			let firstUser = kpi[0].login;
 			let countKpi = 0;
-			let numUservalue = 0;
+			let numUserValue = 0;
 			let user;
 			let n = 1, m = 5;
 			let sum = 0;
 			for(let i = 0; i < kpi.length; i++) {
 				
 				//заполение первой строчки с названиями ПЭД
-				if(userone == kpi[i].login) {
+				if(firstUser == kpi[i].login) {
 					ws.cell(1, m).string(kpi[i].name_kpi).style(style).style({font:{bold: true}});
 					countKpi++;
 				}
@@ -64,28 +64,28 @@ exports.getReport = function(req, res) {
 					sum = 0;
 				}
 				let val = 0;
-				let finalCrit = i + kpi[i].count_criterion;
-				if(numUservalue == uservalue.length || uservalue[numUservalue].login != kpi[i].login || 
-					uservalue[numUservalue].name_kpi != kpi[i].name_kpi) {
+				let finalCriterion = i + kpi[i].count_criterion;
+				if(numUserValue == userValues.length || userValues[numUserValue].login != kpi[i].login || 
+					userValues[numUserValue].name_kpi != kpi[i].name_kpi) {
 					i+= kpi[i].count_criterion;
 				}
 				else {
 					//пока значение данного ПЭД есть у пользователя
-					while(numUservalue != uservalue.length && user == uservalue[numUservalue].login && 
-						uservalue[numUservalue].login == kpi[i].login 
-						&& uservalue[numUservalue].name_kpi == kpi[i].name_kpi) {
+					while(numUserValue != userValues.length && user == userValues[numUserValue].login && 
+						userValues[numUserValue].login == kpi[i].login 
+						&& userValues[numUserValue].name_kpi == kpi[i].name_kpi) {
 
-						if(kpi[i].type == 1 || uservalue[numUservalue].number_criterion == kpi[i].number_criterion) {
-							let value = getValue(uservalue[numUservalue]);
+						if(kpi[i].type == 1 || userValues[numUserValue].number_criterion == kpi[i].number_criterion) {
+							let value = getValue(userValues[numUserValue]);
 							if(value >= kpi[i].start_val && (kpi[i].final_val == null || value <= kpi[i].final_val)) {
 								val += kpi[i].ball;
 							}
-							numUservalue ++;
+							numUserValue ++;
 						}
 						i++;
 
 					}
-					i = finalCrit;
+					i = finalCriterion;
 				}
 				i --;
 				ws.cell(n, m).number(val).style(style);
@@ -116,7 +116,7 @@ exports.getReport = function(req, res) {
 function getValue (uv) {
 	let value;
 	if(uv.indicator_sum == 0) {
-		value = +uv.valuemaxdate;
+		value = +uv.value_max_date;
 	}
 	else {
 		value = +uv.cou;

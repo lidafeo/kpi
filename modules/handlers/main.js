@@ -4,13 +4,14 @@ let DBs = require('../db/select.js');
 
 let getInfoClose = require('./admin.js').getInfoClose;
 
+//GET-запрос начальной страницы сайта
 exports.home = function(req, res) {
 	if(req.session.userName) 
 		return res.redirect('/my_page');
-	res.render("auth", {checkpassword: false, close: false});
+	res.render("auth", {checkPassword: false, close: false});
 };
 
-//authentication
+//Аутентификация
 exports.auth = function(req, res) {
 	let login = req.body.login;
 	let password = req.body.password;
@@ -24,7 +25,7 @@ exports.auth = function(req, res) {
 			req.session.userName = result.name;
 			req.session.login = result.login;
 			req.session.userPosition = result.position;
-			req.session.numberGroup = result.number_group;
+			//req.session.numberGroup = result.number_group;
 			req.session.level = result.level;
 			req.session.department = result.department;
 			req.session.faculty = result.faculty;
@@ -38,19 +39,19 @@ exports.auth = function(req, res) {
 			//проверка доступа к личному кабинету
 			let closeAccount = getInfoClose();
 			if(closeAccount && result.func_pps)
-				return res.render("auth", {checkpassword: false, close: true});
+				return res.render("auth", {checkPassword: false, close: true});
 
 			res.redirect('/my_page');
 		}
 		else
-			res.render("auth", {checkpassword: true, close: false});
+			res.render("auth", {checkPassword: true, close: false});
 	}).catch(err => {
 		res.status(500).render('error/500');
 	});
 };
 
 //проверка открытия кабинетов
-exports.checkaccount = function(req, res, next) {
+exports.checkAccount = function(req, res, next) {
 	//проверка доступа к личному кабинету
 	let closeAccount = getInfoClose();
 	if(closeAccount && req.session.rights.pps)
@@ -59,7 +60,7 @@ exports.checkaccount = function(req, res, next) {
 };
 
 //проверка входа
-exports.checksession = function(req, res, next) {
+exports.checkSession = function(req, res, next) {
 	let name = req.session.userName;
 	if(!name) return res.redirect('/');
 	next();
@@ -70,7 +71,7 @@ exports.exit = function(req, res) {
 	//очищаем данные сессии
 	delete req.session.userName;
 	delete req.session.userPosition;
-	delete req.session.numberGroup;
+	//delete req.session.numberGroup;
 	delete req.session.level;
 	delete req.session.department;
 	delete req.session.faculty;
@@ -78,8 +79,8 @@ exports.exit = function(req, res) {
 	res.redirect('/');
 };
 
-//404
-exports.notfound = function(req, res) {
+//Отправка страницы 404
+exports.notFound = function(req, res) {
 	res.status(404).render('error/404');
 }
 

@@ -201,8 +201,8 @@ exports.editBallsKpi = function(req, res) {
 //GET-запрос начальной страницы администратора
 exports.main = function(req, res) {
 	let date;
-	if(req.body)
-		date = new Date(req.body.date);
+	if(req.query.date)
+		date = new Date(req.query.date);
 	else
 		date = new Date();
 	let strDate = dateModule.dateToString(date);
@@ -211,8 +211,8 @@ exports.main = function(req, res) {
 	fs.readFile("./log/" + nameFile, "utf8", function(err, data) {
 		let logs = [];
 		if(err) {
-			console.log("Сегодня не было действий");
-			logs.push("Сегодня не было действий");
+			console.log(strDate + " не было действий пользователей");
+			logs.push("Действий пользователей не было");
 		}
 		else {
 			logs = data.split(';');
@@ -380,18 +380,17 @@ exports.POSTdeleteUser = function(req, res) {
 
 //POST-запрос на закрытие личных кабинетов ППС
 exports.POSTcloseAccounts = function(req, res) {
-	//записываем логи
-	writeLogs(req.session.login, "закрыл(а) личные кабинеты ППС");
-	close = true;
-	res.redirect('/admin/close_account');
-}
-
-//POST-запрос на открытие личных кабинетов ППС
-exports.POSTopenAccounts = function(req, res) {
-	//записываем логи
-	writeLogs(req.session.login, "открыл(а) личные кабинеты ППС");
-	close = false;
-	res.redirect('/admin/close_account');
+	//открываем
+	if(close) {
+		writeLogs(req.session.login, "открыл(а) личные кабинеты ППС");
+		close = false;
+	}
+	//закрываем
+	else {
+		writeLogs(req.session.login, "закрыл(а) личные кабинеты ППС");
+		close = true;
+	}
+	res.redirect('/admin/close_accounts');
 }
 
 //POST-запрос на установку текущего периода

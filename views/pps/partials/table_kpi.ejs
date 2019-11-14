@@ -18,18 +18,18 @@
 					<tr>
 						<td><%=arr[i].name %></td>
 						<td><%=arr[i].description %></td>
-						<td><big><%=arr[i].userball[0] %></big></td>
+						<td><big><%=arr[i].userBall[0] %></big></td>
 					</tr>
 				<%} %>
 				<% if(arr[i].type == 2) {%>
 					<tr>
-						<td rowspan=<%=(arr[i].count_criterion + 1) + "" %>><%=arr[i].name %></td>
+						<td rowspan=<%=(arr[i].countCriterion + 1) + "" %>><%=arr[i].name %></td>
 						<td colspan="2"><%=arr[i].description %></td>
 					</tr>
-					<% for(let j = 0; j < arr[i].count_criterion; j++) {%>
+					<% for(let j = 0; j < arr[i].countCriterion; j++) {%>
 					<tr>
 						<td><%=arr[i].criterion[j].description %></td>
-						<td><big><%=arr[i].userball[j] %></big></td>
+						<td><big><%=arr[i].userBall[j] %></big></td>
 					</tr>
 					<%} %>
 				<%} %>

@@ -188,12 +188,12 @@ exports.forReportPFU = function(date1, date2) {
 
 	return query("SELECT UV.name_kpi name_kpi, users.name name_user, login, COUNT(DISTINCT id) cou, value, type, " +
 			"indicator_sum, number_criterion, " +
-			"substring_index(group_concat(value order by date desc), ',', 1) as valuemaxdate " +
+			"substring_index(group_concat(value order by date desc), ',', 1) as value_max_date " +
 		"FROM uservalues UV " +
 		"INNER JOIN kpi ON kpi.name=UV.name_kpi " +
 		"INNER JOIN users ON  users.login=UV.login_user "+ 
 		"WHERE (start_date BETWEEN DATE(?) AND DATE(?)) OR ((finish_date BETWEEN DATE(?) AND DATE(?)) OR " +
-			"((start_date <= DATE(?)) AND (finish_date >= DATE(?))))" + " " +
+			"((start_date <= DATE(?)) AND (finish_date >= DATE(?)))) AND valid=1 " +
 		"GROUP BY name_kpi, login, number_criterion " +
 		"ORDER BY name_user ASC, users.login ASC, section ASC, subtype ASC, number ASC, number_criterion", 
 		[date1, date2, date1, date2, date1, date2]);
