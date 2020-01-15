@@ -12,6 +12,7 @@ let DBu = require('../db/update.js');
 let dateModule = require('../date.js');
 let writeLogs = require('../logs');
 let additFunc = require('../additional');
+let userFunc = require('../user_func');
 
 let BCRYPT_SALT_ROUNDS = 12;
 
@@ -95,6 +96,14 @@ exports.addUsersFromFile = function(req, res) {
 	if(req.query.action == 'ok') action = 1;
 	if(req.query.action == 'err') action = 2;
 	res.render('admin/users/page_add_users_from_file', {action: action});
+};
+
+//GET-запрос страницы добавления сотрудников с файла №2
+exports.addUsersFromFile2 = function(req, res) {
+	let action = 0;
+	if(req.query.action == 'ok') action = 1;
+	if(req.query.action == 'err') action = 2;
+	res.render('admin/users/page_add_users_from_file2', {action: action, report: false});
 };
 
 //GET-запрос страницы удаления сотрудника
@@ -261,6 +270,34 @@ exports.getBallsUsers = function(req, res) {
 	});
 }
 
+//GET-запрос страницы с таблицей структуры университета
+exports.getStructure = function(req, res) {
+    let action = 0;
+    if(req.query.action == 'ok') action = 1;
+    if(req.query.action == 'err') action = 2;
+    DBs.selectStructureOrderByFaculty().then(result => {
+        let structure = {};
+        for(let i = 0; i < result.length; i++) {
+            if(!structure[result[i].faculty]) {
+                structure[result[i].faculty] = [];
+            }
+            structure[result[i].faculty].push(result[i].department);
+        }
+        res.render('admin/structure/page_get_structure', {action: action, structure: structure});
+    }).catch(err => {
+        console.log(err);
+        res.status(500).render('error/500');
+    });
+}
+
+//GET-запрос страницы обновления таблицы структуры университета
+exports.updateStructure = function(req, res) {
+    let action = 0;
+    if(req.query.action == 'ok') action = 1;
+    if(req.query.action == 'err') action = 2;
+    res.render('admin/structure/page_update_structure', {action: action});
+}
+
 //GET-запрос страницы установки текущего периода
 exports.setPeriod = function(req, res) {
 	res.render('admin/page_set_period', {set: objPeriod.set, period: objPeriod});
@@ -358,6 +395,76 @@ exports.POSTaddUsersFromFile = function(req, res) {
 	});
 }
 
+//POST-запрос на добавление пользователей с файла вариант 2
+exports.POSTaddUsersFromFile2 = function(req, res) {
+	let form = new formidable.IncomingForm();
+	form.parse(req, async function(err, fields, files) {
+		if(err) return console.log(err);
+
+		let arr = ['xls', 'xlsx'];
+		let ext = files.file.name.split('.').pop();
+		if(!files.file || arr.indexOf(ext) == -1)
+			return res.redirect('/admin/users/add_users_from_file2?action=err');
+
+		let workBook = xlsx.readFile(files.file.path);
+		let firstSheetName = workBook.SheetNames[0];
+		let workSheet = workBook.Sheets[firstSheetName];
+
+		//let address = {"C" : "position", "D" : "employment", "E" : "department"};
+		let num = 1;
+		addUsers = [];
+		allUsers = [];
+		while(true) {
+			let obj = {};
+			//порядковый номер
+			numb = (workSheet["A" + (num + 1)].v + "");
+			//имя
+			let name = (workSheet["B" + (num + 1)] ? (workSheet["B" + (num + 1)].v + "") : undefined);
+			if(!name) {
+				break;
+			}
+			obj.name = name;
+			obj.numb = numb;
+			//должность
+			let positions = (workSheet["C" + (num + 1)] ? (workSheet["C" + (num + 1)].v + "") : undefined);
+			obj = await userFunc.addPosition(positions, obj);
+			//вид занятости
+			let employment = (workSheet["D" + (num + 1)] ? (workSheet["D" + (num + 1)].v + "") : undefined);
+			if(employment && employment.toLowerCase().indexOf("основ")) {
+				obj.empl = "main";
+			}
+			else {
+				obj.empl = "no_main";
+			}
+			//кафедра и факультет
+			let department = (workSheet["E" + (num + 1)] ? (workSheet["E" + (num + 1)].v + "") : undefined);
+			obj = await userFunc.addDepartment(department, obj);
+			//let ddd = await = DBs.selectFacultyOfDepartment(dep);
+			if(!obj.error) {
+				addUsers.push(obj);
+			}
+			allUsers.push(obj);
+
+            console.log(obj.numb, obj.name, obj.faculty, obj.department);//, obj.empl, obj.faculty, obj.department);
+			num++;
+		}
+        res.render('admin/users/page_add_users_from_file2', {action: action, report: true, users: allUsers});
+		//добавляем
+		/*
+		Promise.all(arrUsers.map(async function (user) {
+			user.password = await bcrypt.hash(user.password, BCRYPT_SALT_ROUNDS);
+			let result = await DBi.insertUserFromObj(user);
+			//записываем логи
+			writeLogs(req.session.login, "добавил(а) нового пользователя: login - " + user.login);
+			logs.push(user);
+			console.log("Сохранен объект user", user.login);
+		})).then(result => {
+			res.redirect('/admin/users/add_users_from_file2?action=ok');
+		});
+		 */
+	});
+}
+
 //POST-запрос на удаление пользователя
 exports.POSTdeleteUser = function(req, res) {
 	let login = req.body.user;
@@ -376,6 +483,82 @@ exports.POSTdeleteUser = function(req, res) {
 		console.log(err);
 		res.redirect('/admin/users/delete_user?action=err');
 	});
+};
+
+//POST-запрос на обновление структуры университета
+exports.POSTupdateStructure = function(req, res) {
+    let form = new formidable.IncomingForm();
+    form.parse(req, function(err, fields, files) {
+        if(err) return console.log(err);
+
+        let arr = ['xls', 'xlsx'];
+        let ext = files.file.name.split('.').pop();
+        if(!files.file || arr.indexOf(ext) == -1)
+            return res.redirect('/admin/update_structure?action=err');
+
+        let workBook = xlsx.readFile(files.file.path);
+        let firstSheetName = workBook.SheetNames[0];
+        let workSheet = workBook.Sheets[firstSheetName];
+
+        let num = 1;
+        let arrStruct = [];
+        while(true) {
+            let obj = {};
+            //факультет
+            let faculty = (workSheet["A" + (num + 1)] ? (workSheet["A" + (num + 1)].v + "") : undefined);
+            if(!faculty) break;
+            obj.faculty = faculty;
+            obj.abbr_faculty = "";
+            if(faculty.includes('(') && faculty.includes(')')) {
+                obj.abbr_faculty = faculty.slice(faculty.indexOf('(') + 1, faculty.indexOf(')'));
+            }
+            //кафедра
+            let department = (workSheet["B" + (num + 1)] ? (workSheet["B" + (num + 1)].v + "") : undefined);
+            if(!department) {
+                res.redirect('/admin/update_structure?action=err');
+            };
+            obj.department = department;
+            obj.abbr_department = "";
+            if(department.includes('(') && department.includes(')')) {
+                obj.abbr_department = department.slice(department.indexOf('(') + 1, department.indexOf(')'));
+            }
+
+            arrStruct.push(obj);
+            num++;
+        }
+        //чистим таблицу
+        DBd.deleteStructure().then(function(result) {
+            //добавляем
+            Promise.all(arrStruct.map(function (object) {
+                let result = DBi.insertDepartment(object);
+                //записываем логи
+                writeLogs(req.session.login, "добавил(а) кафедру " + object.department + " факультета " + object.faculty);
+                console.log("Сохранен объект structure", "кафедра: " + object.department + " факультет: " + object.faculty);
+            })).then(result => {
+                res.redirect('/admin/update_structure?action=ok');
+
+                DBs.selectStructureOrderByFaculty().then(result => {
+                    let structure = {};
+                    let fac = [];
+                    let dep = [];
+                    for(let i = 0; i < result.length; i++) {
+                        if(fac.indexOf(result[i].faculty) == -1) {
+                            fac.push(result[i].faculty);
+                            dep.push([]);
+                        }
+                        dep[fac.indexOf(result[i].faculty)].push(result[i].department);
+                    }
+                    fs.writeFile("./public/structure.json", JSON.stringify({faculty: fac, department: dep}), err => {
+                        console.log(err);
+                    });
+                }).catch(err => {
+                    console.log(err);
+                });
+            }).catch(err => {
+                res.redirect('/admin/update_structure?action=err');
+            });
+        });
+    });
 };
 
 //POST-запрос на закрытие личных кабинетов ППС

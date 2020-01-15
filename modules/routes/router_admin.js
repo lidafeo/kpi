@@ -24,6 +24,9 @@ routerUser.route('/add_user')
 routerUser.route('/add_users_from_file')
     .get(admin.addUsersFromFile)
     .post(urlencodedParser, admin.POSTaddUsersFromFile);
+routerUser.route('/add_users_from_file2')
+    .get(admin.addUsersFromFile2)
+    .post(urlencodedParser, admin.POSTaddUsersFromFile2);
 
 // admin/kpi
 routerKpi.get('/get_kpi', admin.getKpi);
@@ -39,6 +42,11 @@ routerKpi.route('/edit_balls')
 
 adminRouter.use('/users', routerUser);
 adminRouter.use('/kpi', routerKpi);
+
+adminRouter.get('/get_structure', admin.getStructure);
+adminRouter.route('/update_structure')
+    .get(admin.updateStructure)
+    .post(urlencodedParser, admin.POSTupdateStructure);
 
 adminRouter.get('/get_balls_of_users', admin.getBallsUsers);
 adminRouter.route('/set_period')

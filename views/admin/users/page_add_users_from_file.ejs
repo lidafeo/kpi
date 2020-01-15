@@ -12,12 +12,6 @@
 	<div class="wrapper">
 		<div class="content">
 			<%- include("../partials/menu.ejs") %>
-			<% if(action == 1) {%>
-				<p class="uspeshno">Успешно</p>
-			<%} %>
-			<% if(action == 2) {%>
-				<p class="errormess">Ошибка добавления</p>
-			<%} %>
 			<br>
 			<div>
 				<p>Необходимо прикрепить Excel-файл.</p>
@@ -31,6 +25,12 @@
 				<p>В столбце <b>F</b> указывается пароль сотрудника*</p>
 				<p>* - обязательные к заполнению поля</p>
 			</div>
+			<% if(action == 1) {%>
+				<p class="uspeshno">Успешно</p>
+			<%} %>
+			<% if(action == 2) {%>
+				<p class="errormess">Ошибка добавления</p>
+			<%} %>
 			<form enctype="multipart/form-data" action="" 
 			method="post" class="formborderadmin">
 				<input type="file" name="file" required>

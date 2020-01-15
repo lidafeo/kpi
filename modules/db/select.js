@@ -32,6 +32,11 @@ exports.selectStructure = function() {
 	return query("SELECT * from structure");
 }
 
+//получить структуру отсортированную по факультетам
+exports.selectStructureOrderByFaculty = function() {
+    return query("SELECT * from structure order by faculty ASC, department ASC");
+}
+
 //получить кафедры факультета
 exports.selectDepartments = function(faculty) {
 	return query("SELECT department FROM structure " +
@@ -39,6 +44,40 @@ exports.selectDepartments = function(faculty) {
 		faculty);
 }
 
+//получить кафедру факультета
+exports.selectOneDepartments = function(department) {
+	return query("SELECT department FROM structure " +
+		"WHERE department=?",
+		department);
+}
+
+//получить факультет кафедры
+exports.selectFacultyOfDepartment = function(department) {
+	return query("SELECT faculty FROM structure " +
+		"WHERE department=?",
+		department);
+}
+
+//получить факультет
+exports.selectOneFaculty = function(faculty) {
+    return query("SELECT faculty FROM structure " +
+        "WHERE faculty=? OR abbr_faculty=?",
+        [faculty, faculty]);
+}
+
+//получить кафедру по аббривиатуре
+exports.selectDepartmentByAbbr = function(abbr) {
+    return query("SELECT department, faculty FROM structure " +
+        "WHERE abbr_department=?",
+        abbr);
+}
+
+//получить кафедру по аббривиатуре
+exports.selectDepartment = function(dep) {
+    return query("SELECT department, faculty FROM structure " +
+        "WHERE abbr_department=? OR department=?",
+        [dep, dep]);
+}
 
 //USERVALUES
 
@@ -167,6 +206,12 @@ exports.selectPositionWithBalls = function() {
 	return query("SELECT position FROM positions " +
 		"WHERE number_group IS NOT NULL " +
 		"ORDER BY number_group ASC, position ASC");
+}
+
+//выбрать должность
+exports.selectOnePosition = function(position) {
+	return query("SELECT position, level FROM positions " +
+		"WHERE position=?", position);
 }
 
 

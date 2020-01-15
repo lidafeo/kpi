@@ -14,3 +14,10 @@ exports.deleteUser = function(login) {
 exports.deleteKpi = function(name) {
 	return query("DELETE FROM kpi WHERE name='" + name + "'");
 }
+
+//STRUCTURE
+
+//очистка таблицы structure
+exports.deleteStructure = function() {
+	return query("DELETE FROM structure");
+}

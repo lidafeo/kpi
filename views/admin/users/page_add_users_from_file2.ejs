@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Добавление пользователей</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="/general_style/menu.css">
+	<link rel="stylesheet" type="text/css" href="/general_style/footer.css">
+	<link rel="stylesheet" type="text/css" href="/general_style/stylebut.css">
+	<link rel="stylesheet" type="text/css" href="/general_style/form.css">
+</head>
+<body>
+	<div class="wrapper">
+		<div class="content">
+			<%- include("../partials/menu.ejs") %>
+			<br>
+			<div>
+				<p>Необходимо прикрепить Excel-файл.</p>
+				<p>В каждой строке файла, начиная с первой (без перечисления названий в первой строке), 
+					должна содержаться информация о сотруднике в следующем формате:</p>
+				<p>В столбце <b>A</b> указывается порядковый номер</p>
+				<p>В столбце <b>B</b> указывается полное ФИО сотрудника*</p>
+				<p>В столбце <b>C</b> указывается должность сотрудника*</p>
+				<p>В столбце <b>D</b> указывается вид занятости</p>
+				<p>В столбце <b>E</b> указывается кафедра, на которой работает сотрудник</p>
+				<p>* - обязательные к заполнению поля</p>
+			</div>
+			<% if(action == 1) {%>
+				<p class="uspeshno">Успешно</p>
+			<%} %>
+			<% if(action == 2) {%>
+				<p class="errormess">Ошибка добавления</p>
+			<%} %>
+			<% if(report) {%>
+				<%- include("./partials/report_add_users.ejs") %>
+			<%} %>
+			<form enctype="multipart/form-data" action="" 
+			method="post" class="formborderadmin">
+				<input type="file" name="file" required>
+				<input type="submit" class="buttonmypage" value="Добавить">
+			</form>
+			<p class="errormess">Внимание! При отсутствии информации о сотруднике ячейку столбца, 
+				соответсвующего данной информации оставить пустой, без каких-либо символов.
+				Если эта информация является обязательной к заполнению (отмечена *), 
+				то данную информацию стоит уточнить и записать в прикрепляемый Excel-файл.</p>
+		</div>
+		<div class="footer">
+			<%- include("../../partials/footer.ejs") %>
+		</div>
+	</div>
+	
+</body>
+</html>

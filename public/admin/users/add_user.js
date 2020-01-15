@@ -37,6 +37,7 @@ $(document).ready(function() {
 
 	function getInfo() {
 		let position = $("#position option:selected").text();
+		console.log(structure);
 		if(position == "Проректор" || position == "Администратор" || position == "ПФУ") {
 			$("#numdepartment").val(0);
 			$("#faculty option:selected").text("");
@@ -46,7 +47,7 @@ $(document).ready(function() {
 			$("#department").attr("disabled", true);
 		}
 		else if(position == "Декан") {
-			let str;
+			let str = "";
 			for(let i = 0; i < structure.faculty.length; i++){
 				str +="<option>" + structure.faculty[i] + "</option>";
 			}

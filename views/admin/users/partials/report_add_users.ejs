@@ -1,0 +1,36 @@
+<table style="margin-left: 20px;">
+    <tr>
+        <th><h4>Номер</h4></th>
+        <th><h4>ФИО</h4></th>
+        <th><h4>Должность</h4></th>
+        <th><h4>Факультет</h4></th>
+        <th><h4>Кафедра</h4></th>
+        <th><h4>Ошибка</h4></th>
+    </tr>
+    <% for(let i = 0; i < users.length; i ++) {%>
+        <tr>
+            <td><%=users[i].numb %></td>
+            <td><%=users[i].name %></td>
+            <% if(users[i].errField != 'position') {%>
+                <td><%=users[i].position %></td>
+            <%} else {%>
+                <td>Ошибка!</td> 
+            <%} %>
+            <% if(users[i].errField != 'faculty') {%>
+                <td><%=users[i].faculty %></td>
+            <%} else {%>
+                 <td>Ошибка!</td> 
+            <%} %>
+            <% if(users[i].errField != 'department') {%>
+                <td><%=users[i].department %></td>
+            <%} else {%>
+                <td>Ошибка!</td> 
+           <%} %>
+           <% if(users[i].error) {%>
+            <td><%=users[i].error %></td>
+            <%} else {%>
+                <td></td> 
+           <%} %>
+        </tr>
+    <%} %>
+</table>

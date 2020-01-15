@@ -33,6 +33,12 @@ exports.insertKpi = function(name, section, subtype, number, count_criterion, de
 	return query("INSERT INTO kpi VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", arr);
 }
 
+//STRUCTURE
+
+//добавление каферды с объекта
+exports.insertDepartment = function(dep) {
+	return query("INSERT INTO structure VALUES (?, ?, ?, ?)", [dep.faculty, dep.department, dep.abbr_faculty, dep.abbr_department]);
+}
 
 //CRITERIONS
 
