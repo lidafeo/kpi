@@ -10,10 +10,8 @@
 </head>
 <body>
 	<div class="wrapper">
+		<%- include("partials/menu.ejs") %>
 		<div class="content">
-			<%- include("partials/menu.ejs") %>
-
-
 			<div class="formborderadmin">
 			<% if(set) {%>
 				<p style="margin: 1% auto;">Текущий период: с <%=period.date1Str + " по " + period.date2Str %></p>

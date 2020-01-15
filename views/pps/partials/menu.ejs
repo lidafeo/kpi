@@ -1,0 +1,12 @@
+<nav>
+	<ul class="navigation">
+		<!-- Описание ссылок в меню и сами ссылки. -->
+		<li><a href="/my_page" style="border-left: 1px solid rgb(175, 175, 173);">Главная</a></li>
+		<li><a href="/my_page/edit_kpi">Отметить выполнение ПЭД</a></li>
+		<li><a href="/my_page/values_kpi">Добавленные значения ПЭД</a></li>
+		<% if(level) {%>
+			<li><a href="/verify">Проверить ПЭДы ППС</a></li>
+		<%} %>
+		<li><form action="/exit" method="post"><button>Выход</button></form></li>
+	</ul>
+</nav>

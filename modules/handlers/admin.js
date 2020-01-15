@@ -398,7 +398,7 @@ exports.POSTaddUsersFromFile = function(req, res) {
 //POST-запрос на добавление пользователей с файла вариант 2
 exports.POSTaddUsersFromFile2 = function(req, res) {
 	let form = new formidable.IncomingForm();
-	form.parse(req, async function(err, fields, files) {
+	form.parse(req, function(err, fields, files) {
 		if(err) return console.log(err);
 
 		let arr = ['xls', 'xlsx'];
@@ -411,44 +411,11 @@ exports.POSTaddUsersFromFile2 = function(req, res) {
 		let workSheet = workBook.Sheets[firstSheetName];
 
 		//let address = {"C" : "position", "D" : "employment", "E" : "department"};
-		let num = 1;
-		addUsers = [];
-		allUsers = [];
-		while(true) {
-			let obj = {};
-			//порядковый номер
-			numb = (workSheet["A" + (num + 1)].v + "");
-			//имя
-			let name = (workSheet["B" + (num + 1)] ? (workSheet["B" + (num + 1)].v + "") : undefined);
-			if(!name) {
-				break;
-			}
-			obj.name = name;
-			obj.numb = numb;
-			//должность
-			let positions = (workSheet["C" + (num + 1)] ? (workSheet["C" + (num + 1)].v + "") : undefined);
-			obj = await userFunc.addPosition(positions, obj);
-			//вид занятости
-			let employment = (workSheet["D" + (num + 1)] ? (workSheet["D" + (num + 1)].v + "") : undefined);
-			if(employment && employment.toLowerCase().indexOf("основ")) {
-				obj.empl = "main";
-			}
-			else {
-				obj.empl = "no_main";
-			}
-			//кафедра и факультет
-			let department = (workSheet["E" + (num + 1)] ? (workSheet["E" + (num + 1)].v + "") : undefined);
-			obj = await userFunc.addDepartment(department, obj);
-			//let ddd = await = DBs.selectFacultyOfDepartment(dep);
-			if(!obj.error) {
-				addUsers.push(obj);
-			}
-			allUsers.push(obj);
-
-            console.log(obj.numb, obj.name, obj.faculty, obj.department);//, obj.empl, obj.faculty, obj.department);
-			num++;
-		}
-        res.render('admin/users/page_add_users_from_file2', {action: action, report: true, users: allUsers});
+        userFunc.main(workSheet).then(users => {
+            res.render('admin/users/page_add_users_from_file2', {action: 'ok', report: true,
+                users: users.allUsers,
+                countAdd: users.addUsers.length});
+        });
 		//добавляем
 		/*
 		Promise.all(arrUsers.map(async function (user) {
@@ -517,6 +484,13 @@ exports.POSTupdateStructure = function(req, res) {
             if(!department) {
                 res.redirect('/admin/update_structure?action=err');
             };
+            /*if (department.trim().toLowerCase().startsWith('кафедра')) {
+                department = department.slice(department.toLowerCase().indexOf('кафедра') + 'кафедра'.length).trim();
+            }
+            if (department.includes('"') || department.includes("'")) {
+                department = department.replace(/'/g, "").trim();
+                department = department.replace(/"/g, "").trim();
+            }*/
             obj.department = department;
             obj.abbr_department = "";
             if(department.includes('(') && department.includes(')')) {

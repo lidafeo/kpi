@@ -1,3 +1,4 @@
+<div>Добавлено <%=countAdd%> из <%=users.length%></div>
 <table style="margin-left: 20px;">
     <tr>
         <th><h4>Номер</h4></th>
@@ -5,29 +6,55 @@
         <th><h4>Должность</h4></th>
         <th><h4>Факультет</h4></th>
         <th><h4>Кафедра</h4></th>
+        <th><h4>Логин</h4></th>
         <th><h4>Ошибка</h4></th>
     </tr>
     <% for(let i = 0; i < users.length; i ++) {%>
         <tr>
-            <td><%=users[i].numb %></td>
+            <% if(users[i].error) {%>
+                <td  style="color:red;"><%=users[i].numb %></td>
+            <%} else {%>
+                <td><%=users[i].numb %></td>
+            <%} %>
             <td><%=users[i].name %></td>
             <% if(users[i].errField != 'position') {%>
                 <td><%=users[i].position %></td>
             <%} else {%>
-                <td>Ошибка!</td> 
+                <% if(users[i].position) {%>
+                    <td style="color:red;"><%=users[i].position %></td>
+                <%} else {%>
+                    <td style="color:red;">Ошибка!</td> 
+                <%} %>
             <%} %>
             <% if(users[i].errField != 'faculty') {%>
                 <td><%=users[i].faculty %></td>
             <%} else {%>
-                 <td>Ошибка!</td> 
+                <% if(users[i].faculty) {%>
+                    <td style="color:red;"><%=users[i].faculty %></td>
+                <%} else {%>
+                    <td style="color:red;">Ошибка!</td> 
+                <%} %>
             <%} %>
             <% if(users[i].errField != 'department') {%>
                 <td><%=users[i].department %></td>
             <%} else {%>
-                <td>Ошибка!</td> 
+                <% if(users[i].department) {%>
+                    <td style="color:red;"><%=users[i].department %></td>
+                <%} else {%>
+                    <td style="color:red;">Ошибка!</td> 
+                <%} %>
            <%} %>
+           <% if(users[i].errField != 'login') {%>
+                <td><%=users[i].login %></td>
+            <%} else {%>
+                <% if(users[i].login) {%>
+                    <td style="color:red;"><%=users[i].login %></td>
+                <%} else {%>
+                    <td style="color:red;">Ошибка!</td> 
+                <%} %>
+        <%} %>
            <% if(users[i].error) {%>
-            <td><%=users[i].error %></td>
+            <td style="color:red;"><%=users[i].error %></td>
             <%} else {%>
                 <td></td> 
            <%} %>

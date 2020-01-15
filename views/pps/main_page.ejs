@@ -6,27 +6,17 @@
 	<link rel="stylesheet" type="text/css" href="/general_style/list.css">
 	<link rel="stylesheet" type="text/css" href="/general_style/footer.css">
 	<link rel="stylesheet" type="text/css" href="/general_style/stylebut.css">
+	<link rel="stylesheet" type="text/css" href="/general_style/menu.css">
 </head>
 <body>
 	<div class="wrapper">
+		<%- include("partials/menu.ejs") %>
 		<div class="content">
-			<form action="/exit" method="post">
-				<button class="exitt">Выход</button>
-			</form>
-			<br/> 
 			<h1><div id="name"><%=name %>, <%=position %></div></h1><br>
 			<% if(objPeriod.notify) {%>
 				<p style="color: red; font-size: 20px;">Внимание! Скоро будет расчет премии за период с <%=objPeriod.date1Str %> по <%=objPeriod.date2Str %></p>
 				<br><br>
 			<%} %>
-			<form class="flexparent">
-			<a href="/my_page/edit_kpi" class="buttonmypage flexblocks" >Отметить выполнение ПЭД</a>
-			<a href="/my_page/values_kpi" class="buttonmypage flexblocks">Посмотреть добавленные значения</a>
-			<% if(level) {%>
-				<a href="/verify" class="buttonmypage flexblocks">Проверить подтверждения ПЭДов преподавателей</a>
-			<%} %>
-			<br>
-		</form>
 			<form name="date" action="/my_page" class="text" method="get">
 				<label>Период отчета с </label>
 				<input type="date" name="date1" id="date1" class="date" value=<%=date1 %> required>

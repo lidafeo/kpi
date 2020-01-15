@@ -79,6 +79,13 @@ exports.selectDepartment = function(dep) {
         [dep, dep]);
 }
 
+//получить кафедру по аббривиатуре
+exports.selectDepartmentWithLike = function(dep) {
+    return query("SELECT department, faculty FROM structure " +
+        "WHERE abbr_department=? OR department=? OR department LIKE '%" + dep + "%'",
+        [dep, dep]);
+}
+
 //USERVALUES
 
 //получить значения ПЭД всех пользователей
@@ -213,7 +220,11 @@ exports.selectOnePosition = function(position) {
 	return query("SELECT position, level FROM positions " +
 		"WHERE position=?", position);
 }
-
+//выбрать должность используя LIKE
+exports.selectOnePositionWithLike = function(position) {
+    return query("SELECT position, level FROM positions " +
+        "WHERE position=? OR position LIKE '%" + position + "%'", position);
+}
 
 //BALLS
 

@@ -12,8 +12,8 @@
 </head>
 <body>
 	<div class="wrapper">
+		<%- include("../partials/menu.ejs") %>
 		<div class="content">
-			<%- include("../partials/menu.ejs") %>
 			<% if(!choose) {%>
 				<% if(action == 1) {%>
 					<p class="uspeshno">Успешно</p>

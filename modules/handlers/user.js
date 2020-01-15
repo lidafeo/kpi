@@ -131,7 +131,7 @@ exports.editKpi = function(req, res) {
 				});
 			}
 		}
-		res.render('pps/page_add_value_kpi', {obj: obj});
+		res.render('pps/page_add_value_kpi', {obj: obj, level: req.session.level});
 	}).catch(err => {
 		console.log(err);
 		res.status(500).render('error/500');
@@ -142,7 +142,7 @@ exports.editKpi = function(req, res) {
 exports.valueKpi = function(req, res) {
 	DBs.selectValueKpiUser(req.session.login).then(result => {
 		modifyDate(result);
-		res.render('pps/page_values_kpi', {kpi: result});
+		res.render('pps/page_values_kpi', {kpi: result, level: req.session.level});
 	}).catch(err => {
 		console.log(err);
 		res.status(500).render('error/500');
