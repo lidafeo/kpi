@@ -6,19 +6,12 @@
 	<link rel="stylesheet" type="text/css" href="../general_style/footer.css">
 	<link rel="stylesheet" type="text/css" href="../general_style/stylebut.css">
 	<link rel="stylesheet" type="text/css" href="../general_style/list.css">
+	<link rel="stylesheet" type="text/css" href="../general_style/menu.css">
 
 </head>
 <body>
 	<div class="wrapper">
-		<header>
-			<% if(mypage) {%>
-				<form action="/exit" method="post">
-					<button class="exitt" >Выход</button></form>
-			<%} %>
-			<% if(!mypage) {%>
-				<a href="/my_page" class="exitt" >Назад</a>
-			<%} %> 
-		</header>
+		<%- include("partials/menu.ejs") %>
 		<div class="content">
 			<form name="editform" class="formborder flexparent" style="margin-top: 8px; justify-content: center; width: 90%;" action="/verify" method="post">
 				<div class="flexblocks text">

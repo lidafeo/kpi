@@ -412,23 +412,28 @@ exports.POSTaddUsersFromFile2 = function(req, res) {
 
 		//let address = {"C" : "position", "D" : "employment", "E" : "department"};
         userFunc.main(workSheet).then(users => {
-            res.render('admin/users/page_add_users_from_file2', {action: 'ok', report: true,
-                users: users.allUsers,
-                countAdd: users.addUsers.length});
+			res.render('admin/users/page_add_users_from_file2', {action: 'ok', report: true,
+				users: users.allUsers,
+				countAdd: users.addUsers.length,
+				counts: users.counts});
+
+			/*
+			//добавляем
+            Promise.all(users.addUsers.map(async function (user) {
+                user.password = await bcrypt.hash(user.password, BCRYPT_SALT_ROUNDS);
+                let result = await DBi.insertUserFromObj(user);
+                //записываем логи
+                writeLogs(req.session.login, req.session.level, "добавил(а) нового пользователя: login - " + user.login);
+                console.log("Сохранен объект user", user.login);
+            })).then(result => {
+				res.render('admin/users/page_add_users_from_file2', {action: 'ok', report: true,
+					users: users.allUsers,
+					countAdd: users.addUsers.length,
+					counts: users.counts});
+            });
+
+			 */
         });
-		//добавляем
-		/*
-		Promise.all(arrUsers.map(async function (user) {
-			user.password = await bcrypt.hash(user.password, BCRYPT_SALT_ROUNDS);
-			let result = await DBi.insertUserFromObj(user);
-			//записываем логи
-			writeLogs(req.session.login, "добавил(а) нового пользователя: login - " + user.login);
-			logs.push(user);
-			console.log("Сохранен объект user", user.login);
-		})).then(result => {
-			res.redirect('/admin/users/add_users_from_file2?action=ok');
-		});
-		 */
 	});
 }
 

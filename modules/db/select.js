@@ -24,6 +24,13 @@ exports.selectUserFromDepartment = function(faculty, department, level) {
 		[department, faculty, level]);
 }
 
+//получить одного пользователя
+exports.selectOneUser = function(login) {
+	return query("SELECT login FROM users " +
+		"WHERE login=?",
+		[login]);
+}
+
 
 //STRUCTURE
 

@@ -2,6 +2,10 @@ let DBs = require('./db/select.js');
 module.exports = {
     main: async function(workSheet) {
         let num = 1;
+        let countIgnore = 0;
+        let countError = 0;
+        let countExists = 0;
+        let countExternal = 0;
         addNames = []; addUsers = [];
         allNames = []; allUsers = [];
         //currUser = {};
@@ -21,28 +25,24 @@ module.exports = {
             obj = await this.addPosition(positions, obj);
             //вид занятости
             let employment = (workSheet["D" + (num + 1)] ? (workSheet["D" + (num + 1)].v + "") : undefined);
-            if(employment && employment.toLowerCase().indexOf("основ") != -1) {
-                obj.empl = "main";
-            }
-            else {
-                obj.empl = "no_main";
-            }
+            obj = this.addEmployment(employment, obj);
             //кафедра и факультет
             let department = (workSheet["E" + (num + 1)] ? (workSheet["E" + (num + 1)].v + "") : undefined);
             obj = await this.addDepartment(department, obj);
-            //логин
-            obj = getLogin(obj);
-            //пароль
-            obj.password = generatePassword(12);
-
-            if(addNames.indexOf(obj.name) != -1) {
+            if(!obj.error) {
+                //логин
+                obj = getLogin(obj);
+                //пароль
+                obj.password = generatePassword(12);
+            }
+            if(addNames.indexOf(obj.name) != -1 && !obj.error) {
                 let user = addUsers[addNames.indexOf(obj.name)];
-                if(user.empl == "main" || (user.empl == "no_main" && obj.empl == "no_main")) {
+                if(user.empl == "main" || (user.empl == "internal" && obj.empl != "main")) {
                     obj.error = "Повторяющийся пользователь";
                     obj.errField = "name";
                     obj.ignore = true;
                 }
-                else if(user.empl == "no_main" && obj.empl == "main" && !obj.error) {
+                else {
                     user.error = "Повторяющийся пользователь";
                     user.errField = "name";
                     user.ignore = true;
@@ -51,23 +51,64 @@ module.exports = {
                 }
             } else {
                 if (!obj.error) {
-                    addUsers.push(obj);
-                    addNames.push(obj.name);
+                    //ищем такого пользователя в БД
+                    let user = await DBs.selectOneUser(obj.login);
+                    if(user[0] && user[0].login != "") {
+                        obj.error = "Такой пользователь существует в БД";
+                        obj.errField = "login";
+                        obj.exists = true;
+                    }
+                    else {
+                        addUsers.push(obj);
+                        addNames.push(obj.name);
+                    }
                 }
             }
-
+            if(obj.ignore) {
+                countIgnore++;
+            } else if(obj.extern) {
+                countExternal++;
+            } else if(obj.exists) {
+                countExists++;
+            } else if(obj.error) {
+                countError++;
+            }
             allUsers.push(obj);
             allNames.push(obj.name);
             //console.log(obj.numb, obj.name, obj.faculty, obj.department);//, obj.empl, obj.faculty, obj.department);
             num++;
         }
-        return {allUsers: allUsers, addUsers: addUsers};
+        return {allUsers: allUsers, addUsers: addUsers, counts: {countError: countError,
+                countIgnore: countIgnore, countExists: countExists, countExternal: countExternal}};
+    },
+    addEmployment: function (employment, obj) {
+        //занятость
+        if(employment) {
+            obj.employment = employment;
+            if(employment.toLowerCase().indexOf("основ") != -1) {
+                obj.empl = "main";
+            }
+            else if(employment.toLowerCase().indexOf("внутрен") != -1){
+                obj.empl = "internal";
+            }
+            else {
+                obj.empl = "external";
+                if(!obj.error) {
+                    obj.error = "Имеет внешнее совместительство";
+                    obj.extern = true;
+                }
+            }
+        }
+        return obj;
     },
     addPosition: async function (positions, obj) {
         //должность
         if(positions) {
             let arrPos = positions.split(',');
             let find = false;
+            let positions = await DBs.selectPositionWithBalls();
+            ///написать сдесь поиск по positions; (типо includes), но сначала попробоавть найти по полному названию
+            ///(по arrPos[0])
             for(let po = 0; po < arrPos.length; po++) {
                 if(arrPos[po] && arrPos[po].trim().toLowerCase().startsWith('и.о.')) {
                     let ind = arrPos[po].trim().toLowerCase().indexOf('и.о.')
