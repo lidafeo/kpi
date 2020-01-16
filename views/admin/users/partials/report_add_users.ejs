@@ -3,20 +3,33 @@
     <tr>
         <th><h4>Номер</h4></th>
         <th><h4>ФИО</h4></th>
+        <th><h4>Занятость</h4></th>
         <th><h4>Должность</h4></th>
         <th><h4>Факультет</h4></th>
         <th><h4>Кафедра</h4></th>
         <th><h4>Логин</h4></th>
+        <th><h4>Пароль</h4></th>
         <th><h4>Ошибка</h4></th>
     </tr>
     <% for(let i = 0; i < users.length; i ++) {%>
         <tr>
-            <% if(users[i].error) {%>
-                <td  style="color:red;"><%=users[i].numb %></td>
+            <% if(users[i].ignore) {%>
+                <td style="color:rgb(0, 225, 255);"><%=users[i].numb %></td>
+            <%} else if(users[i].error){%>
+                <td style="color:red;"><%=users[i].numb %></td>
             <%} else {%>
-                <td><%=users[i].numb %></td>
+                <td style="color:green;"><%=users[i].numb %></td>
             <%} %>
-            <td><%=users[i].name %></td>
+
+            <% if(users[i].ignore) {%>
+                <td style="color:rgb(0, 225, 255);"><%=users[i].name %></td>
+            <%} else if(users[i].error){%>
+                <td style="color:red;"><%=users[i].name %></td>
+            <%} else {%>
+                <td style="color:green;"><%=users[i].name %></td>
+            <%} %>
+            
+            <td><%=users[i].empl %></td>
             <% if(users[i].errField != 'position') {%>
                 <td><%=users[i].position %></td>
             <%} else {%>
@@ -44,20 +57,27 @@
                     <td style="color:red;">Ошибка!</td> 
                 <%} %>
            <%} %>
-           <% if(users[i].errField != 'login') {%>
+           <% if(users[i].errField != 'login' && !users[i].error) {%>
                 <td><%=users[i].login %></td>
-            <%} else {%>
+            <%} else if(users[i].errField == 'login') {%>
                 <% if(users[i].login) {%>
                     <td style="color:red;"><%=users[i].login %></td>
                 <%} else {%>
                     <td style="color:red;">Ошибка!</td> 
                 <%} %>
-        <%} %>
-           <% if(users[i].error) {%>
-            <td style="color:red;"><%=users[i].error %></td>
             <%} else {%>
                 <td></td> 
-           <%} %>
+            <%} %>
+            <% if(users[i].ignore) {%>
+                <td></td>
+                <td style="color:rgb(0, 225, 255);"><%=users[i].error %></td>
+            <%} else if(users[i].error) {%>
+                <td></td>
+                <td style="color:red;"><%=users[i].error %></td>
+            <%} else {%>
+                 <td><%=users[i].password%></td> 
+                <td></td> 
+            <%} %>
         </tr>
     <%} %>
 </table>

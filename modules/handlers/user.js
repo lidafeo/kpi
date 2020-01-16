@@ -210,7 +210,7 @@ exports.POSTupload = function(req, res) {
 						console.log("Сохранен объект uservalue");
 						res.send('ok');
 						//записываем логи
-						writeLogs(login, "добавил(а) новое значение ПЭД " + kpi.name + " равное " + fields.value);
+						writeLogs(login, req.session.level, "добавил(а) новое значение ПЭД " + kpi.name + " равное " + fields.value);
 						let id = result.insertId;
 						//сохраняем прикрепленный файл
 						if(files.file) {

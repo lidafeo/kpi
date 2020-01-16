@@ -2,25 +2,26 @@ let DBs = require('./db/select.js');
 module.exports = {
     main: async function(workSheet) {
         let num = 1;
-        addUsers = [];
-        allUsers = [];
+        addNames = []; addUsers = [];
+        allNames = []; allUsers = [];
+        //currUser = {};
         while(true) {
             let obj = {};
             //порядковый номер
-            numb = workSheet["A" + (num + 1)] ? (workSheet["A" + (num + 1)].v + "") : undefined;
+            obj.numb = num;
+            //numb = workSheet["A" + (num + 1)] ? (workSheet["A" + (num + 1)].v + "") : undefined;
             //имя
             let name = (workSheet["B" + (num + 1)] ? (workSheet["B" + (num + 1)].v + "") : undefined);
             if(!name) {
                 break;
             }
             obj.name = name;
-            obj.numb = numb;
             //должность
             let positions = (workSheet["C" + (num + 1)] ? (workSheet["C" + (num + 1)].v + "") : undefined);
             obj = await this.addPosition(positions, obj);
             //вид занятости
             let employment = (workSheet["D" + (num + 1)] ? (workSheet["D" + (num + 1)].v + "") : undefined);
-            if(employment && employment.toLowerCase().indexOf("основ")) {
+            if(employment && employment.toLowerCase().indexOf("основ") != -1) {
                 obj.empl = "main";
             }
             else {
@@ -31,12 +32,33 @@ module.exports = {
             obj = await this.addDepartment(department, obj);
             //логин
             obj = getLogin(obj);
-            if(!obj.error) {
-                addUsers.push(obj);
-            }
-            allUsers.push(obj);
+            //пароль
+            obj.password = generatePassword(12);
 
-            console.log(obj.numb, obj.name, obj.faculty, obj.department);//, obj.empl, obj.faculty, obj.department);
+            if(addNames.indexOf(obj.name) != -1) {
+                let user = addUsers[addNames.indexOf(obj.name)];
+                if(user.empl == "main" || (user.empl == "no_main" && obj.empl == "no_main")) {
+                    obj.error = "Повторяющийся пользователь";
+                    obj.errField = "name";
+                    obj.ignore = true;
+                }
+                else if(user.empl == "no_main" && obj.empl == "main" && !obj.error) {
+                    user.error = "Повторяющийся пользователь";
+                    user.errField = "name";
+                    user.ignore = true;
+                    allUsers[allNames.indexOf(obj.name)] = user;
+                    addUsers.splice(addUsers.indexOf(obj.name), 1, obj);
+                }
+            } else {
+                if (!obj.error) {
+                    addUsers.push(obj);
+                    addNames.push(obj.name);
+                }
+            }
+
+            allUsers.push(obj);
+            allNames.push(obj.name);
+            //console.log(obj.numb, obj.name, obj.faculty, obj.department);//, obj.empl, obj.faculty, obj.department);
             num++;
         }
         return {allUsers: allUsers, addUsers: addUsers};
@@ -193,4 +215,14 @@ function getLogin(obj) {
     }
     obj.login = login;
     return obj;
+}
+
+function generatePassword(length) {
+    let result = '';
+    let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let charactersLength = characters.length;
+    for ( var i = 0; i < length; i++ ) {
+        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+    }
+    return result;
 }

@@ -87,7 +87,7 @@ exports.POSTinvalid = function(req, res) {
 			DBu.updateValueInvalid(invalidKpi[i].id, name, invalidKpi[i].comment).then(result => {
 				console.log(result);
 				//записываем логи
-				writeLogs(name, "сделал(а) отметку о недействительности ПЭД " + invalidKpi[i].name + 
+				writeLogs(name, req.session.level, "сделал(а) отметку о недействительности ПЭД " + invalidKpi[i].name +
 					" пользователя " + chooseUser + " по следующей причине: " + invalidKpi[i].comment);
 				resolve('ok');
 			}).catch(err => {

@@ -217,7 +217,7 @@ exports.main = function(req, res) {
 	let strDate = dateModule.dateToString(date);
 	let dateHTML = dateModule.dateForInput(date);
 	let nameFile = strDate.split('.').join('_') + '.log';
-	fs.readFile("./log/" + nameFile, "utf8", function(err, data) {
+	fs.readFile("./log/user/" + nameFile, "utf8", function(err, data) {
 		let logs = [];
 		if(err) {
 			console.log(strDate + " не было действий пользователей");
@@ -328,7 +328,7 @@ exports.POSTaddUser = function(req, res) {
 		//insertUser(name, position, faculty, department, login, password)
 		DBi.insertUser(name, position, faculty, department, login, password).then(result => {
 			//запись логов
-			writeLogs(req.session.login, "добавил(а) нового пользователя: login - " + login);
+			writeLogs(req.session.login, req.session.level, "добавил(а) нового пользователя: login - " + login);
 			console.log("Сохранен объект user");
 			res.redirect('/admin/users/add_user?action=ok');
 		}).catch(err => {
@@ -387,7 +387,7 @@ exports.POSTaddUsersFromFile = function(req, res) {
 			user.password = await bcrypt.hash(user.password, BCRYPT_SALT_ROUNDS);
 			let result = await DBi.insertUserFromObj(user);
 			//записываем логи
-			writeLogs(req.session.login, "добавил(а) нового пользователя: login - " + user.login);
+			writeLogs(req.session.login, req.session.level, "добавил(а) нового пользователя: login - " + user.login);
 			console.log("Сохранен объект user", user.login);
 		})).then(result => {
 			res.redirect('/admin/users/add_users_from_file?action=ok');
@@ -439,7 +439,7 @@ exports.POSTdeleteUser = function(req, res) {
 		if(result.affectedRows > 0) {
 			console.log("Удален пользователь: ", login);
 			//записываем логи
-			writeLogs(req.session.login, "удалил(а) пользователя " + login);
+			writeLogs(req.session.login, req.session.level, "удалил(а) пользователя " + login);
 			res.redirect('/admin/users/delete_user?action=ok');
 		}
 		else {
@@ -506,7 +506,7 @@ exports.POSTupdateStructure = function(req, res) {
             Promise.all(arrStruct.map(function (object) {
                 let result = DBi.insertDepartment(object);
                 //записываем логи
-                writeLogs(req.session.login, "добавил(а) кафедру " + object.department + " факультета " + object.faculty);
+                writeLogs(req.session.login, req.session.level, "добавил(а) кафедру " + object.department + " факультета " + object.faculty);
                 console.log("Сохранен объект structure", "кафедра: " + object.department + " факультет: " + object.faculty);
             })).then(result => {
                 res.redirect('/admin/update_structure?action=ok');
@@ -539,12 +539,12 @@ exports.POSTupdateStructure = function(req, res) {
 exports.POSTcloseAccounts = function(req, res) {
 	//открываем
 	if(close) {
-		writeLogs(req.session.login, "открыл(а) личные кабинеты ППС");
+		writeLogs(req.session.login, req.session.level, "открыл(а) личные кабинеты ППС");
 		close = false;
 	}
 	//закрываем
 	else {
-		writeLogs(req.session.login, "закрыл(а) личные кабинеты ППС");
+		writeLogs(req.session.login, req.session.level, "закрыл(а) личные кабинеты ППС");
 		close = true;
 	}
 	res.redirect('/admin/close_accounts');
@@ -561,7 +561,7 @@ exports.POSTsetPeriod = function(req, res) {
 	else {
 		objPeriod.setDate(date1, date2);
 		//записываем логи
-		writeLogs(req.session.login, "установил(а) период для отчета с " + 
+		writeLogs(req.session.login, req.session.level, "установил(а) период для отчета с " +
 			date1.split('-').reverse().join('.') + " по " + date2.split('-').reverse().join('.'));
 	}
 	res.redirect('/admin/set_period');
@@ -644,7 +644,7 @@ exports.POSTaddKpi = function(req, res) {
 				Promise.all(criterions.map(DBi.insertCriterion)).then(result => {
 					console.log("Критерии ПЭД успешно добавлены");
 					//записываем логи
-					writeLogs(req.session.login, "добавил(а) ПЭД " + req.body.name);
+					writeLogs(req.session.login, req.session.level, "добавил(а) ПЭД " + req.body.name);
 					console.log("Сохранен объект kpi");
 					res.redirect('/admin/kpi/add_kpi?action=ok');
 				}).catch(err => {
@@ -667,7 +667,7 @@ exports.POSTdeleteKpi = function(req, res) {
 		if(result.affectedRows > 0) {
 			console.log("Удален объект kpi ", req.body.name);
 			//записываем логи
-			writeLogs(req.session.login, "удалил(а) ПЭД " + req.body.name);
+			writeLogs(req.session.login, req.session.level, "удалил(а) ПЭД " + req.body.name);
 			res.redirect('/admin/kpi/delete_kpi?action=ok');
 		}
 		else {
@@ -700,7 +700,7 @@ exports.POSTeditBallsKpi = function(req, res) {
 		Promise.all(arrBalls.map(DBu.updateBallOfCriterion)).then(result => {
 			console.log("Оценки успешно изменены", req.body.name);
 			//записываем логи
-			writeLogs(req.session.login, "изменил(а) оценки ПЭД " + req.body.name);
+			writeLogs(req.session.login, req.session.level, "изменил(а) оценки ПЭД " + req.body.name);
 			res.redirect('/admin/kpi/edit_balls?action=ok');
 		}).catch(err => {
 			console.log(err);
