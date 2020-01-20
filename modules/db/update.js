@@ -8,6 +8,13 @@ exports.updateValueInvalid = function(id, author, text) {
 		"', valid=0 WHERE id=" + id);
 }
 
+//USER
+
+//меняем пароль пользователю
+exports.updatePassword = function(login, newPassword) {
+	return query("UPDATE users SET password='" + newPassword +
+		"' WHERE login=?", [login]);
+}
 
 //CRITERION
 

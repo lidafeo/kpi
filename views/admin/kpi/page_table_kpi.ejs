@@ -19,7 +19,7 @@
 						<th rowspan="2"><h4>Шифр показателя эффективности</h4></th>
 						<th rowspan="2"><h4>Показатель</h4></th>
 						<th rowspan="2"><h4>Критерии оценки эффективности деятельности</h4></th>
-						<th colspan="6"><h4>Группы</h4></th>
+						<th colspan="<%=positions.length%>"><h4>Группы</h4></th>
 					</tr>
 					<tr class="row2">
 						<% for(let i = 0; i < positions.length; i++) {%>
@@ -30,7 +30,7 @@
 						<% if(kpi[u].length != 0) {%>
 							<tr>
 								<td><%=kpi[u][0].section[0] + "." %></td>
-								<td colspan="8" class="namesection">
+								<td colspan="<%=positions.length + 2%>" class="namesection">
 									<h4>Раздел <%=(u+1) + ". " + kpi[u][0].section %></h4>
 								</td>
 							</tr>
@@ -54,7 +54,7 @@
 									<% if(arr[i].type == 2) {%>
 									<tr>
 										<td rowspan="<%=(arr[i].count_criterion + 1)%>"><%=arr[i].name %></td>
-										<td colspan="8"><%=arr[i].description %></td>
+										<td colspan="<%=positions.length + 2%>"><%=arr[i].description %></td>
 										</tr>
 										<% for(let j = 0; j < arr[i].lines.length; j++) {%>
 										<tr>

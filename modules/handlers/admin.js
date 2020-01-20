@@ -300,13 +300,13 @@ exports.updateStructure = function(req, res) {
 
 //GET-запрос страницы установки текущего периода
 exports.setPeriod = function(req, res) {
-	res.render('admin/page_set_period', {set: objPeriod.set, period: objPeriod});
+	res.render('admin/settings/page_set_period', {set: objPeriod.set, period: objPeriod});
 }
 
 //GET-запрос страницы закрытия/открытия кабинетов
 exports.closeAccount = function(req, res) {
 	if(close) res.render('admin/page_close_account', {op: false});
-	else res.render('admin/page_close_account', {op: true});
+	else res.render('admin/settings/page_close_account', {op: true});
 }
 
 //POST-запрос на добавление пользователя
@@ -384,7 +384,7 @@ exports.POSTaddUsersFromFile = function(req, res) {
 		}
 		//добавляем
 		Promise.all(arrUsers.map(async function (user) {
-			user.password = await bcrypt.hash(user.password, BCRYPT_SALT_ROUNDS);
+			user.passwordHash = await bcrypt.hash(user.password, BCRYPT_SALT_ROUNDS);
 			let result = await DBi.insertUserFromObj(user);
 			//записываем логи
 			writeLogs(req.session.login, req.session.level, "добавил(а) нового пользователя: login - " + user.login);
@@ -410,29 +410,30 @@ exports.POSTaddUsersFromFile2 = function(req, res) {
 		let firstSheetName = workBook.SheetNames[0];
 		let workSheet = workBook.Sheets[firstSheetName];
 
-		//let address = {"C" : "position", "D" : "employment", "E" : "department"};
-        userFunc.main(workSheet).then(users => {
-			res.render('admin/users/page_add_users_from_file2', {action: 'ok', report: true,
-				users: users.allUsers,
-				countAdd: users.addUsers.length,
-				counts: users.counts});
-
-			/*
-			//добавляем
-            Promise.all(users.addUsers.map(async function (user) {
-                user.password = await bcrypt.hash(user.password, BCRYPT_SALT_ROUNDS);
-                let result = await DBi.insertUserFromObj(user);
-                //записываем логи
-                writeLogs(req.session.login, req.session.level, "добавил(а) нового пользователя: login - " + user.login);
-                console.log("Сохранен объект user", user.login);
-            })).then(result => {
-				res.render('admin/users/page_add_users_from_file2', {action: 'ok', report: true,
-					users: users.allUsers,
-					countAdd: users.addUsers.length,
-					counts: users.counts});
-            });
-
-			 */
+		//удаляем, если нужно
+		new Promise(async (resolve, reject) => {
+			if(fields['del_pps'] == 'on') {
+				await DBd.deleteAllPps();
+				//записываем логи
+				writeLogs(req.session.login, req.session.level, "удалил(а) всех пользователей - ППС");
+			}
+			resolve();
+		}).then(result => {
+			userFunc.main(workSheet).then(users => {
+				//добавляем
+				Promise.all(users.addUsers.map(async function (user) {
+					user.passwordHash = await bcrypt.hash(user.password, BCRYPT_SALT_ROUNDS);
+					let result = await DBi.insertUserFromObj(user);
+					//записываем логи
+					writeLogs(req.session.login, req.session.level, "добавил(а) нового пользователя: login - " + user.login);
+					console.log("Сохранен объект user", user.login);
+				})).then(result => {
+					res.render('admin/users/page_add_users_from_file2', {action: 'ok', report: true,
+						users: users.allUsers,
+						countAdd: users.addUsers.length, counts: users.counts
+					});
+				});
+			});
         });
 	});
 }

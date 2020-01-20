@@ -20,8 +20,12 @@ exports.insertUser = function(name, position, faculty, department, login, passwo
 
 //добавление пользователя с объекта
 exports.insertUserFromObj = function(user) {
-	let arr = [user.name, user.position, user.faculty, user.department, user.login, user.password];
-	return query("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?)", arr);
+	if(user.department) {
+		let arr = [user.name, user.position, user.faculty, user.department, user.login, user.passwordHash];
+		return query("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?)", arr);
+	}
+	let arr = [user.name, user.position, user.faculty, user.login, user.passwordHash];
+	return query("INSERT INTO users(name, position, faculty, login, password) VALUES (?, ?, ?, ?, ?)", arr);
 }
 
 //KPI

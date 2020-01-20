@@ -31,9 +31,17 @@ module.exports = {
             obj = await this.addDepartment(department, obj);
             if(!obj.error) {
                 //логин
-                obj = getLogin(obj);
+                if(workSheet["G" + (num + 1)]) {
+                    obj.login = workSheet["G" + (num + 1)].v + "";
+                } else {
+                    obj = getLogin(obj);
+                }
                 //пароль
-                obj.password = generatePassword(12);
+                if(workSheet["H" + (num + 1)]) {
+                    obj.password = workSheet["H" + (num + 1)].v + "";
+                } else {
+                    obj.password = generatePassword(12);
+                }
             }
             if(addNames.indexOf(obj.name) != -1 && !obj.error) {
                 let user = addUsers[addNames.indexOf(obj.name)];
@@ -106,31 +114,31 @@ module.exports = {
         if(positions) {
             let arrPos = positions.split(',');
             let find = false;
-            let positions = await DBs.selectPositionWithBalls();
-            ///написать сдесь поиск по positions; (типо includes), но сначала попробоавть найти по полному названию
-            ///(по arrPos[0])
-            for(let po = 0; po < arrPos.length; po++) {
-                if(arrPos[po] && arrPos[po].trim().toLowerCase().startsWith('и.о.')) {
-                    let ind = arrPos[po].trim().toLowerCase().indexOf('и.о.')
-                    arrPos[po] = arrPos[po].slice(ind + 'и.о.'.length).trim();
-                }
-                let pos = await DBs.selectOnePositionWithLike(arrPos[po].trim());
-                if(pos[0] && pos.length == 1) {
+
+            let po = 0;
+            if(arrPos[0] && arrPos[po].trim().toLowerCase().startsWith('и.о.')) {
+                let ind = arrPos[po].trim().toLowerCase().indexOf('и.о.');
+                arrPos[po] = arrPos[po].slice(ind + 'и.о.'.length).trim();
+            }
+            if(arrPos[po] && arrPos[po].trim().toLowerCase().startsWith('исполняющий обязанности')) {
+                let ind = arrPos[po].trim().toLowerCase().indexOf('исполняющий обязанности');
+                arrPos[po] = arrPos[po].slice(ind + 'исполняющий обязанности'.length).trim();
+            }
+            let pos = await DBs.selectOnePositionWithLike(arrPos[po].trim());
+            if(pos[0] && pos.length == 1) {
+                find = true;
+                obj.position = pos[0]['position'];
+                obj.posLevel = pos[0]['level'];
+            }
+            else {
+                pos = await DBs.selectOnePosition(arrPos[po].trim());
+                if(pos[0]) {
                     find = true;
                     obj.position = pos[0]['position'];
                     obj.posLevel = pos[0]['level'];
-                    break;
-                }
-                else {
-                    pos = await DBs.selectOnePosition(arrPos[po].trim());
-                    if(pos[0]) {
-                        find = true;
-                        obj.position = pos[0]['position'];
-                        obj.posLevel = pos[0]['level'];
-                        break;
-                    }
                 }
             }
+
             if(!find) {
                 obj.error = "Должность не найдена в БД";
                 obj.position = positions;

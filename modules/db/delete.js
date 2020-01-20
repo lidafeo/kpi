@@ -7,6 +7,12 @@ exports.deleteUser = function(login) {
 	return query("DELETE FROM users WHERE login='" + login + "'");
 }
 
+//удаление всех ППС
+exports.deleteAllPps = function() {
+	return query("DELETE users FROM users " +
+		"INNER JOIN positions ON positions.position = users.position " +
+		"WHERE func_pps=1");
+}
 
 //KPI
 

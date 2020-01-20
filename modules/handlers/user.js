@@ -1,11 +1,15 @@
 const formidable = require("formidable");
 const fs = require("fs");
+const bcrypt = require("bcrypt");
 
 let DBs = require('../db/select.js');
 let DBi = require('../db/insert.js');
+let DBu = require('../db/update.js');
 
 let dateModule = require('../date.js');
 let writeLogs = require('../logs');
+
+let BCRYPT_SALT_ROUNDS = 12;
 
 let getObjPeriod = require('./admin.js').getObjPeriod;
 
@@ -149,6 +153,11 @@ exports.valueKpi = function(req, res) {
 	});
 }
 
+//GET-запрос страницы с настройками
+exports.settings = function(req, res) {
+	res.render('pps/page_settings', {level: req.session.level, action: 0});
+}
+
 //отправка файла пользователю
 exports.sendFile = function(req, res) {
 	let file = req.query.file;
@@ -229,6 +238,25 @@ exports.POSTupload = function(req, res) {
 	});
 };
 
+//POST-запрос изменения пароля
+exports.POSTsettings = function(req, res) {
+	let password = req.body.password;
+	let login = req.session.login;
+	if(password) {
+		changePassword(login, password).then(result => {
+			//записываем логи
+			writeLogs(login, req.session.level, "изменил(а) пароль");
+			res.render('pps/page_settings', {level: req.session.level, action: 1});
+		}).catch(err => {
+			console.log(err);
+			res.status(500).render('error/500');
+		});
+	}
+	else {
+		console.log("Задан пустой пароль");
+		res.render('pps/page_settings', {level: req.session.level});
+	}
+}
 
 //сортировка и 
 //добавление доп информации по ПЭДам: количество подтвержденных, балл, дата подтверждения
@@ -362,4 +390,10 @@ function createArrayOfKeyValues(arrObj, key) {
 			arr.push(arrObj[i][key]);
 	}
 	return arr;
+}
+
+//обновление пароля
+async function changePassword (login, password) {
+	let passwordHash = await bcrypt.hash(password, BCRYPT_SALT_ROUNDS);
+	await DBu.updatePassword(login, passwordHash);
 }

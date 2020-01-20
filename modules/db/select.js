@@ -217,8 +217,8 @@ exports.selectAllPosition = function() {
 
 //выбрать должности, у которых есть ПЭД
 exports.selectPositionWithBalls = function() {
-	return query("SELECT position FROM positions " +
-		"WHERE number_group IS NOT NULL " +
+	return query("SELECT position, level FROM positions " +
+		"WHERE func_pps=1 " +
 		"ORDER BY number_group ASC, position ASC");
 }
 

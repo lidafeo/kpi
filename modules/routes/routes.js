@@ -26,8 +26,10 @@ module.exports = function(app) {
 	app.get('/my_page/edit_kpi', rightImplementKpi, user.editKpi);
 	app.get('/my_page/values_kpi', rightImplementKpi, user.valueKpi);
 	app.get('/upload_file', rightPpsOrVerify, user.sendFile);
+	app.get('/settings', rightPpsOrVerify, user.settings);
 	app.post('/edit_kpi', jsonParser, user.POSTeditKpi);
 	app.post('/upload', user.POSTupload);
+	app.post('/settings', urlencodedParser, user.POSTsettings);
 
 	app.get('/verify', rightVerify, verify.verify);
 	app.post('/verify', jsonParser, verify.POSTverify);
