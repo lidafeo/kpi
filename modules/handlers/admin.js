@@ -10,7 +10,8 @@ let DBd = require('../db/delete.js');
 let DBu = require('../db/update.js');
 
 let dateModule = require('../date.js');
-let writeLogs = require('../logs');
+let writeLogs = require('../logs').log;
+let writeErrorLogs = require('../logs').error;
 let additFunc = require('../additional');
 let userFunc = require('../user_func');
 
@@ -62,9 +63,9 @@ exports.getUsers = function(req, res) {
 		res.render('admin/users/page_table_users', {users: users});
 	}).catch(err => {
 		console.log(err);
+		writeErrorLogs(res.session.login, err);
 		res.status(500).render('error/500');
 	});
-	
 }
 
 //GET-запрос страницы для добавления сотрудника
@@ -82,10 +83,12 @@ exports.addUser = function(req, res) {
 				department: departmentArr});
 		}).catch(err => {
 			console.log(err);
+			writeErrorLogs(res.session.login, err);
 			res.status(500).render('error/500');
 		});
 	}).catch(err => {
 		console.log(err);
+		writeErrorLogs(res.session.login, err);
 		res.status(500).render('error/500');
 	});
 };
@@ -114,6 +117,7 @@ exports.deleteUser = function(req, res) {
 	DBs.selectAllUsers().then(users => {
 		res.render('admin/users/page_delete_user', {users: users, action: action});
 	}).catch(err => {
+		writeErrorLogs(res.session.login, err);
 		console.log(err);
 		res.status(500).render('error/500');
 	});
@@ -143,6 +147,7 @@ exports.getKpi = function(req, res) {
 		}
 		res.render('admin/kpi/page_table_kpi', {kpi: kpi, positions: positions});
 	}).catch(err => {
+		writeErrorLogs(res.session.login, err);
 		console.log(err);
 		res.status(500).render('error/500');
 	});
@@ -157,10 +162,12 @@ exports.addKpi = function(req, res) {
 		DBs.selectPositionWithBalls().then(positions => {
 			res.render('admin/kpi/page_add_kpi', {section: section, action: action, positions: positions});
 		}).catch(err => {
+			writeErrorLogs(res.session.login, err);
 			console.log(err);
 			res.status(500).render('error/500');
 		});
 	}).catch(err => {
+		writeErrorLogs(res.session.login, err);
 		console.log(err);
 		res.status(500).render('error/500');
 	});
@@ -174,6 +181,7 @@ exports.deleteKpi = function(req, res) {
 	DBs.selectAllKpi().then(result => {
 		res.render('admin/kpi/page_delete_kpi', {kpi: result, action: action});
 	}).catch(err => {
+		writeErrorLogs(res.session.login, err);
 		console.log(err);
 		res.status(500).render('error/500');
 	});
@@ -187,10 +195,11 @@ exports.editBallsKpi = function(req, res) {
 		DBs.selectOneKpiWithBalls(kpi).then(result => {
 			let positions = [];
 			let kpi = getKpiObj(result, positions);
-			res.render('admin/kpi/page_edit_balls_kpi', {choose: true, arr: kpi.lines, positions: positions, 
+			res.render('admin/kpi/page_edit_balls_kpi', {choose: true, arr: kpi.lines, positions: kpi.positions,
 				count_criterion: result[0].count_criterion, type: result[0].type, name: result[0].name, 
 				description: result[0].description});
 		}).catch(err => {
+			writeErrorLogs(res.session.login, err);
 			console.log(err);
 			res.status(500).render('error/500');
 		});
@@ -201,6 +210,7 @@ exports.editBallsKpi = function(req, res) {
 		DBs.selectAllKpi().then(result => {
 			res.render('admin/kpi/page_edit_balls_kpi', {kpi: result, choose: false, action: action});
 		}).catch(err => {
+			writeErrorLogs(res.session.login, err);
 			console.log(err);
 			res.status(500).render('error/500');
 		});
@@ -265,6 +275,7 @@ exports.getBallsUsers = function(req, res) {
 		}
 		res.render('admin/page_values_kpi', {balls: result});
 	}).catch(err => {
+		writeErrorLogs(res.session.login, err);
 		console.log(err);
 		res.status(500).render('error/500');
 	});
@@ -285,6 +296,7 @@ exports.getStructure = function(req, res) {
         }
         res.render('admin/structure/page_get_structure', {action: action, structure: structure});
     }).catch(err => {
+		writeErrorLogs(res.session.login, err);
         console.log(err);
         res.status(500).render('error/500');
     });
@@ -309,6 +321,10 @@ exports.closeAccount = function(req, res) {
 	else res.render('admin/settings/page_close_account', {op: true});
 }
 
+//GET-запрос страницы изменения пароля
+exports.changePassword = function(req, res) {
+	res.render('admin/settings/page_change_password', {action: 0});
+}
 //POST-запрос на добавление пользователя
 exports.POSTaddUser = function(req, res) {
 	console.log("Добавление пользователя");
@@ -332,12 +348,14 @@ exports.POSTaddUser = function(req, res) {
 			console.log("Сохранен объект user");
 			res.redirect('/admin/users/add_user?action=ok');
 		}).catch(err => {
+			writeErrorLogs(res.session.login, err);
 			console.log("Скорее всего такой пользователь уже есть");
 			res.redirect('/admin/users/add_user?action=err');
 		});
 	}).then(function() {
 		console.log("Пароль успешно хеширован");
 	}).catch(function(err) {
+		writeErrorLogs(res.session.login, err);
 		console.log("Error saving user: ");
 		console.log(err);
 		res.status(500).render('error/500');
@@ -453,6 +471,7 @@ exports.POSTdeleteUser = function(req, res) {
 			res.redirect('/admin/users/delete_user?action=err');
 		}
 	}).catch(err => {
+		writeErrorLogs(res.session.login, err);
 		console.log(err);
 		res.redirect('/admin/users/delete_user?action=err');
 	});
@@ -532,9 +551,11 @@ exports.POSTupdateStructure = function(req, res) {
                         console.log(err);
                     });
                 }).catch(err => {
+				writeErrorLogs(res.session.login, err);
                     console.log(err);
                 });
             }).catch(err => {
+				writeErrorLogs(res.session.login, err);
                 res.redirect('/admin/update_structure?action=err');
             });
         });
@@ -654,14 +675,17 @@ exports.POSTaddKpi = function(req, res) {
 					console.log("Сохранен объект kpi");
 					res.redirect('/admin/kpi/add_kpi?action=ok');
 				}).catch(err => {
+					writeErrorLogs(res.session.login, err);
 					console.log("Скорее всего такой ПЭД уже есть");
 					res.redirect('/admin/kpi/add_kpi?action=err');
 				});
 			}).catch(err => {
+				writeErrorLogs(res.session.login, err);
 				console.log(err);
 				res.redirect('/admin/kpi/add_kpi?action=err');
 			});
 	}).catch(err => {
+		writeErrorLogs(res.session.login, err);
 		console.log(err);
 		res.status(500).render('error/500');
 	});
@@ -681,6 +705,7 @@ exports.POSTdeleteKpi = function(req, res) {
 			res.redirect('/admin/kpi/delete_kpi?action=err');
 		}
 	}).catch(err => {
+		writeErrorLogs(res.session.login, err);
 		console.log(err);
 		res.redirect('/admin/kpi/delete_kpi?action=err');
 	});
@@ -709,10 +734,12 @@ exports.POSTeditBallsKpi = function(req, res) {
 			writeLogs(req.session.login, req.session.level, "изменил(а) оценки ПЭД " + req.body.name);
 			res.redirect('/admin/kpi/edit_balls?action=ok');
 		}).catch(err => {
+			writeErrorLogs(res.session.login, err);
 			console.log(err);
 			res.redirect('/admin/kpi/edit_balls?action=err');
 		});
 	}).catch(err => {
+		writeErrorLogs(res.session.login, err);
 		console.log(err);
 		res.redirect('/admin/kpi/edit_balls?action=err');
 	});
@@ -722,6 +749,27 @@ exports.POSTeditBallsKpi = function(req, res) {
 exports.notify = function(req, res) {
 	objPeriod.notify = true;
 	res.redirect('/admin/set_period');
+}
+
+//POST-запрос для смены пароля
+exports.POSTchangePassword = function(req, res) {
+	let password = req.body.password;
+	let login = req.session.login;
+	if(password) {
+		changePassword(login, password).then(result => {
+			//записываем логи
+			writeLogs(login, req.session.level, "изменил(а) пароль");
+		res.render('admin/settings/page_change_password', {action: 1});
+	}).catch(err => {
+		writeErrorLogs(res.session.login, err);
+		console.log(err);
+		res.status(500).render('error/500');
+	});
+	}
+	else {
+		console.log("Задан пустой пароль");
+		res.render('admin/settings/page_change_password', {action: 2});
+	}
 }
 
 
@@ -734,7 +782,7 @@ function getKpiObj(arr, positions) {
 	let kpi = {};
 	for (key in arr[0]) {
 		if(key != 'ball' && key !='position')
-		kpi[key] = arr[0][key];
+			kpi[key] = arr[0][key];
 	}
 	let lines = [];
 	for(let i = 0; i < arr.length; i++) {
@@ -745,12 +793,19 @@ function getKpiObj(arr, positions) {
 		while (i != arr.length && idCrit == arr[i].id) {
 			if(positions.indexOf(arr[i].position) == -1)
 				positions.push(arr[i].position);
-			balls[positions.indexOf(arr[i].position)] = arr[i].ball;
+			balls[arr[i].position] = arr[i].ball;
 			i++;
 		}
 		lines.push({name: criterion, description: desc, balls: balls, id: idCrit});
 		i--;
 	}
 	kpi.lines = lines;
+	kpi.positions = positions;
 	return kpi;
+}
+
+//обновление пароля
+async function changePassword (login, password) {
+	let passwordHash = await bcrypt.hash(password, BCRYPT_SALT_ROUNDS);
+	await DBu.updatePassword(login, passwordHash);
 }

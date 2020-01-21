@@ -1,4 +1,4 @@
-let writeLogs = require('../logs');
+let writeLogs = require('../logs').log;
 let additFunc = require('../additional');
 
 let DBs = require('../db/select.js');

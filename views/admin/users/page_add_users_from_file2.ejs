@@ -9,15 +9,15 @@
 	<link rel="stylesheet" type="text/css" href="/general_style/list.css">
 	<link rel="stylesheet" type="text/css" href="/general_style/form.css">
 	<link rel="stylesheet" type="text/css" href="/general_style/loader.css">
+	<link rel="stylesheet" type="text/css" href="/general_style/common.css">
 </head>
 <body>
 	<div class="wrapper">
 		<%- include("../partials/menu.ejs") %>
 		<div class="content">
-			<h1>Добавление пользователей с Excel-файла</h1>
-			<hr>
+			<h1 class="title-page">Добавление пользователей ППС с Excel-файла</h1>
 			<% if(!report) {%>
-				<div>
+				<div class="warning">
 					<p>Необходимо прикрепить Excel-файл.</p>
 					<p>В каждой строке файла, начиная с первой (без перечисления названий в первой строке), 
 						должна содержаться информация о сотруднике в следующем формате:</p>

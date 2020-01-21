@@ -7,12 +7,14 @@
 	<link rel="stylesheet" type="text/css" href="/general_style/footer.css">
 	<link rel="stylesheet" type="text/css" href="/general_style/stylebut.css">
 	<link rel="stylesheet" type="text/css" href="/general_style/form.css">
+	<link rel="stylesheet" type="text/css" href="/general_style/common.css">
 </head>
 <body>
 	<div class="wrapper">
 		<%- include("../partials/menu.ejs") %>
 		<div class="content">
-			<div>
+			<h1 class="title-page">Добавление пользователей с Excel-файла</h1>
+			<div class="warning">
 				<p>Необходимо прикрепить Excel-файл.</p>
 				<p>В каждой строке файла, начиная с первой (без перечисления названий в первой строке), 
 					должна содержаться информация о сотруднике в следующем формате:</p>
@@ -23,7 +25,7 @@
 				<p>В столбце <b>E</b> указывается <i>уникальный</i> логин сотрудника*</p>
 				<p>В столбце <b>F</b> указывается пароль сотрудника*</p>
 				<p>* - обязательные к заполнению поля</p>
-			</div>
+			</div class="warning">
 			<% if(action == 1) {%>
 				<p class="uspeshno">Успешно</p>
 			<%} %>
@@ -32,8 +34,10 @@
 			<%} %>
 			<form enctype="multipart/form-data" action="" 
 			method="post" class="formborderadmin">
-				<input type="file" name="file" required>
-				<input type="submit" class="buttonmypage" value="Добавить">
+				<div class="col-form">
+					<input type="file" name="file" required>
+					<input type="submit" class="buttonmypage" value="Добавить">
+				</div>
 			</form>
 			<p style="color: brown;">Внимание! При отсутствии информации о сотруднике ячейку столбца, 
 				соответсвующего данной информации оставить пустой, без каких-либо символов.

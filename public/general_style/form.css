@@ -65,7 +65,10 @@
 	background: white;
 	box-shadow: 0 2px 4px 1px rgba(0,0,0,0.2), 1px 3px 15px 1px rgba(0,0,0,0.1);
 }
-.form-inner {padding: 50px;}
+.form-inner { 
+	padding: 15px; 
+	margin-left: 10%;
+	margin-right: 50px;}
 .form-inner input,
 .form-inner select {
 	display: block;
@@ -75,7 +78,7 @@
 	background: rgba(218, 227, 247, 0.911);
 	line-height: 40px;
 	border-width: 0;
-	border-radius: 20px;
+	border-radius: 10px;
 	font-family: 'Roboto', sans-serif;
 }
 .form-inner label {
@@ -93,8 +96,8 @@
 	height: auto;
 	border-bottom: 4px solid #1C9675;
 	color: white;
-	font-size: 14px;
-	width: 80%;
+	font-size: 16px;
+	width: 60%;
 	padding: 5px;
 }
 .form-inner h3 {
@@ -257,8 +260,9 @@ textarea {
 	box-shadow: 0 2px 4px 1px rgba(0,0,0,0.2), 1px 3px 15px 1px rgba(0,0,0,0.1);
 }
 
-.error-text {
+.error-form {
 	color: red;
+	padding: 5px 20px;
 }
 
 .col-form {

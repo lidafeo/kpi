@@ -3,11 +3,11 @@
 <head>
 	<title>Настройки</title>
 	<meta charset="utf-8">
-	<link rel="stylesheet" type="text/css" href="../../general_style/list.css">
-	<link rel="stylesheet" type="text/css" href="../../general_style/footer.css">
-	<link rel="stylesheet" type="text/css" href="../../general_style/stylebut.css">
-    <link rel="stylesheet" type="text/css" href="../../general_style/menu.css">
-    <link rel="stylesheet" type="text/css" href="../../general_style/form.css">
+	<link rel="stylesheet" type="text/css" href="/general_style/list.css">
+	<link rel="stylesheet" type="text/css" href="/general_style/footer.css">
+	<link rel="stylesheet" type="text/css" href="/general_style/stylebut.css">
+    <link rel="stylesheet" type="text/css" href="/general_style/menu.css">
+    <link rel="stylesheet" type="text/css" href="/general_style/form.css">
 </head>
 <body>
 	<div class="wrapper">
@@ -22,9 +22,9 @@
             <%} %>
             <form class="form-add form-inner" id="form-edit-pass" method="POST">
                 <h3>Изменение пароля</h3>
-                <div class="error-text" id="error"></div>
+                <div class="error-form" id="error"></div>
                 <div class="col-form">
-                    <label for="password1">Пароль</label>
+                    <label for="password1">Новый пароль</label>
                     <input type="password" name="password" id="password1" required>
                 </div>
                 <div class="col-form">
@@ -41,6 +41,6 @@
 		</div>
     </div>
     <script type="text/javascript" src="/plugins/jquery-3.3.1.min.js"></script>
-	<script type="text/javascript" src="./settings.js"></script>
+	<script type="text/javascript" src="/scripts/settings.js"></script>
 </body>
 </html>

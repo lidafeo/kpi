@@ -7,7 +7,8 @@ let DBi = require('../db/insert.js');
 let DBu = require('../db/update.js');
 
 let dateModule = require('../date.js');
-let writeLogs = require('../logs');
+let writeLogs = require('../logs').log;
+let writeErrorLogs = require('../logs').error;
 
 let BCRYPT_SALT_ROUNDS = 12;
 
@@ -64,6 +65,7 @@ exports.myPage = function(req, res) {
 					}
 					resolve(arrObj);
 				}).catch(err => {
+					writeErrorLogs(res.session.login, err);
 					console.log(err);
 					res.status(500).render('error/500');
 				});
@@ -103,6 +105,7 @@ exports.myPage = function(req, res) {
 			});
 		}
 	}).catch(err => {
+		writeErrorLogs(res.session.login, err);
 		console.log(err);
 		res.status(500).render('error/500');
 	});
@@ -137,6 +140,7 @@ exports.editKpi = function(req, res) {
 		}
 		res.render('pps/page_add_value_kpi', {obj: obj, level: req.session.level});
 	}).catch(err => {
+		writeErrorLogs(res.session.login, err);
 		console.log(err);
 		res.status(500).render('error/500');
 	});
@@ -148,6 +152,7 @@ exports.valueKpi = function(req, res) {
 		modifyDate(result);
 		res.render('pps/page_values_kpi', {kpi: result, level: req.session.level});
 	}).catch(err => {
+		writeErrorLogs(res.session.login, err);
 		console.log(err);
 		res.status(500).render('error/500');
 	});
@@ -165,6 +170,7 @@ exports.sendFile = function(req, res) {
 		doc = result[0];
 		res.download("./user_files/" + file + '.' + doc.file.split('.').pop(), doc.file);
 	}).catch(err => {
+		writeErrorLogs(res.session.login, err);
 		console.log(err);
 		res.status(500).render('error/500');
 	});
@@ -180,6 +186,7 @@ exports.POSTeditKpi = function(req, res) {
 				modifyDate(result);
 				res.render("pps/partials/table_posted_values", {kpi: result, desc: kpi, textErr: false});
 			}).catch(err => {
+				writeErrorLogs(res.session.login, err);
 				console.log(err);
 				res.status(500).render('error/500');
 			});
@@ -188,6 +195,7 @@ exports.POSTeditKpi = function(req, res) {
 			res.render("pps/partials/table_posted_values", {kpi: [], textErr: true});
 		}
 	}).catch(err => {
+		writeErrorLogs(res.session.login, err);
 		console.log(err);
 		res.status(500).render('error/500');
 	});
@@ -231,6 +239,7 @@ exports.POSTupload = function(req, res) {
 							readableStream.pipe(writeableStream);
 						}
 				}).catch(err => {
+					writeErrorLogs(res.session.login, err);
 					console.log(err);
 					res.status(500).render('error/500');
 				});
@@ -248,6 +257,7 @@ exports.POSTsettings = function(req, res) {
 			writeLogs(login, req.session.level, "изменил(а) пароль");
 			res.render('pps/page_settings', {level: req.session.level, action: 1});
 		}).catch(err => {
+			writeErrorLogs(res.session.login, err);
 			console.log(err);
 			res.status(500).render('error/500');
 		});

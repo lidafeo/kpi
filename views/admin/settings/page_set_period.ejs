@@ -18,7 +18,7 @@
 			<div class="page">
 				<%- include("../partials/settings-menu.ejs") %>
 				<div class="formborderadmin">
-					<h2>Текущий период для отчета</h2>
+					<h2 class="title-page">Текущий период для отчета</h2>
 					<% if(set) {%>
 						<p style="margin: 1% auto;">Текущий период: с <%=period.date1Str + " по " + period.date2Str %></p>
 						<% if(!period.notify) {%>

@@ -6,6 +6,7 @@
 	<link rel="stylesheet" type="text/css" href="/general_style/list.css">
 	<link rel="stylesheet" type="text/css" href="/general_style/menu.css">
 	<link rel="stylesheet" type="text/css" href="/general_style/footer.css">
+	<link rel="stylesheet" type="text/css" href="/general_style/common.css">
 	<link rel="stylesheet" type="text/css" href="/general_style/stylebut.css">
 	<link rel="stylesheet" type="text/css" href="/general_style/form.css">
 
@@ -44,15 +45,12 @@
 								<th rowspan="2">Показатель</th>
 							<%} %>
 							<th rowspan="2">Критерий оценки эффективности деятельности</th>
-							<th colspan="6">Группы</th>
+							<th colspan="<%=positions.length%>">Группы</th>
 						</tr>
 						<tr class="row2">
-							<th>Декан</th>
-							<th>Зав. кафедрой</th>
-							<th>Профессор</th>
-							<th>Доцент</th>
-							<th>Ст. преподаватель</th>
-							<th>Ассистент/преподаватель</th>
+							<% for(let i = 0; i < positions.length; i++) {%>
+								<th><%=positions[i]%></th>
+							<%} %>
 						</tr>
 						<% for(let i = 0; i < arr.length; i++) {%>
 							<input type="hidden" name="id" value="<%=arr[i].id%>">
@@ -61,8 +59,8 @@
 									<td><%=arr[i].description %></td>
 								<%} %>
 								<td><%=arr[i].name %></td>
-								<% for(let k = 0; k < arr[i].balls.length; k++) {%>
-									<td><input type="number" min="0" max="1000" name="<%=positions[k]%>" style="width: 50px;" class="inp" value="<%=arr[i].balls[k]%>" required></td>
+								<% for(let k = 0; k < positions.length; k++) {%>
+									<td><input type="number" min="0" max="1000" name="<%=positions[k]%>" style="width: 50px;" class="inp" value="<%=arr[i].balls[positions[k]]%>" required></td>
 								<%} %>
 							</tr>
 						<%} %>

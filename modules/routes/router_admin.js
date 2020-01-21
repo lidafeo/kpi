@@ -54,7 +54,10 @@ adminRouter.route('/set_period')
     .post(urlencodedParser, admin.POSTsetPeriod);
 adminRouter.route('/close_accounts')
     .get(admin.closeAccount)
-    .post(urlencodedParser, admin.POSTcloseAccounts)
+    .post(urlencodedParser, admin.POSTcloseAccounts);
+adminRouter.route('/change_password')
+    .get(admin.changePassword)
+    .post(urlencodedParser, admin.POSTchangePassword);
 //adminRouter.get('/close_accounts', admin.closeAccount);
 adminRouter.get('/', admin.main);
 
