@@ -46,8 +46,8 @@
 												</tr><tr>
 											<%} %>
 											<td><%=arr[i].lines[j].name %></td>
-											<% for(let k = 0; k < arr[i].lines[j].balls.length; k++) {%>
-												<td><big><%=arr[i].lines[j].balls[k] %></big></td>
+											<% for(let k = 0; k < positions.length; k++) {%>
+												<td><big><%=arr[i].lines[j].balls[positions[k]] %></big></td>
 											<%} %>
 										<%} %>
 									</tr>
@@ -61,8 +61,8 @@
 										<tr>
 											<td><%=arr[i].lines[j].description %></td>
 											<td><%=arr[i].lines[j].name %></td>
-											<% for(let k = 0; k < arr[i].lines[j].balls.length; k++) {%>
-												<td><big><%=arr[i].lines[j].balls[k] %></big></td>
+											<% for(let k = 0; k < positions.length; k++) {%>
+												<td><big><%=arr[i].lines[j].balls[positions[k]] %></big></td>
 											<%} %>
 										<%} %>
 				

@@ -317,7 +317,7 @@ exports.setPeriod = function(req, res) {
 
 //GET-запрос страницы закрытия/открытия кабинетов
 exports.closeAccount = function(req, res) {
-	if(close) res.render('admin/page_close_account', {op: false});
+	if(close) res.render('admin/settings/page_close_account', {op: false});
 	else res.render('admin/settings/page_close_account', {op: true});
 }
 
