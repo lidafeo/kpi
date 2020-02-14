@@ -40,14 +40,14 @@
 					<p class="errormess">Ошибка добавления</p>
 				<%} %>
 				<form enctype="multipart/form-data" action=""  
-				method="post" class="formborderadmin" id="form-users_from_file2">
+				method="post" class="formborderadmin" id="form-from_file">
 					<div class="col-form">
 						<input type="checkbox" class="checkbox" name="del_pps" id="del_pps">
 						<label for="del_pps">Удалить всех пользователей ППС перед добавлением</label>
 					</div>
 					<div class="col-form">
 						<input type="file" name="file" required>
-						<input type="submit" class="buttonmypage" id="but-file2" value="Добавить">
+						<input type="submit" class="buttonmypage" id="but-file" value="Добавить">
 					</div>
 				</form>
 			<%} else {%>
@@ -60,6 +60,6 @@
 	</div>
 	<script type="text/javascript" src="/plugins/jquery-3.3.1.min.js"></script>
 	<script type="text/javascript" src="/plugins/carhartl-jquery-cookie-92b7715/jquery.cookie.js"></script>
-	<script type="text/javascript" src="./add_users_from_file2.js"></script>
+	<script type="text/javascript" src="/scripts/loader.js"></script>
 </body>
 </html>

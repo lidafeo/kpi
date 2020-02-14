@@ -40,6 +40,11 @@ routerKpi.route('/edit_balls')
     .get(admin.editBallsKpi)
     .post(urlencodedParser, admin.POSTeditBallsKpi);
 
+routerKpi.route('/past_kpi')
+    .get(admin.addPastKpi)
+    .post(urlencodedParser, admin.POSTaddPastKpi);
+
+
 adminRouter.use('/users', routerUser);
 adminRouter.use('/kpi', routerKpi);
 

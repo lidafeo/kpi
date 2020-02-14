@@ -14,6 +14,7 @@ let writeLogs = require('../logs').log;
 let writeErrorLogs = require('../logs').error;
 let additFunc = require('../additional');
 let userFunc = require('../user_func');
+let pastKpiFunc = require('../past_kpi');
 
 let BCRYPT_SALT_ROUNDS = 12;
 
@@ -216,6 +217,15 @@ exports.editBallsKpi = function(req, res) {
 		});
 	}
 };
+
+
+//GET-запрос страницы добавления прошлых значений ПЭД с файла
+exports.addPastKpi = function(req, res) {
+	let action = 0;
+	if(req.query.action == 'ok') action = 1;
+	if(req.query.action == 'err') action = 2;
+	res.render('admin/kpi/page_add_past_kpi', {action: action, report: false});
+}
 
 //GET-запрос начальной страницы администратора
 exports.main = function(req, res) {
@@ -744,6 +754,53 @@ exports.POSTeditBallsKpi = function(req, res) {
 		res.redirect('/admin/kpi/edit_balls?action=err');
 	});
 };
+
+
+//POST-запрос на добавление пошлых значений ПЭД ППС с файла
+exports.POSTaddPastKpi = function(req, res) {
+	let form = new formidable.IncomingForm();
+	form.parse(req, function(err, fields, files) {
+		if(err) return console.log(err);
+
+		let arr = ['xls', 'xlsx', 'csv'];
+		let ext = files.file.name.split('.').pop();
+		if(!files.file || arr.indexOf(ext) == -1)
+			return res.redirect('/admin/kpi/past_kpi?action=err');
+
+		let workBook = xlsx.readFile(files.file.path);
+		let firstSheetName = workBook.SheetNames[0];
+		let workSheet = workBook.Sheets[firstSheetName];
+
+		//удаляем, если нужно
+		new Promise(async (resolve, reject) => {
+			if(fields['del_val'] == 'on') {
+				console.log('Нужно удалить');
+				//await DBd.deleteAllPps();
+				//записываем логи
+				//writeLogs(req.session.login, req.session.level, "удалил(а) всех пользователей - ППС");
+			}
+			resolve();
+		}).then(result => {
+			pastKpiFunc.main(workSheet, fields['check_val']).then(users => {
+				//добавляем
+				/*
+				Promise.all(users.addUsers.map(async function (user) {
+					user.passwordHash = await bcrypt.hash(user.password, BCRYPT_SALT_ROUNDS);
+					let result = await DBi.insertUserFromObj(user);
+					//записываем логи
+					writeLogs(req.session.login, req.session.level, "добавил(а) нового пользователя: login - " + user.login);
+					console.log("Сохранен объект user", user.login);
+				})).then(result => {
+					res.render('admin/users/page_add_users_from_file2', {action: 'ok', report: true,
+					users: users.allUsers, countAdd: users.addUsers.length, counts: users.counts});
+				});
+				 */
+				res.render('admin/kpi/page_add_past_kpi', {action: 'ok', report: true, countAdd: 0,
+                    countError: users.counts.countError, users: users.allUsers});
+			});
+		});
+	});
+}
 
 //POST-запрос для оповещения сотрудников о скором закрытии кабинетов
 exports.notify = function(req, res) {

@@ -170,8 +170,7 @@ module.exports = {
                 }
                 //пробуем найти без like
                 if(result[0] && result.length > 1) {
-                    let result = await
-                    DBs.selectDepartment(dep[i]);
+                    let result = await DBs.selectDepartment(dep[i]);
                     if (result[0] && result[0]['department'] && result[0]['faculty'] && result.length == 1) {
                         obj.department = result[0]['department'];
                         obj.faculty = result[0]['faculty'];

@@ -31,6 +31,13 @@ exports.selectOneUser = function(login) {
 		[login]);
 }
 
+//получить одного пользователя по ФИО
+exports.selectOneUserByName = function(name) {
+	return query("SELECT login FROM users " +
+		"WHERE name=?",
+		[name]);
+}
+
 
 //STRUCTURE
 

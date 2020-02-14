@@ -1,0 +1,26 @@
+<div>Добавлено <%=countAdd%> из <%=users.length%>:</div>
+<div>Успешно добавлено - <span style="color:green;"><%=countAdd%></span></div>
+<div>Найдено с ошибками - <span style="color:red;"><%=countError%></span></div>
+<table style="margin-left: 0;">
+    <tr>
+        <th><h4>Номер</h4></th>
+        <th><h4>ФИО</h4></th>
+        <th><h4>Результат</h4></th>
+        <th><h4>Ошибка</h4></th>
+    </tr>
+    <% for(let i = 0; i < users.length; i ++) {%>
+        <tr>
+            <% if(users[i].error) {%>
+                <td style="color:red;"><%=users[i].numb %></td>
+                <td style="color:red;"><%=users[i].name %></td>
+                <td></td>
+                <td style="color:red;"><%=users[i].error %></td>
+            <%} else {%>
+                <td><%=users[i].numb %></td>
+                <td><%=users[i].name %></td>
+                <td></td>
+                <td></td>
+            <%} %>
+        </tr>
+    <%} %>
+</table>
