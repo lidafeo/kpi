@@ -7,7 +7,16 @@ exports.insertValueKpi = function(login, name_kpi, value, date, start_date, fini
 	let arr = [login, name_kpi, value, date, start_date, finish_date, text, file, number_criterion];
 	return query("INSERT INTO uservalues(login_user, name_kpi, value, date, start_date, finish_date, " +
 	"text, file, number_criterion) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)", arr);
-}
+};
+
+//добавить значение ПЭД с объекта
+exports.insertValueKpiFromObj = function(uservalue) {
+	let arr = [uservalue.login_user, uservalue.name_kpi, uservalue.value, uservalue.date,
+		uservalue.start_date, uservalue.finish_date, uservalue.text, uservalue.file,
+		uservalue.number_criterion];
+	return query("INSERT INTO uservalues(login_user, name_kpi, value, date, start_date, finish_date, " +
+		"text, file, number_criterion) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)", arr);
+};
 
 
 //USERS
@@ -16,7 +25,7 @@ exports.insertValueKpi = function(login, name_kpi, value, date, start_date, fini
 exports.insertUser = function(name, position, faculty, department, login, password) {
 	let arr = [name, position, faculty, department, login, password];
 	return query("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?)", arr);
-}
+};
 
 //добавление пользователя с объекта
 exports.insertUserFromObj = function(user) {
@@ -26,7 +35,7 @@ exports.insertUserFromObj = function(user) {
 	}
 	let arr = [user.name, user.position, user.faculty, user.login, user.passwordHash];
 	return query("INSERT INTO users(name, position, faculty, login, password) VALUES (?, ?, ?, ?, ?)", arr);
-}
+};
 
 //KPI
 
@@ -35,14 +44,14 @@ exports.insertKpi = function(name, section, subtype, number, count_criterion, de
 	indicator_sum, action_time) {
 		let arr = [name, section, subtype, number, count_criterion, description, type, indicator_sum, action_time];
 	return query("INSERT INTO kpi VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", arr);
-}
+};
 
 //STRUCTURE
 
 //добавление каферды с объекта
 exports.insertDepartment = function(dep) {
 	return query("INSERT INTO structure VALUES (?, ?, ?, ?)", [dep.faculty, dep.department, dep.abbr_faculty, dep.abbr_department]);
-}
+};
 
 //CRITERIONS
 
@@ -66,7 +75,7 @@ exports.insertCriterion = function(criterion) {
 			reject(err);
 		});
 	});
-}
+};
 
 function insertBalls(ball) {
 	return query("INSERT INTO balls VALUES (?, ?, ?)", ball);

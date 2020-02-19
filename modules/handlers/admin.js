@@ -756,7 +756,7 @@ exports.POSTeditBallsKpi = function(req, res) {
 };
 
 
-//POST-запрос на добавление пошлых значений ПЭД ППС с файла
+//POST-запрос на добавление прошлых значений ПЭД ППС с файла
 exports.POSTaddPastKpi = function(req, res) {
 	let form = new formidable.IncomingForm();
 	form.parse(req, function(err, fields, files) {
@@ -775,9 +775,9 @@ exports.POSTaddPastKpi = function(req, res) {
 		new Promise(async (resolve, reject) => {
 			if(fields['del_val'] == 'on') {
 				console.log('Нужно удалить');
-				//await DBd.deleteAllPps();
+				await DBd.deleteAllUservalues();
 				//записываем логи
-				//writeLogs(req.session.login, req.session.level, "удалил(а) всех пользователей - ППС");
+				writeLogs(req.session.login, req.session.level, "удалил(а) все значения ПЭД пользователей");
 			}
 			resolve();
 		}).then(result => {

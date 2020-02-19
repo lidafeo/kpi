@@ -11,7 +11,11 @@
 </head>
 <body>
 	<div class="wrapper">
-		<%- include("partials/menu.ejs") %>
+	    <% if(mypage) {%>
+		    <%- include("partials/menu.ejs") %>
+		<%} else {%>
+		    <%- include("../pps/partials/menu.ejs") %>
+		<%} %>
 		<div class="content">
 			<form name="editform" class="formborder flexparent" style="margin-top: 8px; justify-content: center; width: 90%;" action="/verify" method="post">
 				<div class="flexblocks text">

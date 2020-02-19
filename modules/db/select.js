@@ -185,7 +185,7 @@ exports.selectOneKpi = function(name) {
 	return query("SELECT * FROM kpi " +
 		"WHERE kpi.name=?", 
 		name);
-}
+};
 
 
 //получить один ПЭД с баллами
@@ -213,6 +213,11 @@ exports.selectAllCriterion = function(position) {
 	"' ORDER BY name_kpi, criterions.number_criterion ASC");
 }
 
+//получить один критерий
+exports.selectOneCriterion = function(kpi, criterion) {
+	return query("SELECT * FROM criterions WHERE name_kpi=? AND name_criterion=?'",
+		[kpi, criterion]);
+}
 
 //POSITION
 

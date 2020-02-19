@@ -14,7 +14,7 @@
 		<div class="content">
 			<h1><div id="name"><%=name %>, <%=position %></div></h1><br>
 			<% if(objPeriod.notify) {%>
-				<p style="color: red; font-size: 20px;">Внимание! Скоро будет расчет премии за период с <%=objPeriod.date1Str %> по <%=objPeriod.date2Str %></p>
+				<p style="color: red; font-size: 20px;">Внимание! Расчет оценок будет производиться за период с <%=objPeriod.date1Str %> по <%=objPeriod.date2Str %></p>
 				<br><br>
 			<%} %>
 			<form name="date" action="/my_page" class="text" method="get">
