@@ -8,7 +8,7 @@ let colunms = ['B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 
 let namesKpi = [];
 
 module.exports = {
-    main: async function(workSheet, checkVal) {
+    main: async function(workSheet) {
         let num = 1;
         let countError = 0;
         let countIgnore = 0;
@@ -16,7 +16,7 @@ module.exports = {
         allNames = []; allUsers = [];
 
         let errParse = await getNamesKpiFromFile(workSheet);
-        console.log("Pasrse names kpi", errParse);
+        console.log("Parse names kpi", errParse);
 
         //currUser = {};
         while (true) {
@@ -35,6 +35,7 @@ module.exports = {
             if(!user[0]) {
                 obj.error = "Пользоватeль не найден в БД";
                 countError ++;
+                console.log("added", num);
                 num ++;
                 allUsers.push(obj);
                 continue;
@@ -47,15 +48,19 @@ module.exports = {
                 for (let j = 0; j < namesKpi.length; j++) {
                     let value = (workSheet[namesKpi[j].col + (num + 1)] ? (workSheet[namesKpi[j].col + (num + 1)].v + "") : undefined);
                     if (!value) {
-                        console.log(namesKpi[j].col + (num + 1), namesKpi[j]['name']);
+                        //console.log(namesKpi[j].col + (num + 1), namesKpi[j]['name']);
                         continue;
                     }
                     let parseArr = parseValue(value, namesKpi[j]);
                     if (parseArr.length == 0) {
                         continue;
                     }
+                    //if(namesKpi[j].name == 'Н.П.1') {
+                    //    console.log(parseArr);
+                    //}
                     for (let ival = 0; ival < parseArr.length; ival++) {
                         let objDb = getObjForSaveInDb(user[0]['login'], namesKpi[j], parseArr[ival]);
+                        //console.log(objDb);
                         let result = await DBi.insertValueKpiFromObj(objDb);
                         obj.countVal++;
                         if(ival == 0) {
@@ -70,8 +75,10 @@ module.exports = {
                     countError++;
                     console.log(e);
                 }
+                //num++;
             }
             allUsers.push(obj);
+            console.log("added", num);
             num++;
         }
         return {allUsers: allUsers, counts: {countError: countError, countIgnore: countIgnore}};
@@ -134,7 +141,8 @@ function getObjForSaveInDb(login, kpi, objParse) {
         val = objParse['val'];
     }
     if(!objParse['date']) {
-        throw "дата";
+        objParse['date'] = new Date();
+        //throw "дата";
         //throw "Не установлена дата выполнения ПЭД - " + kpi['name'];
     }
     let finishDate = new Date(objParse['date']);
@@ -151,6 +159,11 @@ function getObjForSaveInDb(login, kpi, objParse) {
         file = objParse['file'];
     }
 
+    let link = null;
+    if (objParse['link'] && objParse['link'] != '') {
+        link = objParse['link'].trim();
+    }
+
     let numberCriterion = 0;
     if(+kpi['type'] == 2) {
         numberCriterion = +kpi['numb'] - 1;
@@ -158,7 +171,7 @@ function getObjForSaveInDb(login, kpi, objParse) {
 
     return {'login_user': login, 'name_kpi': kpi['name'],
         'value': val, 'date': objParse['date'], 'start_date': objParse['date'],
-        'finish_date': finishDate, 'text': text, 'file': file,
+        'finish_date': finishDate, 'text': text, 'link': link, 'file': file,
         'number_criterion': numberCriterion};
 }
 
@@ -182,9 +195,9 @@ function getTextVal(objParse) {
     if(objParse['result'] && objParse['result'] != '') {
         text += 'Результат: ' + objParse['result'] + "\n";
     }
-    if(objParse['link'] && objParse['link'] != '') {
-        text += 'Ссылка: ' + objParse['link'];
-    }
+    //if(objParse['link'] && objParse['link'] != '') {
+    //    text += 'Ссылка: ' +  '<a href="' + objParse['link'] + '">Ссылка</a>';
+    //}
     if(text == '') {
         text = null;
     }
@@ -219,6 +232,7 @@ async function getNamesKpiFromFile(workSheet) {
         objKpi.action_time = result[0]['action_time'];
         objKpi.type = result[0]['type'];
         objKpi.col = colunms[j];
+        console.log(objKpi.name, objKpi.col);
 
         namesKpi.push(objKpi);
     }

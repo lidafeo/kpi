@@ -17,7 +17,7 @@
 			<%} %>
 			</div>
 		<div style="margin-top: 10px;">  
-			<label>Введите дату реализации ПЭДа</label>
+			<label>Дату реализации (выполнения) ПЭДа</label>
 			<input type="date" name="date" id="datekpi" required>
 			<br/>
 			<% if(!desc[0].indicator_sum) {%> 
@@ -29,7 +29,7 @@
 			<input type="hidden" name="value" value="1" id="value">
 			<%} %>
 			</div>
-		<div style="margin-top: 20px;"> <label>Подтвердить: </label> 
+		<div style="margin-top: 20px;"> <label>Пояснительная записка: </label> 
 			<textarea name="text" id="text"></textarea> 
 			<br/><br/>
 			<input class="file" type="file" name="file" id="file">
@@ -59,7 +59,7 @@
 					<td><%=kpi[i].modifystart_date%></td>
 					<td><%=kpi[i].text %></td>
 					<% if(kpi[i].file != "") {%>
-						<td><a href=<%="/upload_file?file="+kpi[i].id %> download=""><img src="/img/download.png" alt="Скачать файл"></a></td>
+						<td><a href=<%="/upload_file?file="+kpi[i].file %> download=""><img src="/img/download.png" alt="Скачать файл"></a></td>
 					<%} %>
 					<% if(kpi[i].file == "") {%>
 						<td></td>

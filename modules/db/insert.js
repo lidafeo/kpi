@@ -12,10 +12,10 @@ exports.insertValueKpi = function(login, name_kpi, value, date, start_date, fini
 //добавить значение ПЭД с объекта
 exports.insertValueKpiFromObj = function(uservalue) {
 	let arr = [uservalue.login_user, uservalue.name_kpi, uservalue.value, uservalue.date,
-		uservalue.start_date, uservalue.finish_date, uservalue.text, uservalue.file,
+		uservalue.start_date, uservalue.finish_date, uservalue.text, uservalue.link, uservalue.file,
 		uservalue.number_criterion];
 	return query("INSERT INTO uservalues(login_user, name_kpi, value, date, start_date, finish_date, " +
-		"text, file, number_criterion) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)", arr);
+		"text, link, file, number_criterion) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", arr);
 };
 
 

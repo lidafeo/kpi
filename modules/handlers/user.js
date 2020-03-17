@@ -7,6 +7,7 @@ let DBi = require('../db/insert.js');
 let DBu = require('../db/update.js');
 
 let dateModule = require('../date.js');
+let generateFileName = require('../additional').generateFileName;
 let writeLogs = require('../logs').log;
 let writeErrorLogs = require('../logs').error;
 
@@ -166,6 +167,8 @@ exports.settings = function(req, res) {
 //отправка файла пользователю
 exports.sendFile = function(req, res) {
 	let file = req.query.file;
+	res.download("./user_files/" + file, file);
+	/*
 	DBs.selectValueKpiById(file).then(result => {
 		doc = result[0];
 		res.download("./user_files/" + file + '.' + doc.file.split('.').pop(), doc.file);
@@ -174,6 +177,7 @@ exports.sendFile = function(req, res) {
 		console.log(err);
 		res.status(500).render('error/500');
 	});
+	 */
 };
 
 //POST-запрос прошлых подтверждений ПЭД
@@ -218,7 +222,10 @@ exports.POSTupload = function(req, res) {
 		DBs.selectOneKpi(fields.name).then(result => {
 			let kpi = result[0];
 			let finishDate = new Date(fields.date);
-			if(files.file) fileName = files.file.name;
+			if(files.file) {
+				let ext = files.file.name.split('.').pop();
+				fileName = generateFileName(login) + '.' + ext;
+			}
 			finishDate.setMonth(finishDate.getMonth() + kpi.action_time);
 
 				DBi.insertValueKpi(login, kpi.name, +fields.value, dateModule.dateForInput(new Date()), 
@@ -231,11 +238,9 @@ exports.POSTupload = function(req, res) {
 						let id = result.insertId;
 						//сохраняем прикрепленный файл
 						if(files.file) {
-							fileName = files.file.name;
-							let ext = fileName.split('.').pop();
 							let readableStream = fs.createReadStream(files.file.path);
 							let writeableStream = fs.createWriteStream("./user_files/" +
-								id + '.' + ext);
+								fileName);
 							readableStream.pipe(writeableStream);
 						}
 				}).catch(err => {

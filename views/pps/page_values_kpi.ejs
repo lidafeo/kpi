@@ -2,6 +2,7 @@
 <html>
 <head>
 	<title>Значения ПЭД</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta charset="utf-8">
 	<link rel="stylesheet" type="text/css" href="/general_style/list.css">
 	<link rel="stylesheet" type="text/css" href="/general_style/footer.css">
@@ -35,7 +36,7 @@
 							<td><%=kpi[i].value%></td>
 							<td><%=kpi[i].text %></td>
 							<% if(kpi[i].file) {%>
-								<td><a href=<%="/upload_file?file="+kpi[i].id %> download=""><img src="/img/download.png" alt="Скачать файл"></a></td>
+								<td><a href=<%="/upload_file?file="+kpi[i].file %> download=""><img src="/img/download.png" alt="Скачать файл"></a></td>
 							<%} %>
 							<% if(!kpi[i].file) {%>
 								<td></td>

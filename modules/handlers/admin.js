@@ -772,16 +772,20 @@ exports.POSTaddPastKpi = function(req, res) {
 		let workSheet = workBook.Sheets[firstSheetName];
 
 		//удаляем, если нужно
-		new Promise(async (resolve, reject) => {
+		new Promise( (resolve, reject) => {
 			if(fields['del_val'] == 'on') {
 				console.log('Нужно удалить');
-				await DBd.deleteAllUservalues();
-				//записываем логи
-				writeLogs(req.session.login, req.session.level, "удалил(а) все значения ПЭД пользователей");
+				DBd.deleteAllUservalues().then(result => {
+					//записываем логи
+					writeLogs(req.session.login, req.session.level, "удалил(а) все значения ПЭД пользователей");
+					resolve('ok');
+				});
+			} else {
+				resolve('ok');
 			}
-			resolve();
+			//resolve();
 		}).then(result => {
-			pastKpiFunc.main(workSheet, fields['check_val']).then(users => {
+			pastKpiFunc.main(workSheet).then(users => {
 				//добавляем
 				/*
 				Promise.all(users.addUsers.map(async function (user) {
