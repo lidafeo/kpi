@@ -1,9 +1,4 @@
-.content {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-}
 .title-page {
-    font-family: 'Roboto', sans-serif;
-    font-weight: normal;
     color:  #424949;
     margin-bottom: 10px;
 }
@@ -11,4 +6,10 @@
     background-color: #ffffcc;
     border-left: 6px solid #ffeb3b;
     padding-left: 15px;
-  }
+}
+.navbar{
+    min-height: 70px !important;
+}
+body, html {
+    background: rgb(241, 241, 241);
+}

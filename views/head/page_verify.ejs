@@ -2,13 +2,7 @@
 <html>
 <head>
 	<title>Проверка значений</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta charset="utf-8" />
-	<link rel="stylesheet" type="text/css" href="../general_style/footer.css">
-	<link rel="stylesheet" type="text/css" href="../general_style/stylebut.css">
-	<link rel="stylesheet" type="text/css" href="../general_style/list.css">
-	<link rel="stylesheet" type="text/css" href="../general_style/menu.css">
-
+	<%- include("partials/head.ejs")%>
 </head>
 <body>
 	<div class="wrapper">
@@ -59,7 +53,7 @@
 		</div>
 	</div>
 
-	<script type="text/javascript" src="../plugins/jquery-3.3.1.min.js"></script>
+	<%- include("partials/scripts.ejs")%>
 	<script type="text/javascript" src="../plugins/carhartl-jquery-cookie-92b7715/jquery.cookie.js"></script>
 	<script type="text/javascript" src="./verify.js"></script>
 </body>

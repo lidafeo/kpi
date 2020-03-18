@@ -2,36 +2,31 @@
 <html>
 <head>
 	<title>Моя страница</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta charset="utf-8" />
-	<link rel="stylesheet" type="text/css" href="/general_style/list.css">
-	<link rel="stylesheet" type="text/css" href="/general_style/footer.css">
-	<link rel="stylesheet" type="text/css" href="/general_style/stylebut.css">
-	<link rel="stylesheet" type="text/css" href="/general_style/menu.css">
+	<%- include("partials/head.ejs")%>
 </head>
 <body>
-	<div class="wrapper">
-		<%- include("partials/menu.ejs") %>
-		<div class="content">
-			<h1><div id="name"><%=name %>, <%=position %></div></h1><br>
-			<% if(objPeriod.notify) {%>
-				<p style="color: red; font-size: 20px;">Внимание! Расчет оценок будет производиться за период с <%=objPeriod.date1Str %> по <%=objPeriod.date2Str %></p>
-				<br><br>
-			<%} %>
-			<form name="date" action="/my_page" class="text" method="get">
-				<label>Период отчета с </label>
-				<input type="date" name="date1" id="date1" class="date" value=<%=date1 %> required>
-				<label> по </label>
-				<input type="date" name="date2" id="date2" class="date" value=<%=date2 %> required>
-				<button id="date" >Вывести оценки ПЭД за данный период</button>
-			</form>
-			<div id="donekpi"><%- include("partials/table_kpi.ejs") %></div>
-			<br/>
-		</div>
+	<%- include("partials/menu.ejs") %>
+	<div class="container-fluid px-md-5">
+		<h4><div id="name"><%=name %>, <%=position %></div></h4>
+		<hr>
+		<% if(objPeriod.notify) {%>
+			<p style="color: red; font-size: 20px;">Внимание! Расчет оценок будет производиться за период с <%=objPeriod.date1Str %> по <%=objPeriod.date2Str %></p>
+		<%} %>
+		<form name="date" action="/my-page" class="text" method="get">
+			<label>Период расчета оценок с </label>
+			<input type="date" name="date1" id="date1" class="date" value=<%=date1 %> required>
+			<label> по </label>
+			<input type="date" name="date2" id="date2" class="date" value=<%=date2 %> required>
+			<button id="date" >Вывести оценки ПЭД за данный период</button>
+		</form>
+		<div id="donekpi"><%- include("partials/table_kpi.ejs") %></div>
+		<br/>
 
 		<div class="footer">
 			<%- include("../partials/footer.ejs") %>
 		</div>
 	</div>
+
+	<%- include("partials/scripts.ejs")%>
 </body>
 </html>

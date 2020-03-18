@@ -22,19 +22,19 @@ module.exports = function(app) {
 	app.use(main.checkAccount);
 	app.use(main.checkSession);
 
-	app.get('/my_page', user.myPage);
-	app.get('/my_page/edit_kpi', rightImplementKpi, user.editKpi);
-	app.get('/my_page/values_kpi', rightImplementKpi, user.valueKpi);
-	app.get('/upload_file', rightPpsOrVerify, user.sendFile);
+	app.get('/my-page', user.myPage);
+	app.get('/my-page/edit-kpi', rightImplementKpi, user.editKpi);
+	app.get('/my-page/values-kpi', rightImplementKpi, user.valueKpi);
+	app.get('/upload-file', rightPpsOrVerify, user.sendFile);
 	app.get('/settings', rightPpsOrVerify, user.settings);
-	app.post('/edit_kpi', jsonParser, user.POSTeditKpi);
+	app.post('/edit-kpi', jsonParser, user.POSTeditKpi);
 	app.post('/upload', user.POSTupload);
 	app.post('/settings', urlencodedParser, user.POSTsettings);
 
 	app.get('/verify', rightVerify, verify.verify);
 	app.post('/verify', jsonParser, verify.POSTverify);
 	app.post('/invalid', jsonParser, verify.POSTinvalid);
-	app.post('/getworkers', jsonParser, verify.POSTgetWorkers);
+	app.post('/get-workers', jsonParser, verify.POSTgetWorkers);
 	app.post('/getstructure', jsonParser, verify.POSTgetStructure);
 
 	app.get('/pfu', rightPfu, pfu.pfu);

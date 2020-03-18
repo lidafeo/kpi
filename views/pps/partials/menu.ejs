@@ -1,13 +1,31 @@
-<nav>
-	<ul class="navigation">
-		<!-- Описание ссылок в меню и сами ссылки. -->
-		<li><a href="/my_page" style="border-left: 1px solid rgb(175, 175, 173);">Главная</a></li>
-		<li><a href="/my_page/edit_kpi">Отметить выполнение</a></li>
-		<li><a href="/my_page/values_kpi">Список значений ПЭД</a></li>
-		<% if(level) {%>
-			<li><a href="/verify">Проверить ПЭДы ППС</a></li>
-		<%} %>
-		<li><a href="/settings">Настройки</a></li>
-		<li><form action="/exit" method="post"><button>Выход</button></form></li>
-	</ul>
+<nav class="navbar navbar-expand-lg navbar-dark mb-md-3" style="background-color: #561C75;">
+	<a class="navbar-brand ml-md-4" href="/my-page">Главная</a>
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+
+	<div class="collapse navbar-collapse" id="navbarSupportedContent">
+		<ul class="navbar-nav mr-auto">
+			<li class="nav-item">
+				<a class="nav-link" href="/my-page">Посчитать оценки <span class="sr-only">(current)</span></a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="/my-page/edit-kpi">Отметить выполнение</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="/my-page/values-kpi">Список значений ПЭД</a>
+			</li>
+			<% if(level) {%>
+				<li class="nav-item">
+					<a class="nav-link" href="/verify">Проверить ПЭДы ППС</a>
+				</li>
+			<%} %>
+			<li class="nav-item">
+				<a class="nav-link" href="/settings">Настройки</a>
+			</li>
+		</ul>
+		<form class="form-inline my-2 my-lg-0 mr-md-4" action="/exit" method="post">
+			<button class="btn btn-outline-light my-2 my-sm-0" type="submit">Выход</button>
+		</form>
+	</div>
 </nav>

@@ -7,7 +7,7 @@ let getInfoClose = require('./admin.js').getInfoClose;
 //GET-запрос начальной страницы сайта
 exports.home = function(req, res) {
 	if(req.session.userName) 
-		return res.redirect('/my_page');
+		return res.redirect('/my-page');
 	res.render("auth", {checkPassword: false, close: false});
 };
 
@@ -41,7 +41,7 @@ exports.auth = function(req, res) {
 			if(closeAccount && result.func_pps)
 				return res.render("auth", {checkPassword: false, close: true});
 
-			res.redirect('/my_page');
+			res.redirect('/my-page');
 		}
 		else
 			res.render("auth", {checkPassword: true, close: false});

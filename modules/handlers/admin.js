@@ -356,11 +356,11 @@ exports.POSTaddUser = function(req, res) {
 			//запись логов
 			writeLogs(req.session.login, req.session.level, "добавил(а) нового пользователя: login - " + login);
 			console.log("Сохранен объект user");
-			res.redirect('/admin/users/add_user?action=ok');
+			res.redirect('/admin/users/add-user?action=ok');
 		}).catch(err => {
 			writeErrorLogs(res.session.login, err);
 			console.log("Скорее всего такой пользователь уже есть");
-			res.redirect('/admin/users/add_user?action=err');
+			res.redirect('/admin/users/add-user?action=err');
 		});
 	}).then(function() {
 		console.log("Пароль успешно хеширован");
@@ -381,7 +381,7 @@ exports.POSTaddUsersFromFile = function(req, res) {
 		let arr = ['xls', 'xlsx'];
 		let ext = files.file.name.split('.').pop();
 		if(!files.file || arr.indexOf(ext) == -1) 
-			return res.redirect('/admin/users/add_users_from_file?action=err');
+			return res.redirect('/admin/users/add-users-from-file?action=err');
 
 		let workBook = xlsx.readFile(files.file.path);
 		let firstSheetName = workBook.SheetNames[0];
@@ -418,7 +418,7 @@ exports.POSTaddUsersFromFile = function(req, res) {
 			writeLogs(req.session.login, req.session.level, "добавил(а) нового пользователя: login - " + user.login);
 			console.log("Сохранен объект user", user.login);
 		})).then(result => {
-			res.redirect('/admin/users/add_users_from_file?action=ok');
+			res.redirect('/admin/users/add-users-from-file?action=ok');
 		});
 	});
 }
@@ -432,7 +432,7 @@ exports.POSTaddUsersFromFile2 = function(req, res) {
 		let arr = ['xls', 'xlsx'];
 		let ext = files.file.name.split('.').pop();
 		if(!files.file || arr.indexOf(ext) == -1)
-			return res.redirect('/admin/users/add_users_from_file2?action=err');
+			return res.redirect('/admin/users/add-users-from-file2?action=err');
 
 		let workBook = xlsx.readFile(files.file.path);
 		let firstSheetName = workBook.SheetNames[0];
@@ -474,16 +474,16 @@ exports.POSTdeleteUser = function(req, res) {
 			console.log("Удален пользователь: ", login);
 			//записываем логи
 			writeLogs(req.session.login, req.session.level, "удалил(а) пользователя " + login);
-			res.redirect('/admin/users/delete_user?action=ok');
+			res.redirect('/admin/users/delete-user?action=ok');
 		}
 		else {
 			console.log("Нет такого пользователя: " + login);
-			res.redirect('/admin/users/delete_user?action=err');
+			res.redirect('/admin/users/delete-user?action=err');
 		}
 	}).catch(err => {
 		writeErrorLogs(res.session.login, err);
 		console.log(err);
-		res.redirect('/admin/users/delete_user?action=err');
+		res.redirect('/admin/users/delete-user?action=err');
 	});
 };
 
@@ -496,7 +496,7 @@ exports.POSTupdateStructure = function(req, res) {
         let arr = ['xls', 'xlsx'];
         let ext = files.file.name.split('.').pop();
         if(!files.file || arr.indexOf(ext) == -1)
-            return res.redirect('/admin/update_structure?action=err');
+            return res.redirect('/admin/update-structure?action=err');
 
         let workBook = xlsx.readFile(files.file.path);
         let firstSheetName = workBook.SheetNames[0];
@@ -517,7 +517,7 @@ exports.POSTupdateStructure = function(req, res) {
             //кафедра
             let department = (workSheet["B" + (num + 1)] ? (workSheet["B" + (num + 1)].v + "") : undefined);
             if(!department) {
-                res.redirect('/admin/update_structure?action=err');
+                res.redirect('/admin/update-structure?action=err');
             };
             /*if (department.trim().toLowerCase().startsWith('кафедра')) {
                 department = department.slice(department.toLowerCase().indexOf('кафедра') + 'кафедра'.length).trim();
@@ -544,7 +544,7 @@ exports.POSTupdateStructure = function(req, res) {
                 writeLogs(req.session.login, req.session.level, "добавил(а) кафедру " + object.department + " факультета " + object.faculty);
                 console.log("Сохранен объект structure", "кафедра: " + object.department + " факультет: " + object.faculty);
             })).then(result => {
-                res.redirect('/admin/update_structure?action=ok');
+                res.redirect('/admin/update-structure?action=ok');
 
                 DBs.selectStructureOrderByFaculty().then(result => {
                     let structure = {};
@@ -566,7 +566,7 @@ exports.POSTupdateStructure = function(req, res) {
                 });
             }).catch(err => {
 				writeErrorLogs(res.session.login, err);
-                res.redirect('/admin/update_structure?action=err');
+                res.redirect('/admin/update-structure?action=err');
             });
         });
     });
@@ -584,7 +584,7 @@ exports.POSTcloseAccounts = function(req, res) {
 		writeLogs(req.session.login, req.session.level, "закрыл(а) личные кабинеты ППС");
 		close = true;
 	}
-	res.redirect('/admin/close_accounts');
+	res.redirect('/admin/close-accounts');
 }
 
 //POST-запрос на установку текущего периода
@@ -601,7 +601,7 @@ exports.POSTsetPeriod = function(req, res) {
 		writeLogs(req.session.login, req.session.level, "установил(а) период для отчета с " +
 			date1.split('-').reverse().join('.') + " по " + date2.split('-').reverse().join('.'));
 	}
-	res.redirect('/admin/set_period');
+	res.redirect('/admin/set-period');
 }
 
 //POST-запрос на добавление одного ПЭД
@@ -683,16 +683,16 @@ exports.POSTaddKpi = function(req, res) {
 					//записываем логи
 					writeLogs(req.session.login, req.session.level, "добавил(а) ПЭД " + req.body.name);
 					console.log("Сохранен объект kpi");
-					res.redirect('/admin/kpi/add_kpi?action=ok');
+					res.redirect('/admin/kpi/add-kpi?action=ok');
 				}).catch(err => {
 					writeErrorLogs(res.session.login, err);
 					console.log("Скорее всего такой ПЭД уже есть");
-					res.redirect('/admin/kpi/add_kpi?action=err');
+					res.redirect('/admin/kpi/add-kpi?action=err');
 				});
 			}).catch(err => {
 				writeErrorLogs(res.session.login, err);
 				console.log(err);
-				res.redirect('/admin/kpi/add_kpi?action=err');
+				res.redirect('/admin/kpi/add-kpi?action=err');
 			});
 	}).catch(err => {
 		writeErrorLogs(res.session.login, err);
@@ -708,16 +708,16 @@ exports.POSTdeleteKpi = function(req, res) {
 			console.log("Удален объект kpi ", req.body.name);
 			//записываем логи
 			writeLogs(req.session.login, req.session.level, "удалил(а) ПЭД " + req.body.name);
-			res.redirect('/admin/kpi/delete_kpi?action=ok');
+			res.redirect('/admin/kpi/delete-kpi?action=ok');
 		}
 		else {
 			console.log("Такого ПЭД нет: " + req.body.name);
-			res.redirect('/admin/kpi/delete_kpi?action=err');
+			res.redirect('/admin/kpi/delete-kpi?action=err');
 		}
 	}).catch(err => {
 		writeErrorLogs(res.session.login, err);
 		console.log(err);
-		res.redirect('/admin/kpi/delete_kpi?action=err');
+		res.redirect('/admin/kpi/delete-kpi?action=err');
 	});
 }
 
@@ -742,16 +742,16 @@ exports.POSTeditBallsKpi = function(req, res) {
 			console.log("Оценки успешно изменены", req.body.name);
 			//записываем логи
 			writeLogs(req.session.login, req.session.level, "изменил(а) оценки ПЭД " + req.body.name);
-			res.redirect('/admin/kpi/edit_balls?action=ok');
+			res.redirect('/admin/kpi/edit-balls?action=ok');
 		}).catch(err => {
 			writeErrorLogs(res.session.login, err);
 			console.log(err);
-			res.redirect('/admin/kpi/edit_balls?action=err');
+			res.redirect('/admin/kpi/edit-balls?action=err');
 		});
 	}).catch(err => {
 		writeErrorLogs(res.session.login, err);
 		console.log(err);
-		res.redirect('/admin/kpi/edit_balls?action=err');
+		res.redirect('/admin/kpi/edit-balls?action=err');
 	});
 };
 
@@ -765,7 +765,7 @@ exports.POSTaddPastKpi = function(req, res) {
 		let arr = ['xls', 'xlsx', 'csv'];
 		let ext = files.file.name.split('.').pop();
 		if(!files.file || arr.indexOf(ext) == -1)
-			return res.redirect('/admin/kpi/past_kpi?action=err');
+			return res.redirect('/admin/kpi/past-kpi?action=err');
 
 		let workBook = xlsx.readFile(files.file.path);
 		let firstSheetName = workBook.SheetNames[0];
@@ -809,7 +809,7 @@ exports.POSTaddPastKpi = function(req, res) {
 //POST-запрос для оповещения сотрудников о скором закрытии кабинетов
 exports.notify = function(req, res) {
 	objPeriod.notify = true;
-	res.redirect('/admin/set_period');
+	res.redirect('/admin/set-period');
 }
 
 //POST-запрос для смены пароля

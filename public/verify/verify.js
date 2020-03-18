@@ -69,7 +69,7 @@ $(document).ready(function() {
 		let sendValue = JSON.stringify({faculty: faculty, department: department});
 		let request = new XMLHttpRequest();
 		//посылаем запрос на адрес "/getworkers"
-		request.open("POST", "/getworkers", true);
+		request.open("POST", "/get-workers", true);
 		request.setRequestHeader("Content-Type", "application/json");
 		request.addEventListener("load", function() {
 			$("#usersdiv").html(request.response);

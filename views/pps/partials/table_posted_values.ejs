@@ -59,7 +59,7 @@
 					<td><%=kpi[i].modifystart_date%></td>
 					<td><%=kpi[i].text %></td>
 					<% if(kpi[i].file != "") {%>
-						<td><a href=<%="/upload_file?file="+kpi[i].file %> download=""><img src="/img/download.png" alt="Скачать файл"></a></td>
+						<td><a href=<%="/upload-file?file="+kpi[i].file %> download=""><img src="/img/download.png" alt="Скачать файл"></a></td>
 					<%} %>
 					<% if(kpi[i].file == "") {%>
 						<td></td>

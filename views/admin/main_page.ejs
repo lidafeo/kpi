@@ -2,13 +2,8 @@
 <html>
 <head>
 	<title>История действий</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta charset="utf-8" />
-	<link rel="stylesheet" type="text/css" href="/general_style/footer.css">	
-	<link rel="stylesheet" type="text/css" href="/general_style/stylebut.css">
-	<link rel="stylesheet" type="text/css" href="/general_style/menu.css">
+	<%- include("partials/head.ejs")%>
 	<link rel="stylesheet" type="text/css" href="logs.css">
-	<link rel="stylesheet" type="text/css" href="/general_style/common.css">
 </head>
 <body>
 	<div class="wrapper">
@@ -30,7 +25,7 @@
 		</div>
 	</div>
 
-	<script type="text/javascript" src="/plugins/jquery-3.3.1.min.js"></script>
+	<%- include("partials/scripts.ejs")%>
 	<script type="text/javascript" src="./main.js"></script>
 </body>
 </html>

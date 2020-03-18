@@ -2,13 +2,8 @@
 <html>
 <head>
 	<title>Просмотр подтверждений ПЭДа</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta charset="utf-8" />
-	<link rel="stylesheet" type="text/css" href="/general_style/list.css">
+	<%- include("partials/head.ejs")%>
 	<link rel="stylesheet" type="text/css" href="edit_kpi.css">
-	<link rel="stylesheet" type="text/css" href="/general_style/footer.css">
-	<link rel="stylesheet" type="text/css" href="/general_style/stylebut.css">
-	<link rel="stylesheet" type="text/css" href="/general_style/menu.css">
 </head>
 <body>
 	<div class="wrapper">
@@ -53,8 +48,7 @@
 	
 	
 </div>
-
-	<script type="text/javascript" src="/plugins/jquery-3.3.1.min.js"></script>
+	<%- include("partials/scripts.ejs")%>
 	<script type="text/javascript" src="edit_kpi.js"></script>
 </body>
 </html>
