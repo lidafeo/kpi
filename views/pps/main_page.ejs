@@ -13,11 +13,15 @@
 			<p style="color: red; font-size: 20px;">Внимание! Расчет оценок будет производиться за период с <%=objPeriod.date1Str %> по <%=objPeriod.date2Str %></p>
 		<%} %>
 		<form name="date" action="/my-page" class="text" method="get">
-			<label>Период расчета оценок с </label>
-			<input type="date" name="date1" id="date1" class="date" value=<%=date1 %> required>
-			<label> по </label>
-			<input type="date" name="date2" id="date2" class="date" value=<%=date2 %> required>
-			<button id="date" >Вывести оценки ПЭД за данный период</button>
+			<div class="form-row">
+				<div class="col-sm">
+					<label>Период расчета оценок с </label>
+					<input type="date" name="date1" id="date1" class="date" value=<%=date1 %> required>
+					<label> по </label>
+					<input type="date" name="date2" id="date2" class="date" value=<%=date2 %> required>
+					<button class="btn btn-outline-dark" id="date" >Вывести оценки ПЭД за данный период</button>
+				</div>
+			</div>
 		</form>
 		<div id="donekpi"><%- include("partials/table_kpi.ejs") %></div>
 		<br/>

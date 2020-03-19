@@ -1,7 +1,4 @@
 
-		button {
-			padding: 3px;
-		}
 		.exitt {
 			float: right;
 			color: black;
@@ -32,15 +29,6 @@
 			text-align: center; 
 			font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
 		}
-		a {
-			font-size: 18px;
-			text-decoration: none;
-			color: black;
-		}
-		
-		td a{
-			font-size: 9px;
-		}
 
 		.buttonmypage
 		{
@@ -52,18 +40,6 @@
 			padding: .3em 1em;
 			font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
 		}
-
-		/*.errormes {
-			color: rgb(43, 8, 8);
-			font-size: 20px;
-			text-align: center;
-			border: 2px solid #A1B9D5;
-			box-shadow: 0 2px 4px 1px rgba(0,0,0,0.2), 1px 3px 15px 1px rgba(0,0,0,0.1);
-			width: 50%;
-			padding: 2%;
-			margin-left: 20%;
-			margin-top: 3%;
-		}*/
 
 		tr td:last-child {
 			text-align: center;
