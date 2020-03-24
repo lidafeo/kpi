@@ -17,7 +17,8 @@ exports.verify = function(req, res) {
 					let structure = result;
 					let facultyArr = additFunc.getFaculty(structure);
 					let departmentArr = additFunc.getDepartment(facultyArr[0], structure);
-					res.render('head/page_verify', {faculty: facultyArr, department: departmentArr, mypage: true});
+					res.render('head/page_verify', {faculty: facultyArr, department: departmentArr, mypage: true,
+						pageName: '/verify'});
 				}).catch(err => {
 					console.log(err);
 					res.status(500).render('error/500');
@@ -32,7 +33,8 @@ exports.verify = function(req, res) {
 					for(let i = 0; i < result.length; i++) {
 						departmentArr.push(result[i].department);
 					}
-					res.render('head/page_verify', {faculty: facultyArr, department: departmentArr, mypage: false});
+					res.render('head/page_verify', {faculty: facultyArr, department: departmentArr, mypage: false,
+						pageName: '/verify'});
 				}).catch(err => {
 					console.log(err);
 					res.status(500).render('error/500');
@@ -44,7 +46,8 @@ exports.verify = function(req, res) {
 				let departmentArr = [];
 				facultyArr.push(faculty);
 				departmentArr.push(department);
-				res.render('head/page_verify', {faculty: facultyArr, department: departmentArr, mypage: false});
+				res.render('head/page_verify', {faculty: facultyArr, department: departmentArr, mypage: false,
+					pageName: '/verify'});
 				break;
 			//другие
 			default:

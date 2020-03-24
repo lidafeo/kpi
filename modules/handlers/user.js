@@ -48,7 +48,7 @@ exports.myPage = function(req, res) {
 		let objPeriod = getObjPeriod();
 		if(result.length == 0) {
 			res.render("pps/main_page", {name: name, position: position, kpi: null, date1: 
-				date1, date2: date2, level: level, objPeriod: objPeriod});
+				date1, date2: date2, level: level, objPeriod: objPeriod, pageName: '/my-page'});
 		}
 		else {
 			new Promise((resolve, reject) => {
@@ -102,7 +102,7 @@ exports.myPage = function(req, res) {
 				for(let i = 0; i < arrKpi.length; i++)
 					arrKpi[i].sort(sortArr);
 				res.render("pps/main_page", {name: name, position: position, kpi: arrKpi,
-					date1: date1, date2: date2, level: level, objPeriod: objPeriod});
+					date1: date1, date2: date2, level: level, objPeriod: objPeriod, pageName: '/my-page'});
 			});
 		}
 	}).catch(err => {
@@ -139,7 +139,7 @@ exports.editKpi = function(req, res) {
 				});
 			}
 		}
-		res.render('pps/page_add_value_kpi', {obj: obj, level: req.session.level});
+		res.render('pps/page_add_value_kpi', {obj: obj, level: req.session.level, pageName: '/my-page/edit-kpi'});
 	}).catch(err => {
 		writeErrorLogs(res.session.login, err);
 		console.log(err);
@@ -151,7 +151,7 @@ exports.editKpi = function(req, res) {
 exports.valueKpi = function(req, res) {
 	DBs.selectValueKpiUser(req.session.login).then(result => {
 		modifyDate(result);
-		res.render('pps/page_values_kpi', {kpi: result, level: req.session.level});
+		res.render('pps/page_values_kpi', {kpi: result, level: req.session.level, pageName: '/my-page/values-kpi'});
 	}).catch(err => {
 		writeErrorLogs(res.session.login, err);
 		console.log(err);
@@ -161,7 +161,7 @@ exports.valueKpi = function(req, res) {
 
 //GET-запрос страницы с настройками
 exports.settings = function(req, res) {
-	res.render('pps/page_settings', {level: req.session.level, action: 0});
+	res.render('pps/page_settings', {level: req.session.level, action: 0, pageName: '/my-page/settings'});
 }
 
 //отправка файла пользователю
@@ -254,13 +254,15 @@ exports.POSTupload = function(req, res) {
 
 //POST-запрос изменения пароля
 exports.POSTsettings = function(req, res) {
+	console.log(req.body);
 	let password = req.body.password;
 	let login = req.session.login;
 	if(password) {
 		changePassword(login, password).then(result => {
 			//записываем логи
 			writeLogs(login, req.session.level, "изменил(а) пароль");
-			res.render('pps/page_settings', {level: req.session.level, action: 1});
+			res.json({result: 'Пароль успешно изменен'});
+			//res.render('pps/page_settings', {level: req.session.level, action: 1});
 		}).catch(err => {
 			writeErrorLogs(res.session.login, err);
 			console.log(err);
@@ -269,7 +271,8 @@ exports.POSTsettings = function(req, res) {
 	}
 	else {
 		console.log("Задан пустой пароль");
-		res.render('pps/page_settings', {level: req.session.level});
+		res.json({err: 'Пустой пароль'});
+		//res.render('pps/page_settings', {level: req.session.level});
 	}
 }
 

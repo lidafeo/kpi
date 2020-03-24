@@ -5,8 +5,8 @@
     <%- include("partials/head.ejs")%>
 </head>
 <body>
+    <%- include("partials/menu.ejs") %>
 	<div class="wrapper">
-		<%- include("partials/menu.ejs") %>
 		<div class="content">
             <h1>Настройки</h1><hr>
             <% if(action == 1) {%>
@@ -15,19 +15,29 @@
             <% if(action == 2) {%>
                 <p class="errormess">Ошибка добавления пользователя</p>
             <%} %>
-            <form class="form-add form-inner" id="form-edit-pass" method="POST">
+            <form id="form-edit-pass" method="POST" class="needs-validation" novalidate>
                 <h3>Изменение пароля</h3>
-                <div class="error-form" id="error"></div>
-                <div class="col-form">
-                    <label for="password1">Новый пароль</label>
-                    <input type="password" name="password" id="password1" required>
-                </div>
-                <div class="col-form">
-                    <label for="password2">Повторите пароль</label>
-                    <input type="password" name="password2" id="password2" required>
-                </div>
-                <div class="col-form">
-                    <input type="submit" class="buttonmypage" id="but-file2" value="Изменить">
+                <div class="text-danger form-group row ml-1" id="error"></div>
+                <div class="form-group row">
+                    <label for="password1" class="col-sm-2 col-form-label">Новый пароль</label>
+                    <div class="col-sm-3">
+                        <input type="password" name="password" class="form-control" id="password1" minlength="3" maxlength="100" required>
+                        <div class="invalid-feedback">
+                            Пожалуйста введите новый пароль минимум 3 символа
+                        </div>
+                    </div>
+                    </div>
+                <div class="form-group row">
+                    <label for="password2" class="col-sm-2 col-form-label">Повторите пароль</label>
+                    <div class="col-sm-3">
+                        <input type="password" name="password2" class="form-control" id="password2" minlength="3" maxlength="100" required>
+                        <div class="invalid-feedback">
+                            Пожалуйста повторите пароль
+                        </div>
+                    </div>
+                    </div>
+                <div class="form-group row">
+                    <input type="submit" class="btn btn-primary ml-3" id="but-file2" value="Изменить">
                 </div>
             </form>
 		</div>
@@ -37,6 +47,6 @@
     </div>
 
     <%- include("partials/scripts.ejs")%>
-	<script type="text/javascript" src="/scripts/settings.js"></script>
+	<script type="text/javascript" src="./check_form.js"></script>
 </body>
 </html>

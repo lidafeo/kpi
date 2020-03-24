@@ -7,21 +7,21 @@
 	<div class="collapse navbar-collapse" id="navbarSupportedContent">
 		<ul class="navbar-nav mr-auto">
 			<li class="nav-item">
-				<a class="nav-link" href="/my-page">Посчитать оценки <span class="sr-only">(current)</span></a>
+				<a class="nav-link <%if (pageName == "/my-page") {%><%='active'%><%}%>" href="/my-page">Вычислить оценки <span class="sr-only">(current)</span></a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" href="/my-page/edit-kpi">Отметить выполнение</a>
+				<a class="nav-link <%if (pageName == "/my-page/edit-kpi") {%><%='active'%><%}%>" href="/my-page/edit-kpi">Отметить выполнение</a>
 			</li>
 			<li class="nav-item">
-				<a class="nav-link" href="/my-page/values-kpi">Список значений ПЭД</a>
+				<a class="nav-link <%if (pageName == "/my-page/values-kpi") {%><%='active'%><%}%>" href="/my-page/values-kpi">Список значений ПЭД</a>
 			</li>
 			<% if(level) {%>
 				<li class="nav-item">
-					<a class="nav-link" href="/verify">Проверить ПЭДы ППС</a>
+					<a class="nav-link <%if (pageName == "/verify") {%><%='active'%><%}%>" href="/verify">Проверить ПЭДы ППС</a>
 				</li>
 			<%} %>
 			<li class="nav-item">
-				<a class="nav-link" href="/settings">Настройки</a>
+				<a class="nav-link <%if (pageName == "/my-page/settings") {%><%='active'%><%}%>" href="/my-page/settings">Настройки</a>
 			</li>
 		</ul>
 		<form class="form-inline my-2 my-lg-0 mr-md-4" action="/exit" method="post">

@@ -1,46 +1,48 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Просмотр подтверждений ПЭДа</title>
+	<title>Добавление новых значений</title>
 	<%- include("partials/head.ejs")%>
 	<link rel="stylesheet" type="text/css" href="edit_kpi.css">
 </head>
 <body>
-	<div class="wrapper">
-		<%- include("partials/menu.ejs") %>
+	<%- include("partials/menu.ejs") %>
+	<div class="wrapper container-fluid">
 		<div class="content">
-			<h1 style="margin-left: 10px;">Отметить выполнение ПЭД</h1>
-			<div class="page">
-				<aside>
-					<ul class="treeCSS">
-						<li>Выберите ПЭД
-							<ul>
-								<% for (key in obj) {%>
-								<li><div class="drop dropM">-</div><%=key%>
-									<ul>
-										<% for(key2 in obj[key])  {%>
-											<% if(key2 != 'nosubtype') {%>
-												<li><div class=" drop dropM">-</div><%=key2%>
-												<ul>
+			<h2 class="ml-md-1">Отметить выполнение ПЭД</h2>
+			<div class="row">
+				<div class="col-sm-3">
+					<aside>
+						<ul class="treeCSS">
+							<li>Выберите ПЭД
+								<ul>
+									<% for (key in obj) {%>
+									<li><div class="drop dropM">-</div><%=key%>
+										<ul>
+											<% for(key2 in obj[key])  {%>
+												<% if(key2 != 'nosubtype') {%>
+												<li><div class="drop dropM">-</div><%=key2%>
+													<ul>
+												<%} %>
+												<% for(let i = 0; i < obj[key][key2].length; i++) {%>
+													<li><a class="ref" id = <%=obj[key][key2][i]['name'] + ""%>  href="" title="<%=obj[key][key2][i]['description']%>"><%=obj[key][key2][i]['name']%></a></li>
+												<%} %>
+												<% if(key2 != 'nosubtype') {%>
+													</ul></li>
+												<%} %>
 											<%} %>
-											<% for(let i = 0; i < obj[key][key2].length; i++) {%>
-												<li><a class="ref" id = <%=obj[key][key2][i]['name'] + ""%>  href="" title="<%=obj[key][key2][i]['description']%>"><%=obj[key][key2][i]['name']%></a></li>
-											<%} %>
-											<% if(key2 != 'nosubtype') {%>
-												</ul></li>
-											<%} %>
-										<%} %>
-									</ul>
-								</li>
-								<%} %>
-							</ul>
-						</li>
-					</ul>
-				</aside>
-
-				<div id="tablekpi" class="tablekpiborder"></div>
+										</ul>
+									</li>
+									<%} %>
+								</ul>
+							</li>
+						</ul>
+					</aside>
 			</div>
-		</div>
+
+				<div id="tablekpi" class="tablekpiborder col-sm"></div>
+			</div>
+
 
 		<div class="footer">
 			<%- include("../partials/footer.ejs") %>

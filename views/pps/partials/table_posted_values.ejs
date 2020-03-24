@@ -2,12 +2,12 @@
 	<p class="errormess">Этот ПЭД недоступен для Вашей должности</p>
 <%} %>
 <% if(!textErr) {%>
-	<h3><%=desc[0].description %></h3>
-	<button id="plus">+</button>
+	<h4><%=desc[0].description %></h4>
+	<hr>
+	<button id="plus" class="btn btn-outline-primary mb-md-2">+ Добавить значение</button>
 	<div id="plusdiv">
 		<form enctype="multipart/form-data" name="form1" action="/upload" method="post" style="flex-direction: column; display: flex; justify-content: flex-start;">
-			<hr/> 
-		<div style="margin-top: 10px;"><h4>Добавление нового значения</h4>
+		<div style="margin-top: 10px;"><h4>Добавление нового значения ПЭД</h4>
 			<input type="hidden" name="name" id="name">
 			<% if(desc[0].type == 2) {%>
 				<% for(let j = 0; j < desc[0].count_criterion; j++) {%>
@@ -17,7 +17,7 @@
 			<%} %>
 			</div>
 		<div style="margin-top: 10px;">  
-			<label>Дату реализации (выполнения) ПЭДа</label>
+			<label>Дата реализации (выполнения) ПЭД </label>
 			<input type="date" name="date" id="datekpi" required>
 			<br/>
 			<% if(!desc[0].indicator_sum) {%> 
@@ -30,58 +30,60 @@
 			<%} %>
 			</div>
 		<div style="margin-top: 20px;"> <label>Пояснительная записка: </label> 
-			<textarea name="text" id="text"></textarea> 
+			<textarea name="text" id="text" maxlength="1024"></textarea>
 			<br/><br/>
 			<input class="file" type="file" name="file" id="file">
 			<br/><br/>
 		</div>
 
-			<button id="addkpi" class="buttonmypage" style="width: 250px; margin-bottom: 10px;">Добавить показатель</button>
+			<button id="addkpi" class="btn btn-outline-success">Добавить показатель</button>
 		</form>
+		<hr>
 	</div>
 	<% if(kpi.length != 0) {%>
-		<table>
-			<tr>
-				<th>Дата добавления</th>
-				<th>Дата реализации</th>
-				<th>Текст</th>
-				<th>Файл</th>
-				<% if(desc[0].type == 2) {%>
-					<th>Показатель</th>
-				<%} %>
-				<th>Статус</th>
-				<th>Автор проверки</th>
-				<th>Пояснение от автора проверки</th>
-			</tr>
+		<table class="table border-color-f">
+			<thead>
+				<tr>
+					<th scope="col">Дата добавления</th>
+					<th scope="col">Дата реализации</th>
+					<th scope="col">Текст</th>
+					<th scope="col">Файл</th>
+					<% if(desc[0].type == 2) {%>
+						<th scope="col">Показатель</th>
+					<%} %>
+					<th scope="col">Статус</th>
+					<th scope="col">Автор проверки</th>
+					<th scope="col">Пояснение от автора проверки</th>
+				</tr>
+			</thead>
+			<tbody>
 			<% for(let i = 0; i < kpi.length; i++) {%>
 				<tr>
 					<td><%=kpi[i].modifydate %></td>
 					<td><%=kpi[i].modifystart_date%></td>
 					<td><%=kpi[i].text %></td>
-					<% if(kpi[i].file != "") {%>
+					<% if(kpi[i].file != "" && kpi[i].file != null) {%>
 						<td><a href=<%="/upload-file?file="+kpi[i].file %> download=""><img src="/img/download.png" alt="Скачать файл"></a></td>
 					<%} %>
-					<% if(kpi[i].file == "") {%>
+					<% if(kpi[i].file == "" || kpi[i].file == null) {%>
 						<td></td>
 					<%} %>
 					<% if(desc[0].type == 2) {%>
 						<td><%=desc[kpi[i].number_criterion].criterion_description %></td>
 					<%} %>
 					<% if(!kpi[i].valid) {%>
-						<td class="errormess">Недействительно</td>
+						<td class="text-danger">Недействительно</td>
 						<td><%=kpi[i].name_author %></td>
 						<td><%=kpi[i].text_verify %></td>
 					<%} %>
 					<% if(kpi[i].valid) {%>
-						<td>Выполнено</td>
+						<td class="text-success">Выполнено</td>
 						<td></td>
 						<td></td>
 					<%} %>
 				</tr>
 			<%} %>
+			</tbody>
 		</table>
-	<%} %>
-	<% if(kpi.length == 0) {%>
-		<p>Нет отмеченных ПЭДов</p>
 	<%} %>
 <%} %>

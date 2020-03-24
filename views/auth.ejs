@@ -5,42 +5,65 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta charset="utf-8" />
 	<link rel="stylesheet" type="text/css" href="general_style/form.css">
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 </head>
 <body>
 <div class="parent">
 	<div class="block">
-	<form name="authorizForm" action="/user" method="POST" class="form-add">
+	<form name="authorizForm" action="/user" method="POST" class="form-add needs-validation" novalidate>
 		<div class="form-inner">
-			<img src="/img/logo.png" alt="Логотип МТУСИ">
-			<h3>Вход в личный кабинет</h3>
+			<div class="row mb-md-3">
+				<div class="col-sm">
+					<img src="/img/logo.png" alt="Логотип МТУСИ">
+				</div>
+			</div>
+			<div class="row mb-md-2">
+				<div class="col-sm title-form">
+					<h5 class="text-center">Вход в личный кабинет</h5>
+				</div>
+			</div>
 			<% if(close) {%>
-				<p class="errortext">Доступ к личным кабинетам закрыт</p>
+				<div class="row ml-md-1">
+					<p class="text-danger">Доступ к личным кабинетам закрыт</p>
+				</div>
 			<%} %>
 			<% if(checkPassword) {%>
-				<p class="errortext">Неправильно введен логин или пароль</p>
+				<div class="row ml-md-1">
+					<p class="text-danger">Неправильно введен логин или пароль</p>
+				</div>
 			<%} %>
-			<label>Логин</label>
-			<input type="text" name="login" placeholder="ivanov" required/><br>
-			<label>Пароль</label>
-			<input type="password" name="password" placeholder="password" required/>
-			<input type="submit" name="submit" id="submit" value="Войти">
+			<div class="form-group row">
+				<div class="col-sm">
+					<input type="text" name="login" class="form-control" maxlength="48" placeholder="Login" required/>
+					<div class="invalid-feedback">
+						Пожалуйста введите логин
+					</div>
+				</div>
+			</div>
+			<div class="form-group row">
+				<div class="col-sm">
+					<input type="password" name="password" class="form-control"  maxlength="100" placeholder="Password" required/>
+					<div class="invalid-feedback">
+						Пожалуйста введите пароль
+					</div>
+				</div>
+			</div>
+			<input class="btn" type="submit" name="submit" id="submit" value="Войти">
 		</div>
 	</form>
 	</div>
 </div>
 	<style type="text/css">
 		body, html {
-			background: rgb(241, 241, 241);
-		}
-		.errortext {
-			color: red;
+			background: rgba(135, 108, 153, 1);
 		}
 	</style>
 
-			<script type="text/javascript" src="/plugins/jquery-3.3.1.min.js"></script>
-			<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-			<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-			<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-	
+	<script type="text/javascript" src="/plugins/jquery-3.3.1.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+	<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+	<script type="text/javascript" src="/scripts/check_form.js"></script>
+
 </body>
 </html>

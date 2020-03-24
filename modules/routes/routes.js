@@ -26,10 +26,10 @@ module.exports = function(app) {
 	app.get('/my-page/edit-kpi', rightImplementKpi, user.editKpi);
 	app.get('/my-page/values-kpi', rightImplementKpi, user.valueKpi);
 	app.get('/upload-file', rightPpsOrVerify, user.sendFile);
-	app.get('/settings', rightPpsOrVerify, user.settings);
+	app.get('/my-page/settings', rightPpsOrVerify, user.settings);
 	app.post('/edit-kpi', jsonParser, user.POSTeditKpi);
 	app.post('/upload', user.POSTupload);
-	app.post('/settings', urlencodedParser, user.POSTsettings);
+	app.post('/my-page/settings', urlencodedParser, user.POSTsettings);
 
 	app.get('/verify', rightVerify, verify.verify);
 	app.post('/verify', jsonParser, verify.POSTverify);

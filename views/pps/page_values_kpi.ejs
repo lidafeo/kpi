@@ -5,8 +5,8 @@
 	<%- include("partials/head.ejs")%>
 </head>
 <body>
+	<%- include("partials/menu.ejs") %>
 	<div class="wrapper">
-		<%- include("partials/menu.ejs") %>
 		<div class="content">
 			<h1>Значения ПЭД</h1>
 			<% if(kpi.length != 0) {%>
@@ -58,6 +58,7 @@
 			<%} %>
 			<% if(kpi.length == 0) {%>
 				<p>Нет добавленных значений ПЭД</p>
+				<a href="/my-page/edit-kpi/">Отметить выполнение ПЭД</a>
 			<%} %>
 		</div>
 		<div class="footer">

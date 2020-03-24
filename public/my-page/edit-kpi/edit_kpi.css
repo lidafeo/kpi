@@ -1,18 +1,12 @@
 * {
 	box-sizing: border-box;
 }
-header {
-	display: flex;
-	justify-content: flex-end;
-}
-.treeCSS{
-	border: 2px solid #A1B9D5;
-	font-size: 16px;
-	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+.treeCSS {
+	border: 1px solid #A1B9D5;
 	box-shadow: 0 2px 4px 1px rgba(0,0,0,0.2), 1px 3px 15px 1px rgba(0,0,0,0.1);
 }
 
-.treeCSS a:hover  {
+.treeCSS a:hover {
 	background: rgb(236, 240, 243); 
 	color: rgb(38, 29, 58);
 	border: 1px solid #8b8b8b;
@@ -53,13 +47,13 @@ header {
 	position: absolute;
 	left: -6px;
 	top: 5px;
-	width: 11px;
-	height: 11px;
+	width: 12px;
+	height: 12px;
 	line-height: 1em;
 	text-align: center;
-	background: #9F9F9F;
+	background: #9a6d9f;
 	color: #fff;
-	font-size: 78%;
+	font-size: 75%;
 	cursor: pointer;
 	-webkit-user-select: none;
 	-moz-user-select: none;
@@ -69,16 +63,13 @@ header {
 }
 
 .treeCSS .drop + ul {
-	/*display: none;*/ display: block;
+	/*display: none;*/ display: none;
 }
 
 .treeCSS .dropM + ul {
-	/* display: block; */display: none;
+	/* display: block; */display: block;
 }
 .page {
-	display: grid;
-	grid-template-columns: max-content auto;
-	grid-gap: 10px;
 	margin: 10px 3px 5px 0px;
 }
 @media(max-width: 1250px) {
@@ -93,9 +84,7 @@ header {
  }
 .tablekpiborder
 {
-	border: 2px solid #A1B9D5;
-	font-size: 16px;
-	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
+	border: 1px solid #A1B9D5;
 	box-shadow: 0 2px 4px 1px rgba(0,0,0,0.2), 1px 3px 15px 1px rgba(0,0,0,0.1);
 	padding: 1%;
 	width: 99%;

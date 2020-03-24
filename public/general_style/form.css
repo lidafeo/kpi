@@ -3,91 +3,65 @@
 .parent {
 	width: 100%;
 	height: 100%;
-	position: absolute;
+	position: fixed;
 	top: 0;
 	left: 0;
+	display: flex;
+	align-items: center;
+	align-content: center;
+	justify-content: center;
 	overflow: auto;
-	white-space: nowrap;
-	text-align: center;
-	font-size: 0;
-
-&:before {
-	 height: 100%;
-	 display: inline-block;
-	 vertical-align: middle;
-	 content: '';
- }
 }
-
-.block {
-	display: inline-block;
-	white-space: normal;
-	vertical-align: middle;
-	text-align: left;
-
+@media handheld and (max-width: 1200px) {
+	.form-add {
+		width: 90vw;}
+	.form-inner {
+		padding: 30px;
+	}
 }
-.form-add {
-	position: relative;
-	background: white;
-	border-radius: 30px;
-	border: 2px solid #A1B9D5;
-	color: black;
-	box-shadow: 0 2px 4px 1px rgba(0,0,0,0.2), 1px 3px 15px 1px rgba(0,0,0,0.1);
-}
-.form-inner { 
-	padding: 15px;
-}
-.form-inner input,
-.form-inner select {
-	display: block;
-	width: 100%;
-	height: 40px;
-	padding: 5px 20px;
-	background: rgba(218, 227, 247, 0.911);
-	line-height: 40px;
-	border-width: 0;
-	border-radius: 10px;
-	font-family: 'Roboto', sans-serif;
-}
-.form-inner label {
-	height: 20px;
-	padding: 5px 15px;
-	margin-bottom: 10px;
-	color: #1C9675;
-	line-height: 35px;
-	font-family: 'Roboto', sans-serif;
-}
-
-.form-inner input[type="submit"] {
-	margin: 20px auto 0 auto;
-	background: #1C9675;
-	height: auto;
-	border-bottom: 4px solid #1C9675;
-	color: white;
-	font-size: 16px;
-	width: 60%;
-	padding: 5px;
-}
-.form-inner h3 {
-	margin-top: 0;
-	font-family: 'Roboto', sans-serif;
-	font-weight: 500;
-	font-size: 20px;
-	color: #1C9675;
-	text-align: center;
+@media screen and (min-width: 1200px) {
+	.form-add {
+		width: 55vw;}
+	.form-inner {
+		padding: 60px;
+	}
 }
 .form-inner img {
 	display: block;
-	margin: auto;
-	padding: 17px 10px;
+	margin-left: auto;
+	margin-right: auto;
 }
-.input__container {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	grid-gap: 16px;
-	overflow: hidden;
+.title-form {
+	color: #1C9675;
 }
-
+.form-add {
+	display: block;
+	position: relative;
+	background: white;
+	border: 1px solid #b5c7d5;
+	color: black;
+	border-radius: 15px;
+	box-shadow: 0 2px 4px 1px rgba(0,0,0,0.5), 1px 3px 15px 1px rgba(0,0,0,0.3);
+}
+.form-inner {
+	border-radius: 15px;
+	background-color: rgba(250, 250, 250, 1);
+	transition: opacity 0.1s, transform 0.3s cubic-bezier(0.17, -0.65, 0.665, 1.25);
+	transform: scale(1);
+}
+.form-inner input,
+.form-inner select {
+	background: rgba(218, 227, 247, 0.7);
+	border-radius: 5px;
+}
+.form-inner input[type="submit"] {
+	display: block;
+	margin: 20px auto 0 auto;
+	background: #1C9675;
+	color: white;
+	width: 60%;
+	height: 44px;
+}
 .radio {
 	position: absolute;
 	z-index: -1;
@@ -230,8 +204,4 @@ textarea {
 .error-form {
 	color: red;
 	padding: 5px 20px;
-}
-
-.col-form {
-	margin: 15px 0;
 }

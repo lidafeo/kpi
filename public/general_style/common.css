@@ -10,6 +10,6 @@
 .navbar{
     min-height: 70px !important;
 }
-body, html {
-    background: rgb(241, 241, 241);
+.border-color-f td, .border-color-f th {
+    border: 1px solid #876c99 !important;
 }
