@@ -24,9 +24,13 @@ $(document).ready(function() {
         }
         $.post('/my-page/settings', $(this).serialize(), function (data) {
             if (data.err) {
-                console.log(data.err);
+                $('#modalCenter #modalTitle').text('Ошибка');
+                $('#modalCenter #modalBody').html(data.err);
+                return $('#modalCenter').modal('show');
             }
-            console.log(data);
+            $('#modalCenter #modalTitle').text('Изменение пароля');
+            $('#modalCenter #modalBody').html(data.result);
+            return $('#modalCenter').modal('show');
         });
     });
     $("#password1, #password2").on("input", function (e) {

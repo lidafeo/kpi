@@ -1,14 +1,23 @@
 <input type="hidden" name="chooseuser" id="chooseuser">
 <% if(worker.length == 0 ) {%>
-	<p class="text" style="color:red; margin-left: 5px;">Нет сотрудников</p>
+	<div class="row">
+		<p class="text-danger col-sm">Нет сотрудников на выбранной кафедре</p>
+	</div>
 <%}%>
 <% if(worker.length != 0 ) {%>
-	<label for="worker" class="text">Сотрудник:</label>
-	<input name="worker" list="worker" id="name" class="text" required autocomplete="off" style="width: 300px;">
-	<datalist id="worker" >
-		<% for(let i = 0; i < worker.length; i++) {%>
-			<option data-value="<%=worker[i].login%>" value="<%=(worker[i].name + ', ' + worker[i].position)%>"></option>
-		<%} %>
-	</datalist>
-	<button id="submit" class="buttonmypage">Выбрать сотрудника</button>
+	<label for="worker" class="col-sm-2 col-form-label">Сотрудник</label>
+	<div class="col-sm-5">
+		<input name="worker" list="worker" id="name" class="form-control" required autocomplete="off">
+		<div class="invalid-feedback">
+			Пожалуйста выберите ППС для проверки из списка
+		</div>
+		<datalist id="worker">
+			<% for(let i = 0; i < worker.length; i++) {%>
+				<option data-value="<%=worker[i].login%>" value="<%=(worker[i].name + ', ' + worker[i].position)%>"></option>
+			<%} %>
+		</datalist>
+	</div>
+	<div class="col-sm-3">
+		<button id="submit" class="btn btn-outline-dark">Выбрать сотрудника</button>
+	</div>
 <%}%>

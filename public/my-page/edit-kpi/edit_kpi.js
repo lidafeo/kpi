@@ -1,4 +1,12 @@
 $(document).ready(function() {
+
+	$(document).on('change', '.custom-file-input', function (e) {
+		if(this.files[0]) {
+			return $('#label-file').text(this.files[0].name);
+		}
+		$('#label-file').text('Выберите файл...');
+	});
+
 	let currRef;
 	$('#submit').click(function(e) {
 		e.preventDefault();
@@ -18,8 +26,8 @@ $(document).ready(function() {
 	});
 
 	$("body").on('click', "#plus", function() {
-		$('#plusdiv').show();
 		$('#plus').hide();
+		$('#plusdiv').show();
 	});
 	$("body").on('click', ".ref", function(e) {
 		e.preventDefault();
@@ -37,8 +45,13 @@ $(document).ready(function() {
 		});
 		request.send(sendValue);
 	});
-	$("body").on('click', "#addkpi", function(e) {
+
+	$("body").on('submit', "#formAddKpi", function(e) {
 		e.preventDefault();
+		$('#error').text("");
+		if (!checkValidForm(this)) {
+			return;
+		}
 		let file = document.getElementById("file");
 		let myform = document.forms.form1;
 		let form = new FormData();
@@ -70,6 +83,49 @@ $(document).ready(function() {
 		request.send(form);
 	});
 
+	$("body").on("input", '#text, #file', function (e) {
+		if(!$('#formAddKpi').hasClass('was-validated')) {
+			return;
+		}
+		let elText = $("#text")[0];
+		elText.setCustomValidity("");
+		$("#text").removeClass("is-invalid");
+
+		let elFile = $("#file")[0];
+		elFile.setCustomValidity("");
+		$("#file").removeClass("is-invalid");
+		$('#error').text("");
+
+		if (!$("#text").val() && !$("#file").val()) {
+			$("#text").addClass("is-invalid");
+			let newElText = $("#text")[0];
+			newElText.setCustomValidity("Invalid field");
+
+			$("#file").addClass("is-invalid");
+			let newElFile = $("#file")[0];
+			newElFile.setCustomValidity("Invalid field");
+
+			$('#error').text("Необходимо подтвердить выполнение пояснительной запиской, либо файлом");
+		}
+	});
+
+	(function() {
+		'use strict';
+		window.addEventListener('load', function() {
+			// Fetch all the forms we want to apply custom Bootstrap validation styles to
+			let forms = document.getElementsByClassName('needs-validation');
+			// Loop over them and prevent submission
+			let validation = Array.prototype.filter.call(forms, function(form) {
+				form.addEventListener('submit', function(event) {
+					if (form.checkValidity() === false) {
+						event.preventDefault();
+						event.stopPropagation();
+					}
+					form.classList.add('was-validated');
+				}, false);
+			});
+		}, false);
+	})();
 
 	(function() {
 		let ul = document.querySelectorAll('.treeCSS > li:not(:only-child) ul, .treeCSS ul ul');
@@ -89,4 +145,34 @@ function getCookie(name) {
 	let matches = document.cookie.match(new RegExp("(?:^|; )" + 
 		name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"));
 	return matches ? decodeURIComponent(matches[1]) : undefined;
+}
+
+function checkValidForm(form) {
+	let check = true;
+	if (form.checkValidity() === false) {
+		check = false;
+	}
+	let elText = $("#text")[0];
+	elText.setCustomValidity("");
+	$("#text").removeClass("is-invalid");
+
+	let elFile = $("#file")[0];
+	elFile.setCustomValidity("");
+	$("#file").removeClass("is-invalid");
+
+	$('#error').text("");
+	if (!$("#text").val() && !$("#file").val()) {
+		$("#text").addClass("is-invalid");
+		let newElText = $("#text")[0];
+		newElText.setCustomValidity("Invalid field");
+
+		$("#file").addClass("is-invalid");
+		let newElFile = $("#file")[0];
+		newElFile.setCustomValidity("Invalid field");
+
+		$('#error').text("Необходимо подтвердить выполнение пояснительной запиской, либо файлом");
+		check = false;
+	}
+	form.classList.add('was-validated');
+	return check;
 }

@@ -25,7 +25,6 @@ exports.auth = function(req, res) {
 			req.session.userName = result.name;
 			req.session.login = result.login;
 			req.session.userPosition = result.position;
-			//req.session.numberGroup = result.number_group;
 			req.session.level = result.level;
 			req.session.department = result.department;
 			req.session.faculty = result.faculty;

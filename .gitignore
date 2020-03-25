@@ -4,8 +4,7 @@ createdb/*
 database/*
 config/*
 log/*
-sendfiles/*
-modules0/*
-views0/*
+user_files/*
+public/img/icons/*
 desktop.ini
 package-lock.json

@@ -18,7 +18,7 @@ exports.verify = function(req, res) {
 					let facultyArr = additFunc.getFaculty(structure);
 					let departmentArr = additFunc.getDepartment(facultyArr[0], structure);
 					res.render('head/page_verify', {faculty: facultyArr, department: departmentArr, mypage: true,
-						pageName: '/verify'});
+						pageName: '/verify', login: req.session.login, level: req.session.level});
 				}).catch(err => {
 					console.log(err);
 					res.status(500).render('error/500');
@@ -34,7 +34,7 @@ exports.verify = function(req, res) {
 						departmentArr.push(result[i].department);
 					}
 					res.render('head/page_verify', {faculty: facultyArr, department: departmentArr, mypage: false,
-						pageName: '/verify'});
+						pageName: '/verify', login: req.session.login, level: req.session.level});
 				}).catch(err => {
 					console.log(err);
 					res.status(500).render('error/500');
@@ -47,7 +47,7 @@ exports.verify = function(req, res) {
 				facultyArr.push(faculty);
 				departmentArr.push(department);
 				res.render('head/page_verify', {faculty: facultyArr, department: departmentArr, mypage: false,
-					pageName: '/verify'});
+					pageName: '/verify', login: req.session.login, level: req.session.level});
 				break;
 			//другие
 			default:
@@ -64,6 +64,7 @@ exports.verify = function(req, res) {
 //POST-запрос на получение таблицы для проверки значений ПЭД ППС
 exports.POSTverify = function(req, res) {
 	let login = req.body.name;
+	console.log(login);
 	//находим значения ПЭД выбранного сотрудника
 	DBs.selectValueKpiByLogin(login).then(result => {
 		if(result.length == 0) {
@@ -77,7 +78,7 @@ exports.POSTverify = function(req, res) {
 		console.log(err);
 		res.status(500).render('error/500');
 	});
-}
+};
 
 //POST-запрос на пометку значения ПЭД как недействительное
 exports.POSTinvalid = function(req, res) {
@@ -117,7 +118,7 @@ exports.POSTgetWorkers = function(req, res) {
 		res.status(500).render('error/500');
 	});
 
-}
+};
 
 //получить структуру
 exports.POSTgetStructure = function(req, res) {
@@ -135,7 +136,7 @@ exports.POSTgetStructure = function(req, res) {
 		console.log(err);
 		res.status(500).render('error/500');
 	});
-}
+};
 
 
 //преобразование даты к нормальному виду

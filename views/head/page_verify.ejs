@@ -5,43 +5,44 @@
 	<%- include("partials/head.ejs")%>
 </head>
 <body>
+	<%- include("../pps/partials/menu.ejs") %>
 	<div class="wrapper">
-	    <% if(mypage) {%>
-		    <%- include("partials/menu.ejs") %>
-		<%} else {%>
-		    <%- include("../pps/partials/menu.ejs") %>
-		<%} %>
-		<div class="content">
-			<form name="editform" class="formborder flexparent" style="margin-top: 8px; justify-content: center; width: 90%;" action="/verify" method="post">
-				<div class="flexblocks text">
-					<label>Факультет</label>
-					<% if(faculty.length == 1) {%>
-						<input type="text" name="faculty" class="text" id="faculty" value="<%=faculty[0]%>" style="width: 350px;" disabled>
-					<%} %>
-					<% if(faculty.length > 1) {%>
-						<select name="faculty" class="text" id="faculty">
-							<% for(let i = 0; i < faculty.length; i++) {%>
+		<div class="content container">
+			<form name="editform" action="/verify" class="needs-validation" novalidate method="post">
+				<div class="form-group row">
+					<label for="faculty" class="col-sm-2 col-form-label">Факультет</label>
+					<div class="col-sm-5">
+						<% if(faculty.length == 1) {%>
+						<input type="text" name="faculty" id="faculty" readonly class="form-control-plaintext" value="<%=faculty[0]%>" disabled>
+						<%} %>
+						<% if(faculty.length > 1) {%>
+							<select name="faculty" class="form-control" id="faculty">
+								<% for(let i = 0; i < faculty.length; i++) {%>
 								<option><%=faculty[i]%></option>
-							<%} %>
-						</select>
-					<%} %>
+								<%} %>
+							</select>
+						<%} %>
+					</div>
 				</div>
-
-				<div class="flexblocks text"><label>Кафедра</label>
-					<% if(department.length == 1) {%>
-						<input type="text" class="text" name="department" id="department" value="<%=department[0]%>" style="width: 350px;" disabled>
-					<%} %>
-					<% if(department.length > 1) {%>
-						<select name="department" class="text" id="department" style="width: 300px;">
-							<% for(let i = 0; i < department.length; i++) {%>
-								<option><%=department[i]%></option>
-							<%} %>
-						</select>
-					<%} %>
-					<button id="choosedep" class="buttonmypage">Выбрать кафедру</button></div>
-					<br>
-					<div class="flexblocks"><div id="usersdiv"></div>
-				</div>
+				<div class="form-group row">
+					<label for="department" class="col-sm-2 col-form-label">Кафедра</label>
+					<div class="col-sm-5">
+						<% if(department.length == 1) {%>
+							<input type="text" name="department" readonly class="form-control-plaintext" id="department" value="<%=department[0]%>" style="width: 350px;" disabled>
+						<%} %>
+						<% if(department.length > 1) {%>
+							<select name="department" class="form-control" id="department">
+								<% for(let i = 0; i < department.length; i++) {%>
+									<option><%=department[i]%></option>
+								<%} %>
+							</select>
+						<%} %>
+					</div>
+					<div class="col-sm-3">
+						<button id="choosedep" class="btn btn-outline-dark">Выбрать кафедру</button>
+					</div>
+					</div>
+				<div class="form-group row" id="usersdiv"></div>
 
 			</form>
 
@@ -56,5 +57,6 @@
 	<%- include("partials/scripts.ejs")%>
 	<script type="text/javascript" src="../plugins/carhartl-jquery-cookie-92b7715/jquery.cookie.js"></script>
 	<script type="text/javascript" src="./verify.js"></script>
+	<script type="text/javascript" src="/scripts/check_form.js"></script>
 </body>
 </html>

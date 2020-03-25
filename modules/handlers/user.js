@@ -48,7 +48,8 @@ exports.myPage = function(req, res) {
 		let objPeriod = getObjPeriod();
 		if(result.length == 0) {
 			res.render("pps/main_page", {name: name, position: position, kpi: null, date1: 
-				date1, date2: date2, level: level, objPeriod: objPeriod, pageName: '/my-page'});
+				date1, date2: date2, level: level, objPeriod: objPeriod, pageName: '/my-page',
+                login: login});
 		}
 		else {
 			new Promise((resolve, reject) => {
@@ -102,7 +103,8 @@ exports.myPage = function(req, res) {
 				for(let i = 0; i < arrKpi.length; i++)
 					arrKpi[i].sort(sortArr);
 				res.render("pps/main_page", {name: name, position: position, kpi: arrKpi,
-					date1: date1, date2: date2, level: level, objPeriod: objPeriod, pageName: '/my-page'});
+					date1: date1, date2: date2, level: level, objPeriod: objPeriod,
+                    pageName: '/my-page', login: req.session.login});
 			});
 		}
 	}).catch(err => {
@@ -139,7 +141,8 @@ exports.editKpi = function(req, res) {
 				});
 			}
 		}
-		res.render('pps/page_add_value_kpi', {obj: obj, level: req.session.level, pageName: '/my-page/edit-kpi'});
+		res.render('pps/page_add_value_kpi', {obj: obj, level: req.session.level,
+            pageName: '/my-page/edit-kpi', login: req.session.login});
 	}).catch(err => {
 		writeErrorLogs(res.session.login, err);
 		console.log(err);
@@ -151,33 +154,41 @@ exports.editKpi = function(req, res) {
 exports.valueKpi = function(req, res) {
 	DBs.selectValueKpiUser(req.session.login).then(result => {
 		modifyDate(result);
-		res.render('pps/page_values_kpi', {kpi: result, level: req.session.level, pageName: '/my-page/values-kpi'});
+		res.render('pps/page_values_kpi', {kpi: result, level: req.session.level,
+            pageName: '/my-page/values-kpi', login: req.session.login});
 	}).catch(err => {
 		writeErrorLogs(res.session.login, err);
 		console.log(err);
 		res.status(500).render('error/500');
 	});
-}
+};
 
 //GET-запрос страницы с настройками
 exports.settings = function(req, res) {
-	res.render('pps/page_settings', {level: req.session.level, action: 0, pageName: '/my-page/settings'});
-}
+	res.render('pps/page_settings', {level: req.session.level, action: 0,
+        pageName: '/my-page/settings', login: req.session.login});
+};
 
 //отправка файла пользователю
 exports.sendFile = function(req, res) {
 	let file = req.query.file;
 	res.download("./user_files/" + file, file);
-	/*
-	DBs.selectValueKpiById(file).then(result => {
-		doc = result[0];
-		res.download("./user_files/" + file + '.' + doc.file.split('.').pop(), doc.file);
+};
+
+//Получение значения ПЭД
+exports.getValue = function(req, res) {
+	let valId = req.params["valId"];
+	let login = req.session.login;
+	DBs.selectValueKpiById(valId, login).then(result => {
+		//if(!result[0]) {
+		//	res.render('pps/page_one_val', {val: result[0]});
+		//}
+		modifyDate(result);
+		res.render('pps/page_one_val', {val: result[0], pageName: '/my-page/val/',
+		    level: req.session.level, login: req.session.login});
 	}).catch(err => {
-		writeErrorLogs(res.session.login, err);
 		console.log(err);
-		res.status(500).render('error/500');
 	});
-	 */
 };
 
 //POST-запрос прошлых подтверждений ПЭД
@@ -274,7 +285,7 @@ exports.POSTsettings = function(req, res) {
 		res.json({err: 'Пустой пароль'});
 		//res.render('pps/page_settings', {level: req.session.level});
 	}
-}
+};
 
 //сортировка и 
 //добавление доп информации по ПЭДам: количество подтвержденных, балл, дата подтверждения

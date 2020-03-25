@@ -13,3 +13,6 @@
 .border-color-f td, .border-color-f th {
     border: 1px solid #876c99 !important;
 }
+.custom-file-label::after {
+    content: "Обзор" !important;
+}

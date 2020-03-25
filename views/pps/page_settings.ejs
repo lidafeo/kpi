@@ -9,12 +9,6 @@
 	<div class="wrapper">
 		<div class="content">
             <h1>Настройки</h1><hr>
-            <% if(action == 1) {%>
-                <p class="uspeshno">Успешно</p>
-            <%} %>
-            <% if(action == 2) {%>
-                <p class="errormess">Ошибка добавления пользователя</p>
-            <%} %>
             <form id="form-edit-pass" method="POST" class="needs-validation" novalidate>
                 <h3>Изменение пароля</h3>
                 <div class="text-danger form-group row ml-1" id="error"></div>
@@ -23,7 +17,7 @@
                     <div class="col-sm-3">
                         <input type="password" name="password" class="form-control" id="password1" minlength="3" maxlength="100" required>
                         <div class="invalid-feedback">
-                            Пожалуйста введите новый пароль минимум 3 символа
+                            Пожалуйста введите новый пароль (не менее 3 символа)
                         </div>
                     </div>
                     </div>
@@ -44,6 +38,7 @@
 		<div class="footer">
 			<%- include("../partials/footer.ejs") %>
 		</div>
+        <%- include("../partials/modal.ejs") %>
     </div>
 
     <%- include("partials/scripts.ejs")%>

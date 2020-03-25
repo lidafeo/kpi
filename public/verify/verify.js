@@ -18,9 +18,13 @@ $(document).ready(function() {
 		e.preventDefault();
 		let chooseUser = $("#name").val();
 		let name = $('#worker [value="' + chooseUser + '"]').data('value');
-		if(!chooseUser) {
-			if(!$("p").is("#errormess"))
-				$("#name").after('<p id="errormess" class="errormess">Выберите пользователя</p>');
+
+		let element = $("#name")[0];
+		element.setCustomValidity("");
+		$("#name").removeClass("is-invalid");
+		if(!chooseUser || !name) {
+			$("#name").addClass("is-invalid");
+			element.setCustomValidity("Invalid field");
 			return;
 		}
 		if(chooseUser)
@@ -54,6 +58,9 @@ $(document).ready(function() {
 	//очистка поля user
 	$("body").on('mousedown', "#name", function(e) {
 		$("#name").val("");
+		$("#name").removeClass("is-invalid");
+		let element = $("#name")[0];
+		element.setCustomValidity("Invalid field");
 	});
 
 	$("#choosedep").click(function(e) {

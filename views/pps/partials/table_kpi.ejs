@@ -1,11 +1,11 @@
 <% if(kpi) {%>
-<h4>Оценки ПЭД за выбранный период:</h4>
-<table class="table table-bordered bg-white">
+<h4 class="my-sm-3">Оценки ПЭД за выбранный период:</h4>
+<table class="table border-color-f">
 	<thead>
 		<tr>
-			<th scope="col" width="10%"><h4>Шифр</h4></th>
-			<th scope="col"><h4>Показатель</h4></th>
-			<th scope="col" width="15%"><h4>Оценка</h4></th>
+			<th scope="col" width="10%">Шифр</th>
+			<th scope="col">Показатель</th>
+			<th scope="col" width="15%">Оценка</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -43,5 +43,7 @@
 </table>
 <%} %>
 <% if(!kpi) {%>
-<h3 class="bordernoozenok">Нет оценок</h3>
+	<hr>
+	<h4>За выбранный период нет выполненных ПЭД</h4>
+	<a href="/my-page/edit-kpi">Отметить выполнение ПЭД</a>
 <%} %>

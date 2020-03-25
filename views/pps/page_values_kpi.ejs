@@ -7,57 +7,54 @@
 <body>
 	<%- include("partials/menu.ejs") %>
 	<div class="wrapper">
-		<div class="content">
+		<div class="content container">
 			<h1>Значения ПЭД</h1>
 			<% if(kpi.length != 0) {%>
-				<table>
-					<tr>
-						<th style="width: 10%;"><h4>Дата добавления </h4></th>
-						<th style="width: 6%;"><h4>ПЭД</h4></th>
-						<th style="width: 10%;"><h4>Дата реализации</h4></th>
-						<th style="width: 10%;"><h4>Значение</h4></th>
-						<th style="width: 15%;"><h4>Текст</h4></th>
-						<th style="width: 15%;"><h4>Файл</h4></th>
-						<th><h4>Выбранный показатель</h4></th>
-						<th style="width: 9%;"><h4>Статус</h4></th>
-						<th><h4>Автор проверки</h4></th>
-						<th><h4>Пояснение от автора проверки</h4></th>
-					</tr>
-					<% for(let i = 0; i < kpi.length; i++) {%>
-						<tr>
-							<td><%=kpi[i].modifydate %></td>
-							<td><%=kpi[i].name_kpi %></td>
-							<td><%=kpi[i].modifystart_date%></td>
-							<td><%=kpi[i].value%></td>
-							<td><%=kpi[i].text %></td>
-							<% if(kpi[i].file) {%>
-								<td><a href=<%="/upload-file?file="+kpi[i].file %> download=""><img src="/img/download.png" alt="Скачать файл"></a></td>
-							<%} %>
-							<% if(!kpi[i].file) {%>
-								<td></td>
-							<%} %>
-							<% if(kpi[i].type == 2) {%>
-								<td><%=kpi[i].criterion_description %></td>
-							<%} %>
-							<% if(kpi[i].type != 2) {%>
-								<td></td>
-							<%} %>
-							<% if(kpi[i].valid == 0) {%>
-								<td style="color:red;">Недействительно</td>
-								<td><%=kpi[i].name_author %></td>
-								<td><%=kpi[i].text_verify %></td>
-							<%} %>
-							<% if(kpi[i].valid == 1) {%>
-								<td>Выполнено</td>
-								<td></td>
-								<td></td>
-							<%} %>
-						</tr>
-					<%} %>
+				<table class="table border-color-f">
+					<thead>
+					<th scope="col">Дата добавления</th>
+					<th scope="col">ПЭД</th>
+					<th scope="col">Дата реализации</th>
+					<th scope="col">Значение</th>
+					<th scope="col">Файл</th>
+					<th scope="col">Выбранный показатель</th>
+					<th scope="col">Статус</th>
+					<th scope="col"></th>
+					</thead>
+					<tbody>
+						<% for(let i = 0; i < kpi.length; i++) {%>
+							<tr>
+								<td><%=kpi[i].modifydate %></td>
+								<td><%=kpi[i].name_kpi %></td>
+								<td><%=kpi[i].modifystart_date%></td>
+								<td><%=kpi[i].value%></td>
+								<% if(kpi[i].file) {%>
+									<td><a href=<%="/upload-file?file="+kpi[i].file %> download=""><img src="/img/icons/download.svg" alt="Скачать файл" width="25"></a></td>
+								<%} %>
+								<% if(!kpi[i].file) {%>
+									<td></td>
+								<%} %>
+								<% if(kpi[i].type == 2) {%>
+									<td><%=kpi[i].criterion_description %></td>
+								<%} %>
+								<% if(kpi[i].type != 2) {%>
+									<td></td>
+								<%} %>
+								<% if(kpi[i].valid == 0) {%>
+									<td class="text-danger">Недействительно</td>
+								<%} %>
+								<% if(kpi[i].valid == 1) {%>
+									<td class="text-success">Выполнено</td>
+								<%} %>
+								<td><a href="/my-page/val/<%=kpi[i].id%>">Подробнее</a></td>
+							</tr>
+						<%} %>
+					</tbody>
 				</table>
 			<%} %>
 			<% if(kpi.length == 0) {%>
-				<p>Нет добавленных значений ПЭД</p>
+				<hr>
+				<p>Нет отмеченных значений ПЭД</p>
 				<a href="/my-page/edit-kpi/">Отметить выполнение ПЭД</a>
 			<%} %>
 		</div>

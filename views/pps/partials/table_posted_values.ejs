@@ -1,59 +1,93 @@
 <% if(textErr) {%>
-	<p class="errormess">Этот ПЭД недоступен для Вашей должности</p>
+	<div class="text-danger m-sm-2">Этот ПЭД недоступен для Вашей должности</div>
 <%} %>
 <% if(!textErr) {%>
-	<h4><%=desc[0].description %></h4>
-	<hr>
-	<button id="plus" class="btn btn-outline-primary mb-md-2">+ Добавить значение</button>
-	<div id="plusdiv">
-		<form enctype="multipart/form-data" name="form1" action="/upload" method="post" style="flex-direction: column; display: flex; justify-content: flex-start;">
-		<div style="margin-top: 10px;"><h4>Добавление нового значения ПЭД</h4>
+	<div class="px-sm-3">
+		<h4><%=desc[0].description %></h4>
+		<hr>
+		<button id="plus" class="btn btn-outline-primary">+ Отметить выполнение</button>
+	</div>
+	<div id="plusdiv" class="px-sm-3">
+		<form enctype="multipart/form-data" name="form1" action="/upload" method="post" id="formAddKpi" class="needs-validation" novalidate>
+			<div class="text-danger form-group row ml-1" id="error"></div>
 			<input type="hidden" name="name" id="name">
 			<% if(desc[0].type == 2) {%>
-				<% for(let j = 0; j < desc[0].count_criterion; j++) {%>
-					<input type="radio" name="radio" id="radio" value=<%=j+""%> checked>
-					<%=desc[j].criterion_description %>
-				<%} %>
+				<fieldset class="form-group">
+					<div class="row">
+						<legend class="col-form-label col-sm-3 pt-0">Тип*</legend>
+						<div class="col-sm-7">
+							<% for(let j = 0; j < desc[0].count_criterion; j++) {%>
+								<div class="form-check">
+									<input type="radio" class="form-check-input" name="radio" id="radio<%=j%>" value=<%=j+""%> required>
+									<label class="form-check-label" for="radio<%=j%>">
+										<%=desc[j].criterion_description %>
+									</label>
+									<% if (j == desc[0].count_criterion - 1) {%>
+										<div class="invalid-feedback">
+											Пожалуйста укажите тип
+										</div>
+									<%} %>
+								</div>
+							<%} %>
+						</div>
+					</div>
+				</fieldset>
 			<%} %>
+			<div class="form-group row">
+				<label for="datekpi" class="col-sm-3 col-form-label">Дата реализации (выполнения) ПЭД*</label>
+				<div class="col-sm-7">
+					<input type="date" class="form-control" name="date" id="datekpi" required>
+					<div class="invalid-feedback">
+						Пожалуйста введите дату исполнения ПЭД
+					</div>
+				</div>
 			</div>
-		<div style="margin-top: 10px;">  
-			<label>Дата реализации (выполнения) ПЭД </label>
-			<input type="date" name="date" id="datekpi" required>
-			<br/>
-			<% if(!desc[0].indicator_sum) {%> 
-			</div>
-		<div style="margin-top: 15px;"> <label>Значение: </label>
-			<input type="number" min="0" max="1000" name="value" id="value" required>
+			<% if(!desc[0].indicator_sum) {%>
+				<div class="form-group row">
+					<label for="value" class="col-sm-3 col-form-label">Значение*</label>
+					<div class="col-sm-7">
+						<input type="number" class="form-control" min="0" max="1000" name="value" id="value" required>
+						<div class="invalid-feedback">
+							Пожалуйста введите значение ПЭД
+						</div>
+					</div>
+				</div>
 			<%} %>
 			<% if(desc[0].indicator_sum) {%>
-			<input type="hidden" name="value" value="1" id="value">
+				<input type="hidden" name="value" value="1" id="value">
 			<%} %>
+			<div class="form-group row">
+				<label for="text" class="col-sm-3">Пояснительная записка</label>
+				<div class="col-sm-7">
+					<textarea name="text" class="form-control" id="text" maxlength="1024" rows="5"></textarea>
+				</div>
 			</div>
-		<div style="margin-top: 20px;"> <label>Пояснительная записка: </label> 
-			<textarea name="text" id="text" maxlength="1024"></textarea>
-			<br/><br/>
-			<input class="file" type="file" name="file" id="file">
-			<br/><br/>
-		</div>
+			<div class="form-group row">
+				<label for="file" class="col-sm-3">Файл для подтверждения</label>
+				<div class="col-sm-7">
+					<div class="custom-file">
+						<input type="file" class="custom-file-input" id="file" name="file">
+						<label class="custom-file-label" id="label-file" for="file">Выберите файл...</label>
+					</div>
+				</div>
+			</div>
 
-			<button id="addkpi" class="btn btn-outline-success">Добавить показатель</button>
+			<button id="addkpi" class="btn btn-primary">Добавить показатель</button>
 		</form>
 		<hr>
 	</div>
 	<% if(kpi.length != 0) {%>
-		<table class="table border-color-f">
+		<table class="table border-color-f table-sm mt-3">
 			<thead>
 				<tr>
-					<th scope="col">Дата добавления</th>
-					<th scope="col">Дата реализации</th>
-					<th scope="col">Текст</th>
+					<th scope="col">Добавлено</th>
+					<th scope="col">Выполнено</th>
 					<th scope="col">Файл</th>
 					<% if(desc[0].type == 2) {%>
 						<th scope="col">Показатель</th>
 					<%} %>
 					<th scope="col">Статус</th>
-					<th scope="col">Автор проверки</th>
-					<th scope="col">Пояснение от автора проверки</th>
+					<th scope="col"></th>
 				</tr>
 			</thead>
 			<tbody>
@@ -61,9 +95,8 @@
 				<tr>
 					<td><%=kpi[i].modifydate %></td>
 					<td><%=kpi[i].modifystart_date%></td>
-					<td><%=kpi[i].text %></td>
 					<% if(kpi[i].file != "" && kpi[i].file != null) {%>
-						<td><a href=<%="/upload-file?file="+kpi[i].file %> download=""><img src="/img/download.png" alt="Скачать файл"></a></td>
+						<td><a href=<%="/upload-file?file="+kpi[i].file %> download=""><img src="/img/icons/download.svg" width="25" alt="Скачать файл"></a></td>
 					<%} %>
 					<% if(kpi[i].file == "" || kpi[i].file == null) {%>
 						<td></td>
@@ -73,14 +106,11 @@
 					<%} %>
 					<% if(!kpi[i].valid) {%>
 						<td class="text-danger">Недействительно</td>
-						<td><%=kpi[i].name_author %></td>
-						<td><%=kpi[i].text_verify %></td>
 					<%} %>
 					<% if(kpi[i].valid) {%>
 						<td class="text-success">Выполнено</td>
-						<td></td>
-						<td></td>
 					<%} %>
+					<td><a href="/my-page/val/<%=kpi[i].id%>">Подробнее</a></td>
 				</tr>
 			<%} %>
 			</tbody>
