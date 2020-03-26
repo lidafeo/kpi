@@ -10,6 +10,16 @@ exports.verify = function(req, res) {
 	let department = req.session.department;
 	let faculty = req.session.faculty;
 	try {
+		let myPage = false;
+		if(level == 3) {
+			myPage = true;
+		}
+		getFacultyForVerify(level, faculty, department).then(structure => {
+			res.render('head/page_verify', {faculty: structure.faculty,
+				department: structure.department, mypage: myPage, pageName: '/verify',
+				login: req.session.login, level: req.session.level});
+		});
+		/*
 		switch(level) {
 			//проректор
 			case 3:
@@ -54,12 +64,40 @@ exports.verify = function(req, res) {
 				throw new Error("Server Error: no permissions");
 				break;
 		}
+		 */
 	} catch (e) {
 		console.log("Ошибка доступа");
 		res.status(500).render('error/500');
 	}
 };
 
+//Получение значения ПЭД
+exports.getValPps = function(req, res) {
+	let valId = req.params["valId"];
+	console.log('valId', valId);
+	//let login = req.session.login;
+	let level = req.session.level;
+	let department = req.session.department;
+	let faculty = req.session.faculty;
+	DBs.selectValueKpiByIdForVerify(valId).then(result => {
+		//if(!result[0]) {
+		//	res.render('pps/page_one_val', {val: result[0]});
+		//}
+		modifyDate(result);
+		getFacultyForVerify(level, faculty, department).then(structure => {
+			let val = null;
+			if(result[0] && structure.faculty.indexOf(result[0].faculty) !== -1 &&
+				structure.department.indexOf(result[0].department) !== -1) {
+				val = result[0];
+			}
+			console.log('val', val);
+			res.render('head/page_val_kpi', {val: val, pageName: '/my-page/val/',
+				level: req.session.level, login: req.session.login});
+		});
+	}).catch(err => {
+		console.log(err);
+	});
+};
 
 //POST-запрос на получение таблицы для проверки значений ПЭД ППС
 exports.POSTverify = function(req, res) {
@@ -82,16 +120,18 @@ exports.POSTverify = function(req, res) {
 
 //POST-запрос на пометку значения ПЭД как недействительное
 exports.POSTinvalid = function(req, res) {
+	console.log(req.body);
 	let invalidKpi = req.body.kpi;
 	let chooseUser = req.body.user;
 	let name = req.session.login;
+	return;
 	console.log(invalidKpi);
 	new Promise(function(resolve, reject) {
 		for(let i = 0; i < invalidKpi.length; i++) {
 			DBu.updateValueInvalid(invalidKpi[i].id, name, invalidKpi[i].comment).then(result => {
 				console.log(result);
 				//записываем логи
-				writeLogs(name, req.session.level, "сделал(а) отметку о недействительности ПЭД " + invalidKpi[i].name +
+				writeLogs(name, req.session.level, "сделал(а) отметку о недействительности значения ПЭД с id" + invalidKpi[i].name +
 					" пользователя " + chooseUser + " по следующей причине: " + invalidKpi[i].comment);
 				resolve('ok');
 			}).catch(err => {
@@ -143,6 +183,8 @@ exports.POSTgetStructure = function(req, res) {
 function modifyDate(arrObj) {
 	for(let i = 0; i < arrObj.length; i++) {
 		modifyOneDate(arrObj[i], 'date');
+		if(arrObj[i]['start_date'])
+			modifyOneDate(arrObj[i], 'start_date');
 	}
 }
 
@@ -154,4 +196,35 @@ function modifyOneDate (obj, prop) {
 	if(objDate < 10) objDate = "0" + objDate;
 	if(objMonth < 10) objMonth = "0" + objMonth;
 	obj['modify' + prop] = objDate + '.' + objMonth + '.' + objYear;
+}
+
+async function getFacultyForVerify(level, faculty, department) {
+	let facultyArr = [];
+	let departmentArr = [];
+	switch(level) {
+		//проректор
+		case 3:
+			let structure = await DBs.selectStructure();
+			facultyArr = additFunc.getFaculty(structure);
+			departmentArr = additFunc.getDepartment(facultyArr[0], structure);
+			break;
+		//декан
+		case 2:
+			let result = await DBs.selectDepartments(faculty);
+			facultyArr.push(faculty);
+			for(let i = 0; i < result.length; i++) {
+				departmentArr.push(result[i].department);
+			}
+			break;
+		//зав. кафедрой
+		case 1:
+			facultyArr.push(faculty);
+			departmentArr.push(department);
+			break;
+		//другие
+		default:
+			throw new Error("Server Error: no permissions");
+			break;
+	}
+	return {faculty: facultyArr, department: departmentArr};
 }

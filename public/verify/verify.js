@@ -84,35 +84,6 @@ $(document).ready(function() {
 		request.send(sendValue);
 	});
 
-	$("body").on('click', "#incorrect", function() {
-		let checkboxes = document.getElementsByName('checkbox');
-		//let value = [];
-		let incorrectKpi = [];
-		//определяем выбранное значение
-		for( let i = 0; i < checkboxes.length; i++) {
-			if(checkboxes[i].checked) {
-				let id =  $("#hd" + i).val();
-				let comment = $("#comm" + i).val();
-				if(!comment)
-					return alert("Обязательное поле: комментарий");
-				let name_kpi = $("#kpi" + i).val();
-				let obj = {id: id, comment: comment, name: name_kpi};
-				incorrectKpi.push(obj);
-			}
-		}
-		if(incorrectKpi.length == 0)
-			return alert("Выберите неверные значения");
-		let sendValue = JSON.stringify({kpi: incorrectKpi, user: $("#chooseuser").val()});
-		let request = new XMLHttpRequest();
-		//посылаем запрос на адрес "/invalid"
-		request.open("POST", "/invalid", true);
-		request.setRequestHeader("Content-Type", "application/json");
-		request.addEventListener("load", function() {
-			document.querySelector('#submit').click();
-		});
-		request.send(sendValue);
-	});
-
 	if($("#department").attr("disabled") == "disabled") {
 		(async function() {
 			let chooseDep = await $("#choosedep").click();

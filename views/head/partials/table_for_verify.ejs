@@ -11,8 +11,7 @@
 				<td scope="col">Значение</td>
 				<td scope="col">Текст</td>
 				<td scope="col">Файл</td>
-				<td scope="col">Отметить, как неверные</td>
-				<td scope="col">Комментарий</td>
+				<td scope="col"></td>
 			</tr>
 		</thead>
 		<tbody>
@@ -35,8 +34,7 @@
 					<% if(!kpi[i].file) {%>
 						<td></td>
 					<%} %>
-					<td><input type="checkbox" name="checkbox" value=<%=i + ""%>></td>
-					<td><input type="text" name="comment" class="text" id=<%="comm" + i%>></td>
+					<td><a href="/verify/val/<%=kpi[i].id%>">Подробнее</a></td>
 				</tr>
 			<%} %>
 		</tbody>
@@ -44,8 +42,5 @@
 	<%} %>
 	<% if(kpi.length == 0) {%>
 		<p class="text-danger">Нет отмеченных ПЭД</p>
-	<%} %>
-	<% if(kpi.length != 0) {%>
-		<button id="incorrect" class="buttonmypage">Подтвердить неверные ПЭД</button>
 	<%} %>
 <%} %>

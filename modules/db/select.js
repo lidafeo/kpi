@@ -151,14 +151,27 @@ exports.selectFileValueKpiById = function(id) {
 //получить значение одного ПЭД по id с проверкой пользователя
 exports.selectValueKpiById = function(id, login) {
 	return query("SELECT uservalues.*, kpi.type, kpi.description, " +
-			"criterions.criterion_description, users.name author_verify_name, users.position " +
-			"author_verify_position FROM uservalues " +
+			"criterions.criterion_description, users.name author_verify_name, " +
+			"users.position author_verify_position FROM uservalues " +
 		"INNER JOIN kpi ON uservalues.name_kpi = kpi.name " +
 		"INNER JOIN criterions ON criterions.name_kpi = uservalues.name_kpi " +
 			"AND criterions.number_criterion = uservalues.number_criterion " +
 		"INNER JOIN users ON users.login = uservalues.author_verify " +
 		"WHERE uservalues.id=? AND login_user=?",
 		[id, login]);
+};
+
+//получить значение одного ПЭД по id для проверки руководителем структурных подразделений
+exports.selectValueKpiByIdForVerify = function(id) {
+	return query("SELECT uservalues.*, kpi.type, kpi.description, " +
+			"criterions.criterion_description, users.name, users.department, " +
+			"users.faculty FROM uservalues " +
+		"INNER JOIN kpi ON uservalues.name_kpi = kpi.name " +
+		"INNER JOIN criterions ON criterions.name_kpi = uservalues.name_kpi " +
+			"AND criterions.number_criterion = uservalues.number_criterion " +
+		"INNER JOIN users ON users.login = uservalues.login_user " +
+		"WHERE uservalues.id=?",
+		[id]);
 };
 
 //получить значения ПЭД для пользователя по имени, должности, факультету, кафедре
@@ -181,7 +194,7 @@ exports.selectValueKpiByLogin = function(login) {
 exports.selectAllKpi = function() {
 	return query("SELECT * FROM kpi " +
 		"ORDER BY section ASC, subtype ASC, number ASC");
-}
+};
 
 //получить все ПЭД с критериями
 exports.selectAllKpiWithCriterion = function() {
@@ -210,12 +223,12 @@ exports.selectOneKpiWithBalls = function(name) {
 		"WHERE kpi.name=? " +
 		"ORDER BY id_criterion ASC, positions.sort ASC, balls.position ASC",
 		name);
-}
+};
 
 //получить разделы
 exports.selectAllSection = function() {
 	return query("SELECT DISTINCT section FROM kpi");
-}
+};
 
 
 //CRITERIONS
@@ -224,13 +237,13 @@ exports.selectAllSection = function() {
 exports.selectAllCriterion = function(position) {
 	return query("SELECT * FROM criterions, balls WHERE id=id_criterion AND position='" + position + 
 	"' ORDER BY name_kpi, criterions.number_criterion ASC");
-}
+};
 
 //получить один критерий
 exports.selectOneCriterion = function(kpi, criterion) {
 	return query("SELECT * FROM criterions WHERE name_kpi=? AND name_criterion=?'",
 		[kpi, criterion]);
-}
+};
 
 //POSITION
 
@@ -251,12 +264,12 @@ exports.selectPositionWithBalls = function() {
 exports.selectOnePosition = function(position) {
 	return query("SELECT position, level FROM positions " +
 		"WHERE position=?", position);
-}
+};
 //выбрать должность используя LIKE
 exports.selectOnePositionWithLike = function(position) {
     return query("SELECT position, level FROM positions " +
         "WHERE position=? OR position LIKE '%" + position + "%'", position);
-}
+};
 
 //BALLS
 
@@ -268,7 +281,7 @@ exports.selectBallOneKpi = function(name, position) {
 		"WHERE kpi.name=? AND balls.position=? " +
 		"ORDER BY id ASC", 
 		[name, position]);
-}
+};
 
 
 //ДЛЯ ПФУ

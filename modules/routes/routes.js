@@ -33,6 +33,7 @@ module.exports = function(app) {
 	app.post('/my-page/settings', urlencodedParser, user.POSTsettings);
 
 	app.get('/verify', rightVerify, verify.verify);
+	app.get('/verify/val/:valId', rightVerify, verify.getValPps);
 	app.post('/verify', jsonParser, verify.POSTverify);
 	app.post('/invalid', jsonParser, verify.POSTinvalid);
 	app.post('/get-workers', jsonParser, verify.POSTgetWorkers);
