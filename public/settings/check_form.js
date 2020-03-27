@@ -22,7 +22,7 @@ $(document).ready(function() {
         if (!checkValidForm(this)) {
             return;
         }
-        $.post('/my-page/settings', $(this).serialize(), function (data) {
+        $.post('/settings', $(this).serialize(), function (data) {
             if (data.err) {
                 $('#modalCenter #modalTitle').text('Ошибка');
                 $('#modalCenter #modalBody').html(data.err);

@@ -9,8 +9,9 @@ let dateModule = require('../date.js');
 //главная страница ПФУ
 exports.pfu = function(req, res) {
 	let objPeriod = getObjPeriod();
-	res.render('pfu/page_pfu', {set: objPeriod.set, period: objPeriod});
-}
+	res.render('pfu/page_pfu', {set: objPeriod.set, period: objPeriod, pageName: '/pfu',
+		login: req.session.login});
+};
 
 //создание отчета
 exports.getReport = function(req, res) {
@@ -37,7 +38,17 @@ exports.getReport = function(req, res) {
 
 
 	DBs.forReportPFU(dateModule.dateForInput(date1), dateModule.dateForInput(date2)).then(userValues => {
+		console.log(userValues[0]);
+		console.log(userValues[1]);
+		console.log(userValues[2]);
+		console.log(userValues[3]);
+		console.log(userValues[4]);
+		console.log(')))))))');
 		DBs.selectKpiAndUser().then(kpi => {
+			console.log(kpi[0]);
+			console.log(kpi[1]);
+			console.log(kpi[2]);
+			console.log(kpi[3]);
 			let firstUser = kpi[0].login;
 			let countKpi = 0;
 			let numUserValue = 0;
@@ -75,17 +86,26 @@ exports.getReport = function(req, res) {
 						userValues[numUserValue].login == kpi[i].login 
 						&& userValues[numUserValue].name_kpi == kpi[i].name_kpi) {
 
+						console.log('kpi', kpi[i].name_kpi);
+						console.log('kpi count crit', kpi[i].count_criterion);
+						console.log('user', kpi[i].login);
+
 						if(kpi[i].type == 1 || userValues[numUserValue].number_criterion == kpi[i].number_criterion) {
 							let value = getValue(userValues[numUserValue]);
+							console.log('VALUE', value);
 							if(value >= kpi[i].start_val && (kpi[i].final_val == null || value <= kpi[i].final_val)) {
 								val += kpi[i].ball;
 							}
+						}
+						console.log('num cr', kpi[i].number_criterion);
+						console.log('jjjjjj', numUserValue);
+						if(kpi[i].type == 2 || kpi[i].number_criterion == kpi[i].count_criterion - 1) {
 							numUserValue ++;
 						}
+						console.log('jjjjjj', numUserValue);
 						i++;
-
 					}
-					i = finalCriterion;
+					//i = finalCriterion;
 				}
 				i --;
 				ws.cell(n, m).number(val).style(style);

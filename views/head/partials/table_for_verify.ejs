@@ -11,6 +11,7 @@
 				<td scope="col">Значение</td>
 				<td scope="col">Текст</td>
 				<td scope="col">Файл</td>
+				<td scope="col">Статус</td>
 				<td scope="col"></td>
 			</tr>
 		</thead>
@@ -34,7 +35,13 @@
 					<% if(!kpi[i].file) {%>
 						<td></td>
 					<%} %>
-					<td><a href="/verify/val/<%=kpi[i].id%>">Подробнее</a></td>
+					<% if(!kpi[i].valid) {%>
+						<td class="text-danger">Недействительно</td>
+					<%} %>
+					<% if(kpi[i].valid) {%>
+						<td class="text-success">Выполнено</td>
+					<%} %>
+					<td><a href="/verify/val/<%=kpi[i].id%>">Проверить</a></td>
 				</tr>
 			<%} %>
 		</tbody>

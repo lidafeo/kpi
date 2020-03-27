@@ -59,18 +59,23 @@ $(document).ready(function() {
 		let upload_file = file.files[0];
 		form.append("file", upload_file);
 		let value;
-		if ($('#radio').val()) {
-			let radiobut = document.getElementsByName('radio');
+		let radiobut = document.getElementsByName('radio');
+		console.log(radiobut);
+		if(radiobut.length) {
 			//определяем выбранное значение
-			for( let i = 0; i < radiobut.length; i++) {
-				if(radiobut[i].checked) value = radiobut[i];
+			for (let i = 0; i < radiobut.length; i++) {
+				if (radiobut[i].checked)
+					value = radiobut[i];
 			}
+			console.log("RADIO", value.value);
 			form.append("radio", value.value);
 		}
+
 		form.append("name", getCookie("choosekpi"));
 		form.append("date", $('#datekpi').val());
 		form.append("value", $('#value').val());
 		form.append("text", $('#text').val());
+		form.append("link", $('#link').val());
 		request.open("POST", "/upload", true);
 		//request.setRequestHeader("Content-Type", "multipart/form-data");
 		request.onload = function(ev) {

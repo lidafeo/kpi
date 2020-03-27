@@ -2,12 +2,21 @@
 <html>
 <head>
 	<title>Настройки</title>
-    <%- include("partials/head.ejs")%>
+    <%- include("pps/partials/head.ejs")%>
 </head>
 <body>
-    <%- include("partials/menu.ejs") %>
+    <% if(level < 10) {%>
+        <%- include("pps/partials/menu.ejs") %>
+    <%}%>
+    <% if(level == 10) {%>
+        <%- include("admin/partials/menu.ejs") %>
+    <%}%>
+    <% if(level == 11) {%>
+        <%- include("pfu/partials/menu.ejs") %>
+    <%}%>
+
 	<div class="wrapper">
-		<div class="content">
+		<div class="content container-fluid">
             <h1>Настройки</h1><hr>
             <form id="form-edit-pass" method="POST" class="needs-validation" novalidate>
                 <h3>Изменение пароля</h3>
@@ -36,12 +45,12 @@
             </form>
 		</div>
 		<div class="footer">
-			<%- include("../partials/footer.ejs") %>
+			<%- include("partials/footer.ejs") %>
 		</div>
-        <%- include("../partials/modal.ejs") %>
+        <%- include("partials/modal.ejs") %>
     </div>
 
-    <%- include("partials/scripts.ejs")%>
+    <%- include("pps/partials/scripts.ejs")%>
 	<script type="text/javascript" src="./check_form.js"></script>
 </body>
 </html>

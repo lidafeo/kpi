@@ -3,10 +3,11 @@ const query = require('../connectdb');
 //USERVALUES
 
 //добавить значение ПЭД
-exports.insertValueKpi = function(login, name_kpi, value, date, start_date, finish_date, text, file, number_criterion) {
-	let arr = [login, name_kpi, value, date, start_date, finish_date, text, file, number_criterion];
+exports.insertValueKpi = function(val) {
+	let arr = [val.login, val.name_kpi, val.value, val.date, val.start_date,
+		val.finish_date, val.text, val.link, val.file, val.number_criterion];
 	return query("INSERT INTO uservalues(login_user, name_kpi, value, date, start_date, finish_date, " +
-	"text, file, number_criterion) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?)", arr);
+	"text, link, file, number_criterion) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", arr);
 };
 
 //добавить значение ПЭД с объекта

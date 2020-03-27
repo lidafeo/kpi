@@ -117,7 +117,8 @@ exports.selectValueKpiUser = function(login) {
 			"criterions.number_criterion=uservalues.number_criterion " +
 		"LEFT JOIN users ON users.login=uservalues.author_verify " +
 		"WHERE login_user=? " + 
-		"ORDER BY date DESC", 
+		"ORDER BY date DESC, uservalues.id DESC " +
+		"LIMIT 100",
 		login);
 };
 
@@ -136,7 +137,7 @@ exports.selectValueKpiUserOneKpi = function(login, name_kpi) {
 	return query("SELECT uservalues.*, users.name name_author FROM uservalues " +
 		"LEFT JOIN users ON users.login=uservalues.author_verify " +
 		"WHERE name_kpi=? AND login_user=? " +
-		"ORDER BY date DESC " +
+		"ORDER BY date DESC, uservalues.id DESC " +
 		"LIMIT 50", 
 		[name_kpi, login]);
 };
@@ -156,7 +157,7 @@ exports.selectValueKpiById = function(id, login) {
 		"INNER JOIN kpi ON uservalues.name_kpi = kpi.name " +
 		"INNER JOIN criterions ON criterions.name_kpi = uservalues.name_kpi " +
 			"AND criterions.number_criterion = uservalues.number_criterion " +
-		"INNER JOIN users ON users.login = uservalues.author_verify " +
+		"LEFT JOIN users ON users.login = uservalues.author_verify " +
 		"WHERE uservalues.id=? AND login_user=?",
 		[id, login]);
 };
@@ -177,12 +178,12 @@ exports.selectValueKpiByIdForVerify = function(id) {
 //получить значения ПЭД для пользователя по имени, должности, факультету, кафедре
 exports.selectValueKpiByLogin = function(login) {
 	return query("SELECT uservalues.id, uservalues.name_kpi, value, date, text, file, type, " +
-		"criterion_description description " +
+		"valid, criterion_description description " +
 		"FROM uservalues " +
 		"INNER JOIN kpi ON kpi.name=uservalues.name_kpi " +
 		"INNER JOIN criterions ON criterions.name_kpi=kpi.name AND " +
 			"criterions.number_criterion=uservalues.number_criterion " +
-		"WHERE login_user=? AND valid=1 " +
+		"WHERE login_user=? " +
 		"ORDER BY date DESC", 
 		[login]);
 };
@@ -293,7 +294,7 @@ exports.forReportPFU = function(date1, date2) {
 		"FROM uservalues UV " +
 		"INNER JOIN kpi ON kpi.name=UV.name_kpi " +
 		"INNER JOIN users ON  users.login=UV.login_user "+ 
-		"WHERE (start_date BETWEEN DATE(?) AND DATE(?)) OR ((finish_date BETWEEN DATE(?) AND DATE(?)) OR " +
+		"WHERE ((start_date BETWEEN DATE(?) AND DATE(?)) OR (finish_date BETWEEN DATE(?) AND DATE(?)) OR " +
 			"((start_date <= DATE(?)) AND (finish_date >= DATE(?)))) AND valid=1 " +
 		"GROUP BY name_kpi, login, number_criterion " +
 		"ORDER BY name_user ASC, users.login ASC, section ASC, subtype ASC, number ASC, number_criterion", 
@@ -307,5 +308,5 @@ exports.selectKpiAndUser = function() {
 		"WHERE positions.func_pps = 1 AND positions.position=users.position AND " +
 			"criterions.name_kpi=kpi.name AND balls.position=positions.position AND " +
 			"balls.id_criterion=criterions.id " +
-		"ORDER BY users.name ASC, section ASC, subtype ASC, number ASC, number_criterion ASC");
+		"ORDER BY users.name ASC, users.login ASC, section ASC, subtype ASC, number ASC, number_criterion ASC");
 };

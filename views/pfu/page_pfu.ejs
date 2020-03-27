@@ -2,34 +2,31 @@
 <html>
 <head>
 	<title>ПФУ</title>
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<meta charset="utf-8">
-	<link rel="stylesheet" type="text/css" href="/general_style/footer.css">
-	<link rel="stylesheet" type="text/css" href="/general_style/stylebut.css">
-	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-</head>
-
-<header>
-	<a class="exitt" href="/exit">Выход</a>
-
-</header>
+	<%- include("partials/head.ejs")%>
+	</head>
 <body>
+	<%- include("./partials/menu.ejs") %>
 	<div class="wrapper">
-		<div class="content">
-				<br>
-				<br>
-			<div class="formborderadmin"><% if(set) {%>
-				<p class="text">Текущий период: с <%=period.date1Str%> по <%=period.date2Str%></p>
+		<div class="content container">
+			<% if(set) {%>
+				<h3>Формирование отчета</h3>
+				<hr>
 				<form action="" method="post">
-					<input type="submit" class="buttonmypage" value="Сформировать отчет за период">
+					<div class="form-group">
+						<div>Текущий период: с <%=period.date1Str%> по <%=period.date2Str%></div>
+					</div>
+					<div class="form-group">
+						<input type="submit" class="btn btn-primary" value="Сформировать отчет за этот период">
+					</div>
 				</form>
 			<%} %> 
 			<% if(!set) {%>
-				<div><p>Не был установлен период для отчета.</p>
-					<p>Обратитесь к администратору сайта.</p></div>
+				<div>
+					<p>Не был установлен период для отчета.</p>
+					<p>Обратитесь к администратору сайта.</p>
+				</div>
 			<%} %>
 		</div>
-	</div>
 		
 		<div class="footer">
 			<%- include("../partials/footer.ejs") %>

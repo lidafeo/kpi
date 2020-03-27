@@ -19,52 +19,6 @@ exports.verify = function(req, res) {
 				department: structure.department, mypage: myPage, pageName: '/verify',
 				login: req.session.login, level: req.session.level});
 		});
-		/*
-		switch(level) {
-			//проректор
-			case 3:
-				DBs.selectStructure().then(result => {
-					let structure = result;
-					let facultyArr = additFunc.getFaculty(structure);
-					let departmentArr = additFunc.getDepartment(facultyArr[0], structure);
-					res.render('head/page_verify', {faculty: facultyArr, department: departmentArr, mypage: true,
-						pageName: '/verify', login: req.session.login, level: req.session.level});
-				}).catch(err => {
-					console.log(err);
-					res.status(500).render('error/500');
-				});
-				break;
-			//декан
-			case 2:
-				DBs.selectDepartments(faculty).then(result => {
-					let facultyArr = [];
-					facultyArr.push(faculty);
-					let departmentArr = [];
-					for(let i = 0; i < result.length; i++) {
-						departmentArr.push(result[i].department);
-					}
-					res.render('head/page_verify', {faculty: facultyArr, department: departmentArr, mypage: false,
-						pageName: '/verify', login: req.session.login, level: req.session.level});
-				}).catch(err => {
-					console.log(err);
-					res.status(500).render('error/500');
-				});
-				break;
-			//зав. кафедрой
-			case 1:
-				let facultyArr = [];
-				let departmentArr = [];
-				facultyArr.push(faculty);
-				departmentArr.push(department);
-				res.render('head/page_verify', {faculty: facultyArr, department: departmentArr, mypage: false,
-					pageName: '/verify', login: req.session.login, level: req.session.level});
-				break;
-			//другие
-			default:
-				throw new Error("Server Error: no permissions");
-				break;
-		}
-		 */
 	} catch (e) {
 		console.log("Ошибка доступа");
 		res.status(500).render('error/500');
@@ -75,7 +29,6 @@ exports.verify = function(req, res) {
 exports.getValPps = function(req, res) {
 	let valId = req.params["valId"];
 	console.log('valId', valId);
-	//let login = req.session.login;
 	let level = req.session.level;
 	let department = req.session.department;
 	let faculty = req.session.faculty;
@@ -86,8 +39,11 @@ exports.getValPps = function(req, res) {
 		modifyDate(result);
 		getFacultyForVerify(level, faculty, department).then(structure => {
 			let val = null;
-			if(result[0] && structure.faculty.indexOf(result[0].faculty) !== -1 &&
-				structure.department.indexOf(result[0].department) !== -1) {
+			if(level == 3 ||
+                (level == 2 && structure.faculty.indexOf(result[0].faculty) !== -1) ||
+                (level == 1 && structure.department.indexOf(result[0].department) !== -1)) {
+			//if(result[0] && structure.faculty.indexOf(result[0].faculty) !== -1 &&
+			//	structure.department.indexOf(result[0].department) !== -1) {
 				val = result[0];
 			}
 			console.log('val', val);
@@ -120,30 +76,34 @@ exports.POSTverify = function(req, res) {
 
 //POST-запрос на пометку значения ПЭД как недействительное
 exports.POSTinvalid = function(req, res) {
-	console.log(req.body);
-	let invalidKpi = req.body.kpi;
-	let chooseUser = req.body.user;
-	let name = req.session.login;
-	return;
-	console.log(invalidKpi);
-	new Promise(function(resolve, reject) {
-		for(let i = 0; i < invalidKpi.length; i++) {
-			DBu.updateValueInvalid(invalidKpi[i].id, name, invalidKpi[i].comment).then(result => {
-				console.log(result);
-				//записываем логи
-				writeLogs(name, req.session.level, "сделал(а) отметку о недействительности значения ПЭД с id" + invalidKpi[i].name +
-					" пользователя " + chooseUser + " по следующей причине: " + invalidKpi[i].comment);
-				resolve('ok');
-			}).catch(err => {
-				console.log(err);
-				reject('err');
-			});
-		}
-	}).then(result => {
-		res.send(result);
-	}).catch(error => {
-		res.send(error);
+	let invalidId = req.body.id;
+	let invalidComment = req.body.comment;
+	let login = req.session.login;
+	DBu.updateValueInvalid(invalidId, login, invalidComment).then(result => {
+	    console.log(result);
+	    //записываем логи
+        writeLogs(login, req.session.level, "сделал(а) отметку о недействительности значения ПЭД с id" +
+            invalidId + " по следующей причине: " + invalidComment);
+        res.json({"result": 'ok', "login": login});
+	}).catch(err => {
+	    console.log(err);
+        res.json({'result': 'err'});
 	});
+};
+
+//POST-запрос на отмену пометки недействительности значения ПЭД
+exports.POSTcancelInvalid = function(req, res) {
+    let invalidId = req.body.id;
+    let login = req.session.login;
+    DBu.updateValueCancelInvalid(invalidId).then(result => {
+        //записываем логи
+        writeLogs(login, req.session.level, "сделал(а) значения ПЭД с id" +
+            invalidId + " действительной (отмена отметки)");
+        res.json({"result": 'ok', "login": login});
+    }).catch(err => {
+        console.log(err);
+        res.json({'result': 'err'});
+    });
 };
 
 //получить сотрудников кафедры

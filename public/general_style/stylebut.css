@@ -79,11 +79,6 @@
     		border: 1px solid #A1B9D5;
 		}
 
-		.text{
-			font-size: 16px;
-			font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
-		}
-
 /*рамка форм в админской панели"*/
 		.formborderadmin {
 			padding: 20px 0 0 50px;
@@ -102,11 +97,6 @@
 			color:  #424949;
 		}
 
-/*стили дат"*/
-		.date{
-			text-align: center; 
-			margin: 2px 5px;
-		}
 
 /*рамка на моей странице для "нет оценок"*/
 	.bordernoozenok{

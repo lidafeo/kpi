@@ -67,7 +67,7 @@ exports.myPage = function(req, res) {
 					}
 					resolve(arrObj);
 				}).catch(err => {
-					writeErrorLogs(res.session.login, err);
+					writeErrorLogs(req.session.login, err);
 					console.log(err);
 					res.status(500).render('error/500');
 				});
@@ -108,7 +108,7 @@ exports.myPage = function(req, res) {
 			});
 		}
 	}).catch(err => {
-		writeErrorLogs(res.session.login, err);
+		writeErrorLogs(req.session.login, err);
 		console.log(err);
 		res.status(500).render('error/500');
 	});
@@ -144,7 +144,7 @@ exports.editKpi = function(req, res) {
 		res.render('pps/page_add_value_kpi', {obj: obj, level: req.session.level,
             pageName: '/my-page/edit-kpi', login: req.session.login});
 	}).catch(err => {
-		writeErrorLogs(res.session.login, err);
+		writeErrorLogs(req.session.login, err);
 		console.log(err);
 		res.status(500).render('error/500');
 	});
@@ -157,7 +157,7 @@ exports.valueKpi = function(req, res) {
 		res.render('pps/page_values_kpi', {kpi: result, level: req.session.level,
             pageName: '/my-page/values-kpi', login: req.session.login});
 	}).catch(err => {
-		writeErrorLogs(res.session.login, err);
+		writeErrorLogs(req.session.login, err);
 		console.log(err);
 		res.status(500).render('error/500');
 	});
@@ -165,8 +165,8 @@ exports.valueKpi = function(req, res) {
 
 //GET-запрос страницы с настройками
 exports.settings = function(req, res) {
-	res.render('pps/page_settings', {level: req.session.level, action: 0,
-        pageName: '/my-page/settings', login: req.session.login});
+	res.render('page_settings', {level: req.session.level, action: 0,
+        pageName: '/settings', login: req.session.login});
 };
 
 //отправка файла пользователю
@@ -201,7 +201,7 @@ exports.POSTeditKpi = function(req, res) {
 				modifyDate(result);
 				res.render("pps/partials/table_posted_values", {kpi: result, desc: kpi, textErr: false});
 			}).catch(err => {
-				writeErrorLogs(res.session.login, err);
+				writeErrorLogs(req.session.login, err);
 				console.log(err);
 				res.status(500).render('error/500');
 			});
@@ -210,13 +210,13 @@ exports.POSTeditKpi = function(req, res) {
 			res.render("pps/partials/table_posted_values", {kpi: [], textErr: true});
 		}
 	}).catch(err => {
-		writeErrorLogs(res.session.login, err);
+		writeErrorLogs(req.session.login, err);
 		console.log(err);
 		res.status(500).render('error/500');
 	});
 };
 
-//POST-запорс на добавление значения одного ПЭД
+//POST-запрос на добавление значения одного ПЭД
 exports.POSTupload = function(req, res) {
 	let login = req.session.login;
 	let form = new formidable.IncomingForm();
@@ -238,10 +238,12 @@ exports.POSTupload = function(req, res) {
 				fileName = generateFileName(login) + '.' + ext;
 			}
 			finishDate.setMonth(finishDate.getMonth() + kpi.action_time);
-
-				DBi.insertValueKpi(login, kpi.name, +fields.value, dateModule.dateForInput(new Date()), 
-					dateModule.dateForInput(new Date(fields.date)), dateModule.dateForInput(finishDate), 
-					fields.text, fileName, radio).then(result => {
+				let val = {"login": login, "name_kpi": kpi.name, "value": +fields.value,
+					"date": dateModule.dateForInput(new Date()),
+					"start_date": dateModule.dateForInput(new Date(fields.date)),
+					"finish_date": dateModule.dateForInput(finishDate), "text": fields.text,
+					"link": fields.link, "file": fileName, "number_criterion": radio};
+				DBi.insertValueKpi(val).then(result => {
 						console.log("Сохранен объект uservalue");
 						res.send('ok');
 						//записываем логи
@@ -255,7 +257,7 @@ exports.POSTupload = function(req, res) {
 							readableStream.pipe(writeableStream);
 						}
 				}).catch(err => {
-					writeErrorLogs(res.session.login, err);
+					writeErrorLogs(req.session.login, err);
 					console.log(err);
 					res.status(500).render('error/500');
 				});
@@ -275,7 +277,7 @@ exports.POSTsettings = function(req, res) {
 			res.json({result: 'Пароль успешно изменен'});
 			//res.render('pps/page_settings', {level: req.session.level, action: 1});
 		}).catch(err => {
-			writeErrorLogs(res.session.login, err);
+			writeErrorLogs(req.session.login, err);
 			console.log(err);
 			res.status(500).render('error/500');
 		});
