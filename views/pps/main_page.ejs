@@ -13,7 +13,7 @@
 			<% if(objPeriod.notify) {%>
 				<p style="color: red; font-size: 20px;">Внимание! Расчет оценок будет производиться за период с <%=objPeriod.date1Str %> по <%=objPeriod.date2Str %></p>
 			<%} %>
-			<form name="date" action="/my-page" class="text" method="get">
+			<form name="date" id="form-date" action="" class="text" method="get">
 				<div class="form-row">
 					<div class="col-sm">
 						<label>Период расчета оценок с </label>
@@ -25,7 +25,6 @@
 				</div>
 			</form>
 			<div id="donekpi"><%- include("partials/table_kpi.ejs") %></div>
-			<br/>
 		</div>
 
 		<div class="footer">
@@ -34,5 +33,6 @@
 	</div>
 
 	<%- include("partials/scripts.ejs")%>
+	<script type="text/javascript" src="calculate_balls.js"></script>
 </body>
 </html>

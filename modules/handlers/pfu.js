@@ -76,6 +76,11 @@ exports.getReport = function(req, res) {
 				}
 				let val = 0;
 				let finalCriterion = i + kpi[i].count_criterion;
+				if(kpi[i].name_kpi == 'Н.П.2' && numUserValue != userValues.length) {
+				    console.log('????????????????');
+				    console.log(userValues[numUserValue]);
+                    console.log(kpi[i]);
+                }
 				if(numUserValue == userValues.length || userValues[numUserValue].login != kpi[i].login || 
 					userValues[numUserValue].name_kpi != kpi[i].name_kpi) {
 					i+= kpi[i].count_criterion;
@@ -86,9 +91,11 @@ exports.getReport = function(req, res) {
 						userValues[numUserValue].login == kpi[i].login 
 						&& userValues[numUserValue].name_kpi == kpi[i].name_kpi) {
 
-						console.log('kpi', kpi[i].name_kpi);
+                        console.log('=------------');
+					    console.log('kpi', kpi[i].name_kpi);
 						console.log('kpi count crit', kpi[i].count_criterion);
 						console.log('user', kpi[i].login);
+						console.log('=------------');
 
 						if(kpi[i].type == 1 || userValues[numUserValue].number_criterion == kpi[i].number_criterion) {
 							let value = getValue(userValues[numUserValue]);
@@ -99,7 +106,8 @@ exports.getReport = function(req, res) {
 						}
 						console.log('num cr', kpi[i].number_criterion);
 						console.log('jjjjjj', numUserValue);
-						if(kpi[i].type == 2 || kpi[i].number_criterion == kpi[i].count_criterion - 1) {
+						if(kpi[i].number_criterion == kpi[i].count_criterion - 1 ||
+                            (kpi[i].type == 2 && userValues[numUserValue].number_criterion == kpi[i].number_criterion)) {
 							numUserValue ++;
 						}
 						console.log('jjjjjj', numUserValue);
