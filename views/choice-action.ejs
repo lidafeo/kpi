@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Выбор действия</title>
+    <%- include("common/head.ejs")%>
+</head>
+<body>
+    <%- include("common/menu.ejs") %>
+    <div class="wrapper">
+        <div class="content container">
+            <h3>Выберите необходимое действие:</h3>
+            <ul class="list-group">
+                <% if(infoUser.rights.indexOf("get_my_score") !== -1 || infoUser.rights.indexOf("add_value_of_kpi") !== -1
+                    || infoUser.rights.indexOf("get_my_values_of_kpi") !== -1) {%>
+                    <li class="list-group-item list-group-item-info">ППС:</li>
+                <%} %>
+                <% if(infoUser.rights.indexOf("get_my_score") !== -1) {%>
+                    <a class="list-group-item list-group-item-action" href="/pps/get-my-score">Вычислить оценки <span class="sr-only">(current)</span></a>
+                <%} %>
+                <% if(infoUser.rights.indexOf("add_value_of_kpi") !== -1) {%>
+                    <a class="list-group-item list-group-item-action" href="/pps/add-value-kpi">Отметить выполнение</a>
+                <%} %>
+                <% if(infoUser.rights.indexOf("get_my_values_of_kpi") !== -1) {%>
+                    <a class="list-group-item list-group-item-action" href="/pps/get-values-kpi">Список выполненных ПЭД</a>
+                <%} %>
+                <% if(infoUser.rights.indexOf("verify") !== -1) {%>
+                    <li class="list-group-item list-group-item-info">Проверка объективности заполнения значений:</li>
+                    <a class="list-group-item list-group-item-action" href="/verify">Проверить ПЭД ППС</a>
+                <%} %>
+                <% if(infoUser.rights.indexOf("get_actions_users") !== -1) {%>
+                    <li class="list-group-item list-group-item-info">Действия пользователей:</li>
+                    <a class="list-group-item list-group-item-action" href="/get-actions-users">Логи</a>
+                <%} %>
+                <% if(infoUser.rights.indexOf("get_all_users") !== -1 || infoUser.rights.indexOf("create_user") !== -1
+                        || infoUser.rights.indexOf("delete_user") !== -1) {%>
+                    <li class="list-group-item list-group-item-info">Пользователи:</li>
+                    <% if(infoUser.rights.indexOf("get_all_users") !== -1) {%>
+                         <a class="list-group-item list-group-item-action" href="/get-users">Список</a>
+                    <%} %>
+                    <% if(infoUser.rights.indexOf("create_user") !== -1) {%>
+                        <a class="list-group-item list-group-item-action" href="/change-users/add-user">Добавить</a>
+                    <%} %>
+                    <% if(infoUser.rights.indexOf("delete_user") !== -1) {%>
+                         <a class="list-group-item list-group-item-action" href="/change-users/delete-user">Удалить</a>
+                    <%} %>
+                <%} %>
+                <% if(infoUser.rights.indexOf("create_pps") !== -1 || infoUser.rights.indexOf("change_password_pps") !== -1
+                    || infoUser.rights.indexOf("change_pps") !== -1) {%>
+                    <li class="list-group-item list-group-item-info">Сотрудники:</li>
+                    <% if(infoUser.rights.indexOf("change_pps") !== -1) {%>
+                       <a class="list-group-item list-group-item-action" href="/get-pps">Список сотрудников</a>
+                    <%} %>
+                    <% if(infoUser.rights.indexOf("create_pps") !== -1) {%>
+                         <a class="list-group-item list-group-item-action" href="/change-pps/add-pps">Добавить сотрудника</a>
+                    <%} %>
+                     <% if(infoUser.rights.indexOf("change_password_pps") !== -1) {%>
+                        <a class="list-group-item list-group-item-action" href="/change-pps/change-password">Изменить пароль</a>
+                      <%} %>
+                <%} %>
+                <% if(infoUser.rights.indexOf("get_all_kpi") !== -1 || infoUser.rights.indexOf("change_kpi") !== -1
+                        || infoUser.rights.indexOf("change_balls_of_kpi") !== -1 || infoUser.rights.indexOf("create_kpi") !== -1
+                        || infoUser.rights.indexOf("delete_kpi") !== -1) {%>
+                     <li class="list-group-item list-group-item-info">ПЭД:</li>
+                     <% if(infoUser.rights.indexOf("get_all_kpi") !== -1) {%>
+                        <a class="list-group-item list-group-item-action" href="/get-kpi">Список</a>
+                     <%} %>
+                     <% if(infoUser.rights.indexOf("create_kpi") !== -1) {%>
+                         <a class="list-group-item list-group-item-action" href="/change-kpi/add-kpi">Добавить</a>
+                     <%} %>
+                     <% if(infoUser.rights.indexOf("delete_kpi") !== -1) {%>
+                         <a class="list-group-item list-group-item-action" href="/change-kpi/delete-kpi">Удалить</a>
+                     <%} %>
+                     <% if(infoUser.rights.indexOf("change_balls_of_kpi") !== -1) {%>
+                        <a class="list-group-item list-group-item-action" href="/change-kpi/edit-balls">Изменить оценки</a>
+                     <%} %>
+                <%} %>
+                <% if(infoUser.rights.indexOf("get_all_values_of_kpi") !== -1) {%>
+                    <a class="list-group-item list-group-item-action" href="/get-all-values">Значения ПЭД</a>
+                <%} %>
+                <% if(infoUser.rights.indexOf("get_all_roles") !== -1 || infoUser.rights.indexOf("add_role") !== -1) {%>
+                    <li class="list-group-item list-group-item-info">Роли:</li>
+                    <% if(infoUser.rights.indexOf("get_all_roles") !== -1) {%>
+                         <a class="list-group-item list-group-item-action" href="/get-all-roles">Список</a>
+                    <%} %>
+                    <% if(infoUser.rights.indexOf("add_role") !== -1) {%>
+                        <a class="list-group-item list-group-item-action" href="/change-roles/add-role">Добавить</a>
+                    <%} %>
+                <%} %>
+                <% if(infoUser.rights.indexOf("get_structure") !== -1 || infoUser.rights.indexOf("change_structure") !== -1) {%>
+                    <li class="list-group-item list-group-item-info">Структура:</li>
+                    <% if(infoUser.rights.indexOf("get_structure") !== -1) {%>
+                         <a class="list-group-item list-group-item-action" href="/get-structure">Список</a>
+                    <%} %>
+                <%} %>
+                <% if(infoUser.rights.indexOf("update_with_excel") !== -1) {%>
+                    <li class="list-group-item list-group-item-info">Обновление БД:</li>
+                    <a class="list-group-item list-group-item-action" href="/update-db/add-users-from-file1">Добавить пользователей вариант 1</a>
+                    <a class="list-group-item list-group-item-action" href="/update-db/add-users-from-file2">Добавить пользователей (ППС) вариант 2</a>
+                    <a class="list-group-item list-group-item-action" href="/update-db/past-kpi">Добавить прошлые значения</a>
+                    <a class="list-group-item list-group-item-action" href="/update-db/update-structure">Обновить структуру</a>
+                <%} %>
+                <% if(infoUser.rights.indexOf("create_report") !== -1) {%>
+                    <li class="list-group-item list-group-item-info">ПФУ:</li>
+                    <a class="list-group-item list-group-item-action" href="/pfu">Создать отчет</a>
+                <%} %>
+                <% if(infoUser.rights.indexOf("set_period") !== -1) {%>
+                    <li class="list-group-item list-group-item-info">Работа с периодом для отчета:</li>
+                    <a class="list-group-item list-group-item-action" href="/set-period">Период</a>
+                <%} %>
+                <% if(infoUser.rights.indexOf("close_accounts") !== -1) {%>
+                        <li class="list-group-item list-group-item-info">Доступ ППС к личным кабинетам:</li>
+                    <a class="list-group-item list-group-item-action" href="/close-accounts">Доступ к ЛК</a>
+                <%} %>
+                <% if(infoUser.rights.indexOf("change_my_password") !== -1) {%>
+                    <li class="list-group-item list-group-item-info">Разное:</li>
+                    <a class="list-group-item list-group-item-action" href="/settings">Настройки</a>
+                <%} %>
+            </ul>
+        </div>
+        <div class="footer">
+            <%- include("common/footer.ejs") %>
+        </div>
+    </div>
+
+    <%- include("common/scripts.ejs")%>
+</body>
+</html>

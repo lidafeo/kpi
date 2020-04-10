@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Сотрудники</title>
+	<%- include("../common/head.ejs")%>
+</head>
+<body>
+	<%- include("../common/menu.ejs") %>
+	<div class="wrapper">
+		<div class="content container-fluid">
+			<p> 
+				<h3 class="nametable">Список пользователей</h3>
+			</p>
+			<table style="margin-left: 20px;">
+				<tr>
+					<th><h4>ФИО</h4></th>
+					<th><h4>Логин</h4></th>
+					<th><h4>Роль</h4></th>
+					<th><h4>Должность</h4></th>
+					<th><h4>Факультет</h4></th>
+					<th><h4>Кафедра</h4></th>
+				</tr>
+				<% for(let i = 0; i < users.length; i ++) {%>
+					<tr>
+						<td><%=users[i].name %></td>
+						<td><%=users[i].login %></td>
+						<td><%=users[i].role %></td>
+						<td><%=users[i].position %></td>
+						<td><%=users[i].faculty %></td>
+						<td><%=users[i].department %></td>
+					</tr>
+				<%} %>
+			</table>
+		</div>
+		
+		<div class="footer">
+			<%- include("../common/footer.ejs") %>
+		</div>
+	</div>
+
+	<%- include("../common/scripts.ejs")%>
+
+</body>
+</html>

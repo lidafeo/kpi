@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Закрыть кабинеты</title>
+	<%- include("common/head.ejs")%>
+</head>
+<body>
+	<%- include("common/menu.ejs") %>
+	<div class="wrapper">
+		<div class="content container-fluid">
+			<div class="page">
+				<div class="formborderadmin">
+					<h2 class="title-page">Доступ к личным кабинетам</h2>
+					<% if(op) {%>
+						<p class="text">Состояние ЛК: кабинеты открыты</p>
+						<form name="close" action="" method="post">
+							<input type="submit" class="buttonmypage" value="Закрыть доступ к кабинетам">
+						</form>
+					<%} %>
+					<% if(!op) {%>
+						<p class="text">Состояние ЛК: кабинеты закрыты</p>
+						<form name="open" action="" method="post">
+							<input type="submit" class="buttonmypage" value="Открыть доступ к кабинетам">
+						</form>
+					<%} %>
+				</div>
+			</div>
+		</div>
+		
+		<div class="footer">
+			<%- include("common/footer.ejs") %>
+		</div>
+	</div>
+
+	<%- include("common/scripts.ejs")%>
+</body>
+</html>

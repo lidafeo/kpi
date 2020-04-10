@@ -37,4 +37,4 @@ exports.updateBallOfCriterion = function(ball) {
 exports.updateBalls = function(ball) {
 	return query("UPDATE balls SET ball=" + ball.ball + " WHERE id_criterion=" + ball.id_criterion + 
 	" AND position=" + ball.position);
-}
+};

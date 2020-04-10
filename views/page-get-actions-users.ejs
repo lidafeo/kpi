@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>История действий</title>
+	<%- include("common/head.ejs")%>
+</head>
+<body>
+	<%- include("common/menu.ejs") %>
+	<div class="wrapper">
+		<div class="content container-fluid">
+			<form action="" method="get">
+				<p class="namelist">История действий пользователей за
+					<input type="date" name="date" id="date" class="date" value=<%=date%>>
+					<input type="submit" class="buttonmypage" value="Показать">
+				</p>
+			</form>
+			<ul class="logs" id="logs">
+				<% for(let i = logs.length - 2; i >= 0; i--) {%>
+					<li><%=logs[i]%></li>
+				<%} %>
+			</ul>
+		</div>
+		
+		<div class="footer">
+			<%- include("./common/footer.ejs") %>
+		</div>
+	</div>
+
+	<%- include("common/scripts.ejs")%>
+	<script type="text/javascript" src="./main.js"></script>
+</body>
+</html>

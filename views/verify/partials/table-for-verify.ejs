@@ -1,0 +1,53 @@
+<% if(textErr) {%>
+	<p class="text-danger"><%=textErr%></p>
+<%} %>
+<% if(!textErr) {%>
+	<% if(kpi.length != 0) {%>
+	<table class="table border-color-f">
+		<thead>
+			<tr>
+				<td scope="col">Дата</td>
+				<td scope="col">ПЭД</td>
+				<td scope="col">Значение</td>
+				<td scope="col">Текст</td>
+				<td scope="col">Файл</td>
+				<td scope="col">Статус</td>
+				<td scope="col"></td>
+			</tr>
+		</thead>
+		<tbody>
+			<% for(let i = 0; i < kpi.length; i++) {%>
+				<tr id=<%="tr" + i %>>
+					<input type="hidden" id=<%="hd" + i %> name="hidd" value=<%=kpi[i].id%>>
+					<input type="hidden" id=<%="kpi" + i %>  value=<%=kpi[i].name_kpi%>>
+					<td><%=kpi[i].modifydate %></td>
+					<% if(kpi[i].type == 1) {%>
+						<td><%=kpi[i].name_kpi %></td>
+					<%} %>
+					<% if(kpi[i].type == 2) {%>
+						<td><%=(kpi[i].name_kpi + " (" + kpi[i].description + ")")%></td>
+					<%} %>
+					<td><%=kpi[i].value %></td>
+					<td><%=kpi[i].text %></td>
+					<% if(kpi[i].file) {%>
+						<td><a href=<%="/download-file?file="+kpi[i].file %> download=""><img src="/img/icons/download.svg" width="25" alt="Скачать файл"></a></td>
+					<%} %>
+					<% if(!kpi[i].file) {%>
+						<td></td>
+					<%} %>
+					<% if(!kpi[i].valid) {%>
+						<td class="text-danger">Недействительно</td>
+					<%} %>
+					<% if(kpi[i].valid) {%>
+						<td class="text-success">Выполнено</td>
+					<%} %>
+					<td><a href="/verify/val/<%=kpi[i].id%>">Проверить</a></td>
+				</tr>
+			<%} %>
+		</tbody>
+	</table>
+	<%} %>
+	<% if(kpi.length == 0) {%>
+		<p class="text-danger">Нет отмеченных ПЭД</p>
+	<%} %>
+<%} %>

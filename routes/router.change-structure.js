@@ -1,0 +1,1 @@
+let checkRight = require('../modules/check-right');

@@ -3,7 +3,7 @@ const express = require("express");
 
 let config = require('./config/config.json').server;
 let credentials = require('./modules/credentials.js');
-let routes = require("./modules/routes/routes.js");
+let routes = require("./routes/main.js").routes;
 
 const app = express();
 

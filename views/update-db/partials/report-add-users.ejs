@@ -1,0 +1,99 @@
+<div>Добавлено <%=countAdd%> из <%=users.length%>:</div>
+<div>Успешно добавлено - <span style="color:green;"><%=countAdd%></span></div>
+<div>Найдено с ошибками - <span style="color:red;"><%=counts.countError%></span></div>
+<div>Пропущено повторяющихся - <span style="color:rgb(0, 225, 255);"><%=counts.countIgnore%></span></div>
+<div>Пропущено сотрудников, имеющих внешнее совместительство - <span style="color:rgb(112, 0, 187);"><%=counts.countExternal%></span></div>
+<div>Пропущено найденых в БД - <span style="color:grey;"><%=counts.countExists%></span></div>
+<table style="margin-left: 0;">
+    <tr>
+        <th><h4>Номер</h4></th>
+        <th><h4>ФИО</h4></th>
+        <th><h4>Должность</h4></th>
+        <th><h4>Факультет</h4></th>
+        <th><h4>Кафедра</h4></th>
+        <th><h4>Логин</h4></th>
+        <th><h4>Пароль</h4></th>
+        <th><h4>Ошибка</h4></th>
+    </tr>
+    <% for(let i = 0; i < users.length; i ++) {%>
+        <tr>
+            <% if(users[i].ignore) {%>
+                <td style="color:rgb(0, 225, 255);"><%=users[i].numb %></td>
+                <td style="color:rgb(0, 225, 255);"><%=users[i].name %></td>
+            <%} else if(users[i].exists) {%>
+                <td style="color: grey;"><%=users[i].numb %></td>
+                <td style="color:grey;"><%=users[i].name %></td>
+            <%} else if(users[i].extern) {%>
+                 <td style="color:rgb(112, 0, 187);"><%=users[i].numb %></td>
+                 <td style="color:rgb(112, 0, 187);"><%=users[i].name %></td>
+            <%} else if(users[i].error){%>
+                <td style="color:red;"><%=users[i].numb %></td>
+                <td style="color:red;"><%=users[i].name %></td>
+            <%} else {%>
+                <td style="color:green;"><%=users[i].numb %></td>
+                <td style="color:green;"><%=users[i].name %></td>
+            <%} %>
+
+            <% if(users[i].errField != 'role') {%>
+                <td><%=users[i].role %></td>
+            <%} else {%>
+                <% if(users[i].role) {%>
+                    <td style="color:red;"><%=users[i].role %></td>
+                <%} else {%>
+                    <td style="color:red;">Ошибка!</td> 
+                <%} %>
+            <%} %>
+
+            <% if(users[i].errField != 'faculty') {%>
+                <td><%=users[i].faculty %></td>
+            <%} else {%>
+                <% if(users[i].faculty) {%>
+                    <td style="color:red;"><%=users[i].faculty %></td>
+                <%} else {%>
+                    <td style="color:red;">Ошибка!</td> 
+                <%} %>
+            <%} %>
+
+            <% if(users[i].errField != 'department') {%>
+                <td><%=users[i].department %></td>
+            <%} else {%>
+                <% if(users[i].department) {%>
+                    <td style="color:red;"><%=users[i].department %></td>
+                <%} else {%>
+                    <td style="color:red;">Ошибка!</td> 
+                <%} %>
+           <%} %>
+
+           <% if(users[i].errField != 'login' && !users[i].error) {%>
+                <td><%=users[i].login %></td>
+            <%} else if(users[i].errField == 'login') {%>
+                <% if(users[i].login && users[i].exists) {%>
+                    <td style="color:grey;"><%=users[i].login %></td>
+                <%} else if(users[i].login) {%>
+                    <td style="color:red;"><%=users[i].login %></td>
+                <%} else {%>
+                    <td style="color:red;">Ошибка!</td> 
+                <%} %>
+            <%} else {%>
+                <td></td> 
+            <%} %>
+
+            <% if(users[i].ignore) {%>
+                <td></td>
+                <td style="color:rgb(0, 225, 255);"><%=users[i].error %></td>
+            <%} else if(users[i].extern) {%>
+                 <td></td>
+                <td style="color:rgb(112, 0, 187);"><%=users[i].error %></td>
+            <%} else if(users[i].exists) {%>
+                <td></td>
+                <td style="color:grey;"><%=users[i].error %></td>
+            <%} else if(users[i].error) {%>
+                <td></td>
+                <td style="color:red;"><%=users[i].error %></td>
+            <%} else {%>
+                 <td><%=users[i].passwordWithoutHash%></td>
+                <td></td> 
+            <%} %>
+        </tr>
+    <%} %>
+</table>

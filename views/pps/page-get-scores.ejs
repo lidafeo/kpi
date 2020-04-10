@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Моя страница</title>
+	<%- include("../common/head.ejs")%>
+</head>
+<body>
+	<%- include("../common/menu.ejs") %>
+	<div class="wrapper">
+		<div class="content container-fluid">
+			<h4><div id="name"><%=name %>, <%=position %></div></h4>
+			<hr>
+			<% if(objPeriod.notify) {%>
+				<p style="color: red; font-size: 20px;">Внимание! Расчет оценок будет производиться за период с <%=objPeriod.date1Str %> по <%=objPeriod.date2Str %></p>
+			<%} %>
+			<form name="date" id="form-date" action="" class="text" method="get">
+				<div class="form-row">
+					<div class="col-sm">
+						<label>Период расчета оценок с </label>
+						<input type="date" name="date1" id="date1" class="date" value=<%=date1 %> required>
+						<label> по </label>
+						<input type="date" name="date2" id="date2" class="date" value=<%=date2 %> required>
+						<button class="btn btn-outline-dark" id="date" >Рассчитать оценки ПЭД за данный период</button>
+					</div>
+				</div>
+			</form>
+			<div id="donekpi">
+				<% if(kpi) {%>
+					<h4 class="my-sm-3">Оценки ПЭД за выбранный период:</h4>
+					<table class="table border-color-f">
+						<thead>
+						<tr>
+							<th scope="col" width="10%">Шифр</th>
+							<th scope="col">Показатель</th>
+							<th scope="col" width="15%">Оценка</th>
+						</tr>
+						</thead>
+						<tbody>
+						<% for(let u = 0; u < kpi.length; u++) {%>
+							<% if(kpi[u].length != 0) {%>
+							<tr>
+								<td><h5><%=kpi[u][0].section[0] + "." %></h5></td>
+								<td colspan="2"><h5>Раздел <%=(u+1) + ". " + kpi[u][0].section %></h5></td>
+							</tr>
+							<% for(let i = 0; i < kpi[u].length; i++) {%>
+								<% let arr = kpi[u]; %>
+								<% if(arr[i].type == 1) {%>
+								<tr>
+									<th scope="row"><%=arr[i].name %></th>
+									<td><%=arr[i].description %></td>
+									<td><big><%=arr[i].userBall[0] %></big></td>
+								</tr>
+								<%} %>
+								<% if(arr[i].type == 2) {%>
+								<tr>
+									<th scope="row" rowspan=<%=(arr[i].countCriterion + 1) + "" %>><%=arr[i].name %></th>
+									<td colspan="2"><%=arr[i].description %></td>
+								</tr>
+								<% for(let j = 0; j < arr[i].countCriterion; j++) {%>
+								<tr>
+									<td><%=arr[i].criterion[j].description %></td>
+									<td><big><%=arr[i].userBall[j] %></big></td>
+								</tr>
+								<%} %>
+								<%} %>
+							<%} %>
+							<%} %>
+						<%} %>
+						</tbody>
+					</table>
+				<%} %>
+				<% if(!kpi) {%>
+					<hr>
+					<h4>За выбранный период нет выполненных ПЭД</h4>
+					<a href="/my-page/edit-kpi">Отметить выполнение ПЭД</a>
+				<%} %>
+			</div>
+		</div>
+
+		<div class="footer">
+			<%- include("../common/footer.ejs") %>
+		</div>
+	</div>
+
+	<%- include("../common/scripts.ejs")%>
+	<script type="text/javascript" src="/scripts/pps/calculate-balls.js"></script>
+</body>
+</html>

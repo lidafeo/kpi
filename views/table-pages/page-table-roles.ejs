@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Структура</title>
+	<%- include("../common/head.ejs")%>
+</head>
+<body>
+	<%- include("../common/menu.ejs") %>
+	<div class="wrapper">
+		<div class="content container-fluid">
+			<p> 
+				<h3 class="nametable">Роли системы</h3>
+			</p>
+			<table style="margin-left: 20px;">
+				<tr>
+					<th><h4>Роль</h4></th>
+					<th><h4>Право</h4></th>
+                </tr>
+                <% for (role in roles) {%>
+					<tr>
+                        <td rowspan="<%=roles[role].length%>"><%=role %></td>
+						<td><%=roles[role][0] %></td>
+                    </tr>
+                    <% for (let i = 1; i < roles[role].length; i++) {%>
+                        <tr>
+                            <td><%=roles[role][i] %></td>
+                        </tr>
+                    <%} %>
+				<%} %>
+			</table>
+		</div>
+		
+		<div class="footer">
+			<%- include("../common/footer.ejs") %>
+		</div>
+	</div>
+
+	<%- include("../common/scripts.ejs")%>
+
+</body>
+</html>

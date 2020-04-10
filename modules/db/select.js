@@ -4,21 +4,28 @@ const query = require('../connectdb');
 
 //все пользователи
 exports.selectAllUsers = function() {
-	return query("SELECT name, position, faculty, department, login FROM users " +
+	return query("SELECT name, role, position, faculty, department, login FROM users " +
+		"ORDER BY name ASC");
+};
+
+//все ППС
+exports.selectAllPps = function() {
+	return query("SELECT * FROM users " +
+		"WHERE position IS NOT NULL " +
 		"ORDER BY name ASC");
 };
 
 //получить полную информацию о пользователе
-exports.selectUserWithPositionInfo = async function(login) {
+exports.selectUserByLogin = function(login) {
 	return query("SELECT * from users " +
-		"INNER JOIN positions ON users.position=positions.position " +
-		"WHERE login=?", 
-		login);
+		"LEFT JOIN positions ON positions.position=users.position " +
+		"WHERE login=? ",
+		[login]);
 };
 
 //получить всех пользователей из данного факультета/кафедры
 exports.selectUserFromDepartment = function(faculty, department, level) {
-	return query("SELECT name, users.position, login FROM users " +
+	return query("SELECT name, users.role, login FROM users " +
 		"INNER JOIN positions ON users.position=positions.position " +
 		"WHERE (department=? OR (faculty=? AND department is NULL)) AND level<?", 
 		[department, faculty, level]);
@@ -38,6 +45,21 @@ exports.selectOneUserByName = function(name) {
 		[name]);
 };
 
+//RIGHTS
+
+exports.selectAllRights = function() {
+	return query("SELECT * from rights");
+};
+
+//RIGHTS_ROLES
+
+exports.selectRightsRolesByRole = function(role) {
+	return query("SELECT right_name from rights_roles where role=? AND active=1", [role]);
+};
+
+exports.selectAllRightsRolesOrderByRole = function() {
+	return query("SELECT * from rights_roles where active=1 ORDER BY role ASC");
+};
 
 //STRUCTURE
 
@@ -153,7 +175,7 @@ exports.selectFileValueKpiById = function(id) {
 exports.selectValueKpiById = function(id, login) {
 	return query("SELECT uservalues.*, kpi.type, kpi.description, " +
 			"criterions.criterion_description, users.name author_verify_name, " +
-			"users.position author_verify_position FROM uservalues " +
+			"users.role author_verify_role FROM uservalues " +
 		"INNER JOIN kpi ON uservalues.name_kpi = kpi.name " +
 		"INNER JOIN criterions ON criterions.name_kpi = uservalues.name_kpi " +
 			"AND criterions.number_criterion = uservalues.number_criterion " +
@@ -175,7 +197,7 @@ exports.selectValueKpiByIdForVerify = function(id) {
 		[id]);
 };
 
-//получить значения ПЭД для пользователя по имени, должности, факультету, кафедре
+//получить значения ПЭД для пользователя по логину
 exports.selectValueKpiByLogin = function(login) {
 	return query("SELECT uservalues.id, uservalues.name_kpi, value, date, text, file, type, " +
 		"valid, criterion_description description " +
@@ -202,7 +224,7 @@ exports.selectAllKpiWithCriterion = function() {
 	return query("SELECT * FROM kpi " +
 		"INNER JOIN criterions ON criterions.name_kpi=kpi.name " +
 		"INNER JOIN balls ON balls.id_criterion=criterions.id " +
-		"INNER JOIN positions ON positions.position=balls.position " + 
+		"INNER JOIN positions ON positions.position=balls.position " +
 		"ORDER BY section ASC, subtype ASC, number ASC, name ASC, id_criterion ASC, " +
 			"positions.sort ASC, balls.position ASC");
 };
@@ -236,7 +258,7 @@ exports.selectAllSection = function() {
 
 //получить все критерии
 exports.selectAllCriterion = function(position) {
-	return query("SELECT * FROM criterions, balls WHERE id=id_criterion AND position='" + position + 
+	return query("SELECT * FROM criterions, balls WHERE id=id_criterion AND position='" + position +
 	"' ORDER BY name_kpi, criterions.number_criterion ASC");
 };
 
@@ -246,19 +268,12 @@ exports.selectOneCriterion = function(kpi, criterion) {
 		[kpi, criterion]);
 };
 
-//POSITION
+//ROLES
 
 //получить все должности
-exports.selectAllPosition = function() {
-	return query("SELECT position FROM positions " +
-		"ORDER BY sort ASC, position ASC");
-};
-
-//выбрать должности, у которых есть ПЭД
-exports.selectPositionWithBalls = function() {
-	return query("SELECT position, level FROM positions " +
-		"WHERE func_pps=1 " +
-		"ORDER BY sort ASC, position ASC");
+exports.selectAllRole = function() {
+	return query("SELECT role FROM roles " +
+		"ORDER BY role ASC");
 };
 
 //выбрать должность
@@ -270,6 +285,15 @@ exports.selectOnePosition = function(position) {
 exports.selectOnePositionWithLike = function(position) {
     return query("SELECT position, level FROM positions " +
         "WHERE position=? OR position LIKE '%" + position + "%'", position);
+};
+
+//POSITIONS
+
+//выбрать должности
+//selectPositionsWithBalls
+exports.selectPositions = function() {
+	return query("SELECT position, level FROM positions " +
+		"ORDER BY sort ASC, position ASC");
 };
 
 //BALLS
@@ -305,7 +329,7 @@ exports.selectKpiAndUser = function() {
 	return query("SELECT kpi.name name_kpi, users.name name_user, type, users.position, count_criterion, login, " +
 			"faculty, department, indicator_sum, start_val, final_val, ball, number_criterion " +
 		"FROM users, kpi, positions, criterions, balls " +
-		"WHERE positions.func_pps = 1 AND positions.position=users.position AND " +
+		"WHERE positions.position=users.position AND " +
 			"criterions.name_kpi=kpi.name AND balls.position=positions.position AND " +
 			"balls.id_criterion=criterions.id " +
 		"ORDER BY users.name ASC, users.login ASC, section ASC, subtype ASC, number ASC, number_criterion ASC");

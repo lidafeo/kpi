@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Значения ПЭД</title>
+	<%- include("../common/head.ejs")%>
+</head>
+<body>
+	<%- include("../common/menu.ejs") %>
+	<div class="wrapper">
+		<div class="content container-fluid">
+			<h3 class="nametable">Значения Показателей эффективности деятельности</h3>
+			<% if(balls.length != 0) {%>
+			<table>
+				<tr>
+					<th><h4>Дата добавления</h4></th>
+					<th><h4>Логин сотрудника</h4></th>
+					<th><h4>ПЭД</h4></th>
+					<th><h4>Значение</h4></th>
+					<th><h4>Дата начала действия</h4></th>
+					<th><h4>Дата окончания действия</h4></th>
+					<th><h4>Статус</h4></th>
+					<th><h4>Автор проверки</h4></th>
+				</tr>
+				<% for(let i = 0; i < balls.length; i++) {%>
+					<tr>
+						<td><%=balls[i].date_str %></td>
+						<td><%=balls[i].login_user %></td>
+						<td><%=balls[i].name_kpi %></td>
+						<td><%=balls[i].value %></td>
+						<td><%=balls[i].start_date_str %></td>
+						<td><%=balls[i].finish_date_str %></td>
+						<% if(!balls[i].valid) {%>
+							<td><font color="red">Недействительно</font></td>
+							<td><%=balls[i].author_verify %></td>
+						<%} %>
+						<% if(balls[i].valid) {%>
+							<td><font color="green">Выполнено</font></td>
+							<td></td>
+						<%} %>
+					</tr>
+				<%} %>
+			</table>
+			<%}%>
+			<% if(balls.length == 0) {%>
+			<p class="errormess">Нет добавленных значений ПЭД</p>
+			<%}%>
+		</div>
+
+		<div class="footer">
+			<%- include("../common/footer.ejs") %>
+		</div>
+	</div>
+
+	<%- include("../common/scripts.ejs")%>
+
+</body>
+</html>

@@ -22,20 +22,35 @@ exports.insertValueKpiFromObj = function(uservalue) {
 
 //USERS
 
-//добавление пользователя
-exports.insertUser = function(name, position, faculty, department, login, password) {
-	let arr = [name, position, faculty, department, login, password];
-	return query("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?)", arr);
-};
-
 //добавление пользователя с объекта
 exports.insertUserFromObj = function(user) {
-	if(user.department) {
-		let arr = [user.name, user.position, user.faculty, user.department, user.login, user.passwordHash];
-		return query("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?)", arr);
+	if(!user.department) {
+		user.department = null;
 	}
-	let arr = [user.name, user.position, user.faculty, user.login, user.passwordHash];
-	return query("INSERT INTO users(name, position, faculty, login, password) VALUES (?, ?, ?, ?, ?)", arr);
+	if(!user.position) {
+		user.position = null;
+	}
+	//if(user.department) {
+		let arr = [user.name, user.role, user.position, user.faculty, user.department, user.login, user.password];
+		return query("INSERT INTO users VALUES (?, ?, ?, ?, ?, ?, ?)", arr);
+	//}
+	//let arr = [user.name, user.role, user.position, user.faculty, user.login, user.password];
+	//return query("INSERT INTO users(name, role, position, faculty, login, password) VALUES (?, ?, ?, ?, ?, ?)", arr);
+};
+
+//ROLE
+
+//добавление role
+exports.insertRole = function(role) {
+	return query("INSERT INTO roles VALUES (?)", [role]);
+};
+
+//RIGHTS_ROLE
+
+//добавление role
+exports.insertRightsInRole = function(right, role) {
+	return query("INSERT INTO rights_roles (role, right_name) VALUES (?, ?)",
+		[role, right]);
 };
 
 //KPI

@@ -10,8 +10,7 @@ exports.deleteUser = function(login) {
 //удаление всех ППС
 exports.deleteAllPps = function() {
 	return query("DELETE users FROM users " +
-		"INNER JOIN positions ON positions.position = users.position " +
-		"WHERE func_pps=1");
+		"WHERE role='ППС' OR role='Руководитель подразделения'");
 };
 
 //KPI

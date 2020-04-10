@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Структура</title>
+	<%- include("../common/head.ejs")%>
+</head>
+<body>
+	<%- include("../common/menu.ejs") %>
+	<div class="wrapper">
+		<div class="content container-fluid">
+			<p> 
+				<h3 class="nametable">Кафедры и факультеты университета</h3>
+			</p>
+			<table style="margin-left: 20px;">
+				<tr>
+					<th><h4>Факультет</h4></th>
+					<th><h4>Кафедра</h4></th>
+                </tr>
+                <% for (faculty in structure) {%>
+					<tr>
+                        <td rowspan="<%=structure[faculty].length%>"><%=faculty %></td>
+						<td><%=structure[faculty][0] %></td>
+                    </tr>
+                    <% for (let i = 1; i < structure[faculty].length; i++) {%>
+                        <tr>
+                            <td><%=structure[faculty][i] %></td>
+                        </tr>
+                    <%} %>
+				<%} %>
+			</table>
+		</div>
+		
+		<div class="footer">
+			<%- include("../common/footer.ejs") %>
+		</div>
+	</div>
+
+	<%- include("../common/scripts.ejs")%>
+
+</body>
+</html>

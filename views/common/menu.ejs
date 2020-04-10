@@ -1,0 +1,192 @@
+<nav class="navbar navbar-expand-lg navbar-dark mb-md-3" style="background-color: #561C75;">
+	<a class="navbar-brand ml-md-4" href="/my-page"><%=infoUser.login%></a>
+	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+		<span class="navbar-toggler-icon"></span>
+	</button>
+
+	<div class="collapse navbar-collapse" id="navbarSupportedContent">
+		<ul class="navbar-nav mr-auto">
+			<% if(infoUser.rights.indexOf("get_my_score") !== -1) {%>
+				<li class="nav-item">
+					<a class="nav-link <%if (pageName == "/pps/get-my-score") {%><%='active'%><%}%>" href="/pps/get-my-score">Вычислить оценки <span class="sr-only">(current)</span></a>
+				</li>
+			<%} %>
+			<% if(infoUser.rights.indexOf("add_value_of_kpi") !== -1) {%>
+				<li class="nav-item">
+					<a class="nav-link <%if (pageName == "/pps/add-value-kpi") {%><%='active'%><%}%>" href="/pps/add-value-kpi">Отметить выполнение</a>
+				</li>
+			<%} %>
+			<% if(infoUser.rights.indexOf("get_my_values_of_kpi") !== -1) {%>
+				<li class="nav-item">
+					<a class="nav-link <%if (pageName == "/pps/get-values-kpi" || pageName == "/pps/val") {%><%='active'%><%}%>" href="/pps/get-values-kpi">Список выполненных ПЭД</a>
+				</li>
+			<%} %>
+			<% if(infoUser.rights.indexOf("verify") !== -1) {%>
+				<li class="nav-item">
+					<a class="nav-link <%if (pageName == "/verify") {%><%='active'%><%}%>" href="/verify">Проверить ПЭД ППС</a>
+				</li>
+			<%} %>
+			<% if(infoUser.rights.indexOf("get_actions_users") !== -1) {%>
+				<li class="nav-item">
+					<a class="nav-link <%if (pageName == "/get-actions-users") {%><%='active'%><%}%>" href="/get-actions-users">Логи</a>
+				</li>
+			<%} %>
+			<% if(infoUser.rights.indexOf("get_all_users") !== -1 || infoUser.rights.indexOf("create_user") !== -1
+					|| infoUser.rights.indexOf("delete_user") !== -1) {%>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle
+						<%if (pageName == "/get-users" || pageName == "/change-users/add-user"
+							|| pageName == "/change-users/delete-user") {%>
+							<%='active'%>
+						<%}%>
+					" href="#" id="dropdownUsers" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Пользователи
+					</a>
+					<div class="dropdown-menu" aria-labelledby="dropdownUsers">
+						<% if(infoUser.rights.indexOf("get_all_users") !== -1) {%>
+							<a class="dropdown-item" href="/get-users">Список</a>
+						<%} %>
+						<% if(infoUser.rights.indexOf("create_user") !== -1) {%>
+							<a class="dropdown-item" href="/change-users/add-user">Добавить</a>
+						<%} %>
+						<% if(infoUser.rights.indexOf("delete_user") !== -1) {%>
+							<a class="dropdown-item" href="/change-users/delete-user">Удалить</a>
+						<%} %>
+					</div>
+				</li>
+			<%} %>
+			<% if(infoUser.rights.indexOf("create_pps") !== -1 || infoUser.rights.indexOf("change_password_pps") !== -1) {%>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle
+						<%if (pageName == "/change-pps/add" || pageName == "/change-pps/change-password"
+							|| pageName == "/get-pps") {%>
+							<%='active'%>
+						<%}%>
+					" href="#" id="dropdownPps" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Сотрудники
+					</a>
+					<div class="dropdown-menu" aria-labelledby="dropdownPps">
+						<% if(infoUser.rights.indexOf("change_pps") !== -1) {%>
+							<a class="dropdown-item" href="/get-pps">Список сотрудников</a>
+						<%} %>
+						<% if(infoUser.rights.indexOf("create_pps") !== -1) {%>
+							<a class="dropdown-item" href="/change-pps/add-pps">Добавить сотрудника</a>
+						<%} %>
+						<% if(infoUser.rights.indexOf("change_password_pps") !== -1) {%>
+							<a class="dropdown-item" href="/change-pps/change-password">Изменить пароль</a>
+						<%} %>
+					</div>
+				</li>
+			<%} %>
+			<% if(infoUser.rights.indexOf("get_all_kpi") !== -1 || infoUser.rights.indexOf("change_kpi") !== -1
+					|| infoUser.rights.indexOf("change_balls_of_kpi") !== -1 || infoUser.rights.indexOf("create_kpi") !== -1
+					|| infoUser.rights.indexOf("delete_kpi") !== -1) {%>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle
+						<%if (pageName == "/get-kpi" || pageName == "/change-kpi/add-kpi"
+							|| pageName == "/change-kpi/delete-kpi" || pageName == "/change-kpi/edit-balls") {%>
+							<%='active'%>
+						<%}%>
+					" href="#" id="dropdownKpi" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						ПЭД
+					</a>
+					<div class="dropdown-menu" aria-labelledby="dropdownKpi">
+						<% if(infoUser.rights.indexOf("get_all_kpi") !== -1) {%>
+							<a class="dropdown-item" href="/get-kpi">Список</a>
+						<%} %>
+						<% if(infoUser.rights.indexOf("create_kpi") !== -1) {%>
+							<a class="dropdown-item" href="/change-kpi/add-kpi">Добавить</a>
+						<%} %>
+						<% if(infoUser.rights.indexOf("delete_kpi") !== -1) {%>
+							<a class="dropdown-item" href="/change-kpi/delete-kpi">Удалить</a>
+						<%} %>
+						<% if(infoUser.rights.indexOf("change_balls_of_kpi") !== -1) {%>
+							<a class="dropdown-item" href="/change-kpi/edit-balls">Изменить оценки</a>
+						<%} %>
+					</div>
+				</li>
+			<%} %>
+			<% if(infoUser.rights.indexOf("get_all_values_of_kpi") !== -1) {%>
+				<li class="nav-item">
+					<a class="nav-link <%if (pageName == "/get-all-values") {%><%='active'%><%}%>" href="/get-all-values">Значения ПЭД</a>
+				</li>
+			<%} %>
+			<% if(infoUser.rights.indexOf("get_all_roles") !== -1 || infoUser.rights.indexOf("add_role") !== -1) {%>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle
+								<%if (pageName == "/get-all-roles" || pageName == "/change-roles/add-role") {%>
+									<%='active'%>
+								<%}%>
+							" href="#" id="dropdownRole" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Роли
+					</a>
+					<div class="dropdown-menu" aria-labelledby="dropdownRole">
+						<% if(infoUser.rights.indexOf("get_all_roles") !== -1) {%>
+							<a class="dropdown-item" href="/get-all-roles">Список</a>
+						<%} %>
+						<% if(infoUser.rights.indexOf("add_role") !== -1) {%>
+							<a class="dropdown-item" href="/change-roles/add-role">Добавить</a>
+						<%} %>
+					</div>
+				</li>
+			<%} %>
+			<% if(infoUser.rights.indexOf("get_structure") !== -1 || infoUser.rights.indexOf("change_structure") !== -1) {%>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle
+							<%if (pageName == "/get-structure") {%>
+								<%='active'%>
+							<%}%>
+						" href="#" id="dropdownStructure" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Структура
+					</a>
+					<div class="dropdown-menu" aria-labelledby="dropdownStructure">
+						<% if(infoUser.rights.indexOf("get_structure") !== -1) {%>
+							<a class="dropdown-item" href="/get-structure">Список</a>
+						<%} %>
+					</div>
+				</li>
+			<%} %>
+			<% if(infoUser.rights.indexOf("update_with_excel") !== -1) {%>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle
+								<%if (pageName == "/update-db/add-users-from-file1" || pageName == "/update-db/add-users-from-file2"
+									|| pageName == "/update-db/past-kpi" || pageName == "/update-db/update-structure") {%>
+									<%='active'%>
+								<%}%>
+							" href="#" id="dropdownUpdateDb" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						Обновление БД
+					</a>
+					<div class="dropdown-menu" aria-labelledby="dropdownUpdateDb">
+						<a class="dropdown-item" href="/update-db/add-users-from-file1">Добавить пользователей вариант 1</a>
+						<a class="dropdown-item" href="/update-db/add-users-from-file2">Добавить пользователей (ППС) вариант 2</a>
+						<a class="dropdown-item" href="/update-db/past-kpi">Добавить прошлые значения</a>
+						<a class="dropdown-item" href="/update-db/update-structure">Обновить структуру</a>
+					</div>
+				</li>
+			<%} %>
+			<% if(infoUser.rights.indexOf("create_report") !== -1) {%>
+				<li class="nav-item">
+					<a class="nav-link <%if (pageName == "/pfu") {%><%='active'%><%}%>" href="/pfu">Создать отчет</a>
+				</li>
+			<%} %>
+			<% if(infoUser.rights.indexOf("set_period") !== -1) {%>
+				<li class="nav-item">
+					<a class="nav-link <%if (pageName == "/set-period") {%><%='active'%><%}%>" href="/set-period">Период</a>
+				</li>
+			<%} %>
+			<% if(infoUser.rights.indexOf("close_accounts") !== -1) {%>
+				<li class="nav-item">
+					<a class="nav-link <%if (pageName == "/close-accounts") {%><%='active'%><%}%>" href="/close-accounts">Доступ к ЛК</a>
+				</li>
+			<%} %>
+			<% if(infoUser.rights.indexOf("change_my_password") !== -1) {%>
+				<li class="nav-item">
+					<a class="nav-link <%if (pageName == "/settings") {%><%='active'%><%}%>" href="/settings">Настройки</a>
+				</li>
+			<%} %>
+		</ul>
+		<form class="form-inline my-2 my-lg-0 mr-md-4" action="/exit" method="post">
+			<button class="btn btn-outline-light my-2 my-sm-0" type="submit">Выйти</button>
+		</form>
+	</div>
+</nav>

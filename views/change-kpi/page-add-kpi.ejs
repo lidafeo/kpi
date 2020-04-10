@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Добавление Показателя</title>
+	<%- include("../common/head.ejs")%>
+
+	<link rel="stylesheet" type="text/css" href="/css/change-kpi/add-kpi.css">
+	<link rel="stylesheet" type="text/css" href="/plugins/slick-1.8.1/slick/slick.css">
+	<link rel="stylesheet" type="text/css" href="/plugins/slick-1.8.1/slick/slick-theme.css">
+</head>
+<body>
+    <%- include("../common/menu.ejs") %>
+    <div class="wrapper">
+        <div class="content container-fluid">
+			<% if(action == 1) {%>
+				<p class="uspeshno">Успешно</p>
+			<%} %>
+			<% if(action == 2) {%>
+				<p class="errormess">Ошибка добавления</p>
+			<%} %>
+			<h2>Добавление Показателя эффективности деятельности</h2>
+			<form name="addkpi" action="" method="post" class="form-add" style="width: 80%; margin-top: 5%;">
+				<div class="form-inner">
+					<div class="error-text" id="error"></div>
+					<div class="input__container" id="infokpi">
+						<div>
+							<label>Шифр</label>
+							<input type="text" name="name" id="name" class="notempty" placeholder="О.Д.1" autocomplete="off" required>
+						</div>
+						<div>
+							<label>Раздел</label>
+							<input name="section" list="section" id="inputsection" class="notempty" placeholder="Образовательная деятельность" autocomplete="off" required>
+						</div>
+
+						<datalist id="section">
+							<% for(let i = 0; i < section.length; i++) {%>
+								<option><%=section[i].section%></option>
+							<%} %>
+						</datalist>
+						<div>
+							<label>Подраздел</label>
+							<select name="subtype" id="subtype">
+								<option>Должностные</option>
+								<option>Персональные</option>
+								<option>-</option>
+							</select>
+						</div>
+						<div>
+							<label>Номер</label>
+							<input type="number" name="number" id="number" class="figure" placeholder="1" autocomplete="off" required>
+						</div>
+						<div>
+							<label>Показатель</label>
+							<p><textarea name="desc" id="desc" class="notempty" placeholder="Качество знаний студентов по дисциплинам" required></textarea></p>
+						</div>
+						<div>
+							<label>Время действия подтверждения ПЭДа (в месяцах)</label>
+							<input type="text" name="implementationPeriod" class="figure" value="6" autocomplete="off" required>
+						</div>
+						<div>
+							<label>При подтверждении показателя:</label><br>
+							<input type="radio" name="indicatorssumm" value="false" id="rad1" class="radio" checked="">
+							<label for="rad1">Преподаватель должен указывать значение</label><br>
+							<input type="radio" name="indicatorssumm" value="true" id="rad2" class="radio">
+							<label for="rad2">Автоматически добавлять значение 1 к действующему значению</label>
+						</div>
+						<div>
+							<label>Могут ли выполняться несколько критериев одновременно?</label><br>
+							<input type="radio" name="type" value="1" id="radio1" class="radio" checked="">
+							<label for="radio1">Нет</label>
+							<input type="radio" name="type" value="2" id="radio2" class="radio">
+							<label for="radio2">Да</label>
+						</div>
+						<div>
+							<label>Количество критериев оценки</label>
+							<select name="count" id="count">
+								<% for(let i = 1; i <= 10; i++) {%>
+									<option><%=i%></option>
+								<%} %>
+							</select>
+						</div><br><br>
+					</div>
+					<div class="addcrit">
+						<div id="crit0">
+							<br><hr>
+							<label id="critname">Критерий №1</label>
+							<div class="" id="errorсrit"></div>
+							<div class="input__container">
+								<div class="hidden">
+									<label>Показатель критерия</label>
+									<p><textarea name="description" id="description" class="notempty"></textarea></p>
+								</div>
+								<div>
+									<label>Описание критерия</label>
+									<p><textarea name="namecriterion" id="namecriterion" placeholder="Не менее 60%" class="notempty"></textarea></p>
+								</div>
+								<div>
+									<label>Тип</label>
+									<select name="typecrit" class="typecriterion">
+										<option>Да/Нет</option>
+										<option>Не менее n</option>
+										<option>От a до b</option>
+									</select>
+								</div>
+								<div>
+									<div class="n">
+										<label>n</label>
+										<input type="text" name="n" id="n" class="figure">
+									</div>
+									<div class="a">
+										<label>a</label>
+										<input type="text" name="a" id="a" class="figure">
+									</div>
+									<div class="b">
+										<label>b</label>
+										<input type="text" name="b" id="b" class="figure">
+									</div>
+								</div>
+							</div>
+
+							<label>Оценки по группам пользователей:</label>
+							<div class="input__container">
+								<% for(let i = 0; i < positions.length; i++) {%>
+									<div>
+										<label><%=positions[i].position%></label>
+										<input type="number" name="<%=positions[i].position%>" id="<%=positions[i].position%>" class="figure" placeholder="0" autocomplete="off" required>
+									</div>
+								<%} %>
+							</div>
+						</div>
+					</div>
+					<div class="input__container">
+						<div><input type="submit" name="prev" id="prev" value="Предыдущий критерий"></div>
+						<div><input type="submit" name="next" id="next" value="Следующий критерий"></div>
+					</div>
+					<input type="submit" name="submit" id="add" value="Добавить ПЭД">
+				</div>
+			</form>
+		</div>
+
+		<div class="footer">
+			<%- include("../common/footer.ejs") %>
+		</div>
+	</div>
+
+	<%- include("../common/scripts.ejs")%>
+	<script type="text/javascript" src="/plugins/slick-1.8.1/slick/slick.min.js"></script>
+	<script type="text/javascript" src="/scripts/change-kpi/add-kpi.js"></script>
+</body>
+</html>

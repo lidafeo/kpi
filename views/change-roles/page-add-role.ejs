@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Добавление роли</title>
+	<%- include("../common/head.ejs")%>
+</head>
+<body>
+	<%- include("../common/menu.ejs") %>
+	<div class="wrapper">
+		<div class="content container-fluid">
+			<% if(action == 1) {%>
+				<p class="uspeshno">Успешно</p>
+			<%} %>
+			<% if(action == 2) {%>
+				<p class="errormess">Ошибка добавления роли</p>
+			<%} %>
+			<form name="adduser" action="" method="post" class="form-add" style="margin-top: 5%;">
+				<div class="form-inner">
+					<h3>Добавить роль</h3>
+					<div class="error-text" id="error"></div>
+					<div>
+						<label>Роль</label>
+						<input type="text" name="role" id="role" required>
+					</div>
+					<div>
+						<label>Права:</label>
+						<% for(let i = 0; i < rights.length; i++) {%>
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" name="rights" id="right<%=i%>" value="<%=rights[i].name%>">
+								<label class="form-check-label" for="right<%=i%>">
+									<%=rights[i].name + " (" + rights[i].comment + ")"%>
+								</label>
+							</div>
+						<%} %>
+					</div>
+					<input type="submit" name="submit" id="add" value="Добавить">
+				</div>
+			</form>
+		</div>
+		
+		<div class="footer">
+			<%- include("../common/footer.ejs") %>
+		</div>
+	</div>
+
+	<%- include("../common/scripts.ejs")%>
+</body>
+</html>

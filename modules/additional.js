@@ -1,20 +1,3 @@
-exports.getFaculty = function (structure) {
-	let faculty = [];
-	for (let i = 0; i < structure.length; i++) {
-		if(faculty.indexOf(structure[i].faculty) == -1)
-			faculty.push(structure[i].faculty);
-	}
-	return faculty;
-};
-
-exports.getDepartment = function (faculty, structure) {
-	let department = [];
-	for(let i = 0; i < structure.length; i++)
-		if(structure[i].faculty == faculty) 
-			department.push(structure[i].department);
-	return department;
-};
-
 function getSymb() {
 	var abc = "abcdefghijklmnopqrstuvwxyz";
 	return abc[Math.floor(Math.random() * abc.length)];
@@ -30,4 +13,15 @@ exports.generateFileName = function (login) {
 		getSymb() + date.getSeconds() +
 		getSymb() + date.getHours() +
 		getSymb() + date.getMilliseconds();
+};
+
+//Формирование массива значений из массива объектов одного ключа
+exports.createArrayOfKeyValues = function (arrObj, key) {
+	let arr = [];
+	arr.push(arrObj[0][key]);
+	for(let i = 1; i < arrObj.length; i++) {
+		if(arrObj[i - 1][key] != arrObj[i][key])
+			arr.push(arrObj[i][key]);
+	}
+	return arr;
 };

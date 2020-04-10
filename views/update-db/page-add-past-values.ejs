@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Добавление прошлых значений</title>
+	<%- include("../common/head.ejs")%>
+
+	<link rel="stylesheet" type="text/css" href="/css/loader.css">
+</head>
+<body>
+	<%- include("../common/menu.ejs") %>
+	<div class="wrapper">
+		<div class="content container-fluid">
+			<h1 class="title-page">Добавление прошлых значений показателей эффективности с Excel-файла</h1>
+			<% if(!report) {%>
+				<div class="warning">
+					<p>Необходимо прикрепить Excel-файл.</p>
+					<p>Первая строка - заголовки. Начиная со столбца B в первой строке перечисляются названия ПЭД (обязательно).</p>
+					<p>В каждой строке файла, начиная со второй (, 
+						должна содержаться информация о добавленных значениях ПЭД сотрудников в следующем формате:</p>
+					<p>В столбце <b>A</b> указывается полное <b>ФИО</b> сотрудника</p>
+					<p>В столбце <b>B</b> указывается ...</p>
+					<p style="color: chocolate;">Внимание!</p>
+				</div>
+				<% if(action == 1) {%>
+					<p class="uspeshno">Успешно</p>
+				<%} %>
+				<% if(action == 2) {%>
+					<p class="errormess">Ошибка добавления</p>
+				<%} %>
+				<form enctype="multipart/form-data" action=""  
+				method="post" class="formborderadmin" id="form-from_file">
+					<div class="col-form">
+						<input type="checkbox" class="checkbox" name="del_val" id="del_val">
+						<label for="del_val">Удалить все значения ПЭД всех ППС перед добавлением</label>
+					</div>
+					<div class="col-form">
+						<input type="file" name="file" required>
+						<input type="submit" class="buttonmypage" id="but-file" value="Загрузить">
+					</div>
+				</form>
+			<%} else {%>
+				<%- include("./partials/report-add-past-values.ejs") %>
+			<%} %>
+		</div>
+		<div class="footer">
+			<%- include("../common/footer.ejs") %>
+		</div>
+	</div>
+	<%- include("../common/scripts.ejs")%>
+	<script type="text/javascript" src="/plugins/carhartl-jquery-cookie-92b7715/jquery.cookie.js"></script>
+	<script type="text/javascript" src="/scripts/loader.js"></script>
+</body>
+</html>
