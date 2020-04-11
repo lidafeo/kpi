@@ -7,70 +7,98 @@
 <body>
 	<%- include("../common/menu.ejs") %>
 	<div class="wrapper">
-		<div class="content container-fluid">
-			<% if(action == 1) {%>
-				<p class="uspeshno">Успешно</p>
-			<%} %>
-			<% if(action == 2) {%>
-				<p class="errormess">Ошибка добавления пользователя</p>
-			<%} %>
-			<form name="adduser" action="" method="post" class="form-add" style="margin-top: 5%;">
-				<div class="form-inner">
-					<h3>Добавить пользователя</h3>
-					<div class="error-text" id="error"></div>
-					<div>
-						<label>ФИО</label>
-						<input type="text" name="name" id="name" placeholder="Иванов Иван Иванович" required>
+		<div class="content container">
+			<h1>Добавление нового пользователя</h1>
+			<hr>
+			<form name="adduser" action="" method="post" class="needs-validation" id="form-add-user" novalidate>
+				<div class="form-group row">
+					<label for="name" class="col-sm-2 col-form-label">ФИО</label>
+					<div class="col-sm-10">
+						<input type="text"name="name" class="form-control" id="name" maxlength="100" placeholder="Иванов Иван Иванович" autocomplete="off" required>
+						<div class="invalid-feedback">
+							Пожалуйста введите ФИО
+						</div>
 					</div>
-					<div>
-						<label>Роль</label>
-						<select name="role" id="role">
+				</div>
+
+				<div class="form-group row">
+					<label for="role" class="col-sm-2 col-form-label">Роль</label>
+					<div class="col-sm-10">
+						<select class="form-control" name="role" id="role" required>
 							<% for(let i = 0; i < roles.length; i++) {%>
 							<option><%=roles[i].role%></option>
 							<%} %>
 						</select>
+						<div class="invalid-feedback">
+							Пожалуйста выберите роль
+						</div>
 					</div>
-					<div id="position-div">
-						<label>Должность</label>
-						<select name="position" id="position">
+				</div>
+
+				<div class="form-group row" id="position-div">
+					<label for="position" class="col-sm-2 col-form-label">Должность</label>
+					<div class="col-sm-10">
+						<select name="position" class="form-control" id="position">
 							<% for(let i = 0; i < positions.length; i++) {%>
 							<option><%=positions[i].position%></option>
 							<%} %>
 						</select>
 					</div>
-					<div id="faculty-div">
-						<% if(faculty.length != 0) {%>
-							<label>Факультет</label>
-							<select name="faculty" id="faculty">
+				</div>
+
+				<div class="form-group row" id="faculty-div">
+					<% if(faculty.length != 0) {%>
+						<label for="faculty" class="col-sm-2 col-form-label">Факультет</label>
+						<div class="col-sm-10">
+							<select name="faculty" id="faculty" class="form-control">
 								<% for(let i = 0; i < faculty.length; i++) {%>
-									<option><%=faculty[i]%></option>
+								<option><%=faculty[i]%></option>
 								<%} %>
 							</select>
-						<%}%>
-					</div>
-					<input type="hidden" name="numdepartment" id="numdepartment">
-					<div id="department-div">
-						<label>Кафедра</label>
-						<select name="department" id="department">
+						</div>
+					<%}%>
+				</div>
+
+				<input type="hidden" name="numdepartment" id="numdepartment">
+
+				<div class="form-group row" id="department-div">
+					<label for="department" class="col-sm-2 col-form-label">Кафедра</label>
+					<div class="col-sm-10">
+						<select name="department" id="department" class="form-control">
 							<% for(let i = 0; i < department.length; i++) {%>
-								<option><%=department[i]%></option>
+							<option><%=department[i]%></option>
 							<%} %>
 						</select>
 					</div>
-					<div>
-						<label>login</label>
-						<input type="text" name="login" id="login" placeholder="ivanov" required>
-					</div>
-					<div class="form-group row">
-						<label for="password" class="col-sm-2 col-form-label">Пароль</label>
-						<div class="col-sm-9">
-							<input type="text" class="form-control" id="password" name="password" required autocomplete="off">
-						</div>
-						<div class="col-sm-1">
-							<a href="#" id="generate-pass"><img src="/img/icons/arrow-repeat.svg" title="сгенерировать" width="28px"></a>
+				</div>
+
+				<div class="form-group row">
+					<label for="login" class="col-sm-2 col-form-label">Логин</label>
+					<div class="col-sm-10">
+						<input type="text" name="login" class="form-control" pattern="[A-Za-z_.]+$" id="login" maxlength="45" autocomplete="off" placeholder="i.i.ivanov" required>
+						<div class="invalid-feedback">
+							Пожалуйста введите логин
 						</div>
 					</div>
-					<input type="submit" name="submit" id="add" value="Добавить">
+				</div>
+
+				<div class="form-group row">
+					<label for="password" class="col-sm-2 col-form-label">Пароль</label>
+					<div class="col-sm-9">
+						<input type="text" class="form-control" id="password" name="password" maxlength="50" required autocomplete="off">
+						<div class="invalid-feedback">
+							Пожалуйста введите или сгенерируйте пароль
+						</div>
+					</div>
+					<div class="col-sm-1">
+						<a href="#" id="generate-pass"><img src="/img/icons/arrow-repeat.svg" title="сгенерировать" width="28px"></a>
+					</div>
+				</div>
+
+				<div class="form-group row">
+					<div class="col-sm-10">
+						<button type="submit" class="btn btn-primary btn-lg">Добавить</button>
+					</div>
 				</div>
 			</form>
 		</div>
@@ -81,6 +109,7 @@
 	</div>
 
 	<%- include("../common/scripts.ejs")%>
+	<script type="text/javascript" src="/scripts/check-form.js"></script>
 	<script type="text/javascript" src="/plugins/carhartl-jquery-cookie-92b7715/jquery.cookie.js"></script>
 	<script type="text/javascript" src="/scripts/change-users/add-user.js"></script>
 </body>

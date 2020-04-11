@@ -9,7 +9,6 @@
 				<td scope="col">Дата</td>
 				<td scope="col">ПЭД</td>
 				<td scope="col">Значение</td>
-				<td scope="col">Текст</td>
 				<td scope="col">Файл</td>
 				<td scope="col">Статус</td>
 				<td scope="col"></td>
@@ -28,7 +27,6 @@
 						<td><%=(kpi[i].name_kpi + " (" + kpi[i].description + ")")%></td>
 					<%} %>
 					<td><%=kpi[i].value %></td>
-					<td><%=kpi[i].text %></td>
 					<% if(kpi[i].file) {%>
 						<td><a href=<%="/download-file?file="+kpi[i].file %> download=""><img src="/img/icons/download.svg" width="25" alt="Скачать файл"></a></td>
 					<%} %>

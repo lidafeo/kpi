@@ -24,12 +24,6 @@ $(document).ready(function() {
         $('#department').html(departmentHTML);
     });
 
-    //генерация пароля
-    $("body").on('click', "#generate-pass", function (e) {
-        e.preventDefault();
-        $("#password").val(generatePassword(12));
-    });
-
     $('#form-add-pps').submit(function (e) {
         e.preventDefault();
         if (this.checkValidity() === false) {
@@ -78,15 +72,5 @@ $(document).ready(function() {
             resolve();
         });
         request.send();
-    }
-
-    function generatePassword(length) {
-        let result = '';
-        let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-        let charactersLength = characters.length;
-        for ( var i = 0; i < length; i++ ) {
-            result += characters.charAt(Math.floor(Math.random() * charactersLength));
-        }
-        return result;
     }
 });

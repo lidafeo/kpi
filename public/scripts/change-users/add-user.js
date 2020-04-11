@@ -29,12 +29,10 @@ $(document).ready(function() {
 		$('#department').html(departmentHTML);
 	});
 
-	$('#add').click(function(e) {
-		let name = $("#name").val();
-		if(!$("#name").val() || !$("#login").val() || !$("#password").val()) {
+	$('#form-add-user').submit(function(e) {
+		if (this.checkValidity() === false) {
 			e.preventDefault();
-			$('#error').html('<h4>Заполните все поля!</h4>');
-			$('html, body').animate({scrollTop: 0}, 500);
+			return;
 		}
 	});
 

@@ -5,6 +5,8 @@ let DBs = require('../modules/db/select.js');
 let getObjClose = require('../modules/period.js').getObjClose;
 let setNotify = require('../modules/period.js').setNotify;
 
+let writeErrorLogs = require('../modules/logs').error;
+
 //GET-запрос начальной страницы сайта
 exports.pageHome = function(req, res) {
 	if(req.session.name)
@@ -49,6 +51,8 @@ exports.auth = function(req, res) {
 			res.render("auth", {checkPassword: true, close: false});
 		}
 	}).catch(err => {
+		writeErrorLogs('error auth', err);
+		console.log(err);
 		res.status(500).render('error/500');
 	});
 };

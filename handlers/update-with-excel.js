@@ -105,46 +105,53 @@ exports.addUsersFromFile1 = function(req, res) {
 //POST-запрос на добавление пользователей (ППС) с файла вариант 2
 exports.addUsersFromFile2 = function(req, res) {
     let form = new formidable.IncomingForm();
-    form.parse(req, function(err, fields, files) {
-        if(err) return console.log(err);
+    try {
+        form.parse(req, function (err, fields, files) {
+            if (err) return console.log(err);
 
-        let arr = ['xls', 'xlsx'];
-        let ext = files.file.name.split('.').pop();
-        if(!files.file || arr.indexOf(ext) == -1)
-            return res.redirect('/update-db/add-users-from-file2?action=err');
+            let arr = ['xls', 'xlsx'];
+            let ext = files.file.name.split('.').pop();
+            if (!files.file || arr.indexOf(ext) == -1)
+                return res.redirect('/update-db/add-users-from-file2?action=err');
 
-        let workBook = xlsx.readFile(files.file.path);
-        let firstSheetName = workBook.SheetNames[0];
-        let workSheet = workBook.Sheets[firstSheetName];
+            let workBook = xlsx.readFile(files.file.path);
+            let firstSheetName = workBook.SheetNames[0];
+            let workSheet = workBook.Sheets[firstSheetName];
 
-        //удаляем, если нужно
-        new Promise(async (resolve, reject) => {
-            if(fields['del_pps'] == 'on') {
-                await DBd.deleteAllPps();
-                //записываем логи
-                writeLogs(req.session.login, req.session.position, "удалил(а) всех пользователей - ППС");
-            }
-            resolve();
-        }).then(result => {
-            userFunc.main(workSheet).then(users => {
-                //добавляем
-                Promise.all(users.addUsers.map(async function (user) {
-                    user.passwordWithoutHash = user.password;
-                    user.password = await bcrypt.hash(user.password, BCRYPT_SALT_ROUNDS);
-                    let result = await DBi.insertUserFromObj(user);
+            //удаляем, если нужно
+            new Promise(async (resolve, reject) => {
+                if (fields['del_pps'] == 'on') {
+                    await DBd.deleteAllPps();
                     //записываем логи
-                    writeLogs(req.session.login, req.session.position, "добавил(а) нового пользователя: login - " + user.login);
-                    console.log("Сохранен объект user", user.login);
-                })).then(result => {
-                    res.render('update-db/page-add-users-from-file2', {action: 'ok', report: true,
-                        users: users.allUsers,
-                        countAdd: users.addUsers.length, counts: users.counts,
-                        infoUser: req.session, pageName: '/update-db/add-users-from-file2'
+                    writeLogs(req.session.login, req.session.position, "удалил(а) всех пользователей - ППС");
+                }
+                resolve();
+            }).then(result => {
+                userFunc.main(workSheet).then(users => {
+                    //добавляем
+                    Promise.all(users.addUsers.map(async function (user) {
+                        user.passwordWithoutHash = user.password;
+                        user.password = await bcrypt.hash(user.password, BCRYPT_SALT_ROUNDS);
+                        let result = await DBi.insertUserFromObj(user);
+                        //записываем логи
+                        writeLogs(req.session.login, req.session.position, "добавил(а) нового пользователя: login - " + user.login);
+                        console.log("Сохранен объект user", user.login);
+                    })).then(result => {
+                        res.render('update-db/page-add-users-from-file2', {
+                            action: 'ok', report: true,
+                            users: users.allUsers,
+                            countAdd: users.addUsers.length, counts: users.counts,
+                            infoUser: req.session, pageName: '/update-db/add-users-from-file2'
+                        });
                     });
                 });
             });
         });
-    });
+    } catch (err) {
+        writeErrorLogs(req.session.login, err);
+        console.log(err);
+        res.status(500).render('error/500');
+    }
 };
 
 //POST-запрос на обновление структуры университета
@@ -221,11 +228,12 @@ exports.updateStructure = function(req, res) {
                         console.log(err);
                     });
                 }).catch(err => {
-                    writeErrorLogs(res.session.login, err);
+                    writeErrorLogs(req.session.login, err);
                     console.log(err);
+                    res.status(500).render('error/500');
                 });
             }).catch(err => {
-                writeErrorLogs(res.session.login, err);
+                writeErrorLogs(req.session.login, err);
                 res.redirect('/update-db/update-structure?action=err');
             });
         });
@@ -235,50 +243,58 @@ exports.updateStructure = function(req, res) {
 //POST-запрос на добавление прошлых значений ПЭД ППС с файла
 exports.addPastKpi = function(req, res) {
     let form = new formidable.IncomingForm();
-    form.parse(req, function(err, fields, files) {
-        if(err) return console.log(err);
+    try {
+        form.parse(req, function (err, fields, files) {
+            if (err) return console.log(err);
 
-        let arr = ['xls', 'xlsx', 'csv'];
-        let ext = files.file.name.split('.').pop();
-        if(!files.file || arr.indexOf(ext) == -1)
-            return res.redirect('/update-db/past-kpi?action=err');
+            let arr = ['xls', 'xlsx', 'csv'];
+            let ext = files.file.name.split('.').pop();
+            if (!files.file || arr.indexOf(ext) == -1)
+                return res.redirect('/update-db/past-kpi?action=err');
 
-        let workBook = xlsx.readFile(files.file.path);
-        let firstSheetName = workBook.SheetNames[0];
-        let workSheet = workBook.Sheets[firstSheetName];
+            let workBook = xlsx.readFile(files.file.path);
+            let firstSheetName = workBook.SheetNames[0];
+            let workSheet = workBook.Sheets[firstSheetName];
 
-        //удаляем, если нужно
-        new Promise( (resolve, reject) => {
-            if(fields['del_val'] == 'on') {
-                console.log('Нужно удалить');
-                DBd.deleteAllUservalues().then(result => {
-                    //записываем логи
-                    writeLogs(req.session.login, req.session.position, "удалил(а) все значения ПЭД пользователей");
+            //удаляем, если нужно
+            new Promise((resolve, reject) => {
+                if (fields['del_val'] == 'on') {
+                    console.log('Нужно удалить');
+                    DBd.deleteAllUservalues().then(result => {
+                        //записываем логи
+                        writeLogs(req.session.login, req.session.position, "удалил(а) все значения ПЭД пользователей");
+                        resolve('ok');
+                    });
+                } else {
                     resolve('ok');
+                }
+                //resolve();
+            }).then(result => {
+                pastKpiFunc.main(workSheet).then(users => {
+                    //добавляем
+                    /*
+                    Promise.all(users.addUsers.map(async function (user) {
+                        user.passwordHash = await bcrypt.hash(user.password, BCRYPT_SALT_ROUNDS);
+                        let result = await DBi.insertUserFromObj(user);
+                        //записываем логи
+                        writeLogs(req.session.login, req.session.level, "добавил(а) нового пользователя: login - " + user.login);
+                        console.log("Сохранен объект user", user.login);
+                    })).then(result => {
+                        res.render('admin/users/page_add_users_from_file2', {action: 'ok', report: true,
+                        users: users.allUsers, countAdd: users.addUsers.length, counts: users.counts});
+                    });
+                     */
+                    res.render('update-db/page-add-past-values', {
+                        action: 'ok', report: true,
+                        countAdd: 0, countError: users.counts.countError, users: users.allUsers,
+                        infoUser: req.session, pageName: '/update-db/past-kpi'
+                    });
                 });
-            } else {
-                resolve('ok');
-            }
-            //resolve();
-        }).then(result => {
-            pastKpiFunc.main(workSheet).then(users => {
-                //добавляем
-                /*
-                Promise.all(users.addUsers.map(async function (user) {
-                    user.passwordHash = await bcrypt.hash(user.password, BCRYPT_SALT_ROUNDS);
-                    let result = await DBi.insertUserFromObj(user);
-                    //записываем логи
-                    writeLogs(req.session.login, req.session.level, "добавил(а) нового пользователя: login - " + user.login);
-                    console.log("Сохранен объект user", user.login);
-                })).then(result => {
-                    res.render('admin/users/page_add_users_from_file2', {action: 'ok', report: true,
-                    users: users.allUsers, countAdd: users.addUsers.length, counts: users.counts});
-                });
-                 */
-                res.render('update-db/page-add-past-values', {action: 'ok', report: true,
-                    countAdd: 0, countError: users.counts.countError, users: users.allUsers,
-                    infoUser: req.session, pageName: '/update-db/past-kpi'});
             });
         });
-    });
+    } catch (err) {
+        writeErrorLogs(req.session.login, err);
+        console.log(err);
+        res.status(500).render('error/500');
+    }
 };

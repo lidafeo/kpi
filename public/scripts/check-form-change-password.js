@@ -16,23 +16,6 @@ $(document).ready(function() {
         form.classList.add('was-validated');
         return check;
     }
-    $('#form-edit-pass').submit(function (e) {
-        e.preventDefault();
-        $('#error').text("");
-        if (!checkValidForm(this)) {
-            return;
-        }
-        $.post('/settings', $(this).serialize(), function (data) {
-            if (data.err) {
-                $('#modalCenter #modalTitle').text('Ошибка');
-                $('#modalCenter #modalBody').html(data.err);
-                return $('#modalCenter').modal('show');
-            }
-            $('#modalCenter #modalTitle').text('Изменение пароля');
-            $('#modalCenter #modalBody').html(data.result);
-            return $('#modalCenter').modal('show');
-        });
-    });
     $("#password1, #password2").on("input", function (e) {
         if(!$('#form-edit-pass').hasClass('was-validated')) {
             return;
@@ -46,5 +29,24 @@ $(document).ready(function() {
             $('#error').text("Пароли не совпадают");
             element.setCustomValidity("Invalid field");
         }
+    });
+    $('#form-edit-pass').submit(function (e) {
+        e.preventDefault();
+        $('#error').text("");
+        if (!checkValidForm(this)) {
+            return;
+        }
+        let url = document.location.pathname;
+        console.log(url);
+        $.post(url, $(this).serialize(), function (data) {
+            if (data.err) {
+                $('#modalCenter #modalTitle').text('Ошибка');
+                $('#modalCenter #modalBody').html(data.err);
+                return $('#modalCenter').modal('show');
+            }
+            $('#modalCenter #modalTitle').text('Изменение пароля');
+            $('#modalCenter #modalBody').html(data.result);
+            return $('#modalCenter').modal('show');
+        });
     });
 });

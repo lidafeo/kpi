@@ -11,5 +11,7 @@ let checkRight = require('../modules/check-right');
 router.route('/add-pps')
     .get(handler.pageAddPps)
     .post(urlencodedParser, handler.addPps);
-
+router.route('/change-password')
+    .get(handler.pageChangePassword)
+    .post(urlencodedParser, handler.changePassword);
 module.exports = router;

@@ -8,9 +8,13 @@
 	<%- include("../common/menu.ejs") %>
 	<div class="wrapper">
 		<div class="content container-fluid">
-			<p> 
-				<h3 class="nametable">Список пользователей ППС</h3>
-			</p>
+			<h1>Список пользователей ППС</h1>
+			<div class="table-filters form-group row">
+				<div class="col-sm d-flex">
+					<img src="/img/icons/search.svg" alt="поиск" title="поиск" width="28px">
+					<input type="text" class="form-control ml-sm-3" placeholder="Поиск по ФИО">
+				</div>
+			</div>
 			<table class="table">
 				<thead>
 					<tr>
@@ -19,16 +23,22 @@
 						<th scope="col"><h4>Должность</h4></th>
 						<th scope="col"><h4>Факультет</h4></th>
 						<th scope="col"><h4>Кафедра</h4></th>
+                        <% if(infoUser.rights.indexOf("change_password_pps") !== -1) {%>
+                            <th scope="col"><h4>Действия</h4></th>
+                        <%}%>
 					</tr>
 				</thead>
 				<tbody>
 					<% for(let i = 0; i < users.length; i ++) {%>
-						<tr>
+						<tr class="table-data">
 							<th scope="row"><%=users[i].name %></th>
 							<td><%=users[i].login %></td>
 							<td><%=users[i].position %></td>
 							<td><%=users[i].faculty %></td>
 							<td><%=users[i].department %></td>
+                            <% if(infoUser.rights.indexOf("change_password_pps") !== -1) {%>
+                                <td><a href="/change-pps/change-password?login=<%=users[i].login%>"><img src="/img/icons/pencil.svg" alt="изменить пароль" title="изменить пароль" width="28px"></a></td>
+                            <%}%>
 						</tr>
 					<%} %>
 				</tbody>
@@ -41,6 +51,7 @@
 	</div>
 
 	<%- include("../common/scripts.ejs")%>
+	<script type="text/javascript" src="/scripts/filter-table-by-th.js"></script>
 
 </body>
 </html>

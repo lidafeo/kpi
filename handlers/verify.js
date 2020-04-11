@@ -22,6 +22,7 @@ exports.pageVerify = function(req, res) {
                 infoUser: req.session, pageName: '/verify'});
         });
     } catch (err) {
+        writeErrorLogs(req.session.login, err);
         console.log("Ошибка доступа", err);
         res.status(500).render('error/500');
     }
@@ -32,6 +33,9 @@ exports.pageValPps = function(req, res) {
     let valId = req.params["valId"];
     console.log('valId', valId);
     let level = req.session.level;
+    if(!req.session.position) {
+        level = 10;
+    }
     let department = req.session.department;
     let faculty = req.session.faculty;
     DBs.selectValueKpiByIdForVerify(valId).then(result => {
@@ -41,7 +45,7 @@ exports.pageValPps = function(req, res) {
         funcValueOfKpi.modifyDateOfValue(result);
         funcStructure.getFacultyForVerify(level, faculty, department).then(structure => {
             let val = null;
-            if(level == 3 ||
+            if(level == 10 ||
                 (level == 2 && structure.faculty.indexOf(result[0].faculty) !== -1) ||
                 (level == 1 && structure.department.indexOf(result[0].department) !== -1)) {
                 //if(result[0] && structure.faculty.indexOf(result[0].faculty) !== -1 &&
@@ -53,7 +57,9 @@ exports.pageValPps = function(req, res) {
                 infoUser: req.session, pageName: '/verify/val'});
         });
     }).catch(err => {
+        writeErrorLogs(req.session.login, err);
         console.log(err);
+        res.status(500).render('error/500');
     });
 };
 
@@ -71,6 +77,7 @@ exports.verify = function(req, res) {
             res.render("verify/partials/table-for-verify", {kpi: result, textErr: false});
         }
     }).catch(err => {
+        writeErrorLogs(req.session.login, err);
         console.log(err);
         res.status(500).render('error/500');
     });
@@ -84,10 +91,11 @@ exports.invalidValue = function(req, res) {
     DBu.updateValueInvalid(invalidId, login, invalidComment).then(result => {
         console.log(result);
         //записываем логи
-        writeLogs(login, req.session.position, "сделал(а) отметку о недействительности значения ПЭД с id" +
+        writeLogs(login, req.session.position, "сделал(а) отметку о недействительности значения ПЭД с id " +
             invalidId + " по следующей причине: " + invalidComment);
         res.json({"result": 'ok', "login": login});
     }).catch(err => {
+        writeErrorLogs(req.session.login, err);
         console.log(err);
         res.json({'result': 'err'});
     });
@@ -103,6 +111,7 @@ exports.cancelInvalidValue = function(req, res) {
             invalidId + " действительной (отмена отметки)");
         res.json({"result": 'ok', "login": login});
     }).catch(err => {
+        writeErrorLogs(req.session.login, err);
         console.log(err);
         res.json({'result': 'err'});
     });
@@ -113,13 +122,16 @@ exports.getWorkers = function(req, res) {
     let level = req.session.level;
     let faculty = req.body.faculty;
     let department = req.body.department;
+    if(!req.session.position) {
+        level = 10;
+    }
     DBs.selectUserFromDepartment(faculty, department, level).then(result => {
         res.render('verify/partials/list-workers', {worker: result});
     }).catch(err => {
+        writeErrorLogs(req.session.login, err);
         console.log(err);
         res.status(500).render('error/500');
     });
-
 };
 
 //получить структуру
@@ -135,6 +147,7 @@ exports.getStructure = function(req, res) {
         }
         res.json(structure);
     }).catch(err => {
+        writeErrorLogs(req.session.login, err);
         console.log(err);
         res.status(500).render('error/500');
     });

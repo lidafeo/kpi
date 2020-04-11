@@ -166,7 +166,9 @@ exports.pageGetValue = function(req, res) {
         res.render('pps/page-one-value', {val: result[0], infoUser: req.session,
             pageName: '/pps/val'});
     }).catch(err => {
+        writeErrorLogs(req.session.login, err);
         console.log(err);
+        res.status(500).render('error/500');
     });
 };
 

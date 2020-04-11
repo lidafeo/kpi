@@ -8,26 +8,30 @@
 	<%- include("../common/menu.ejs") %>
 	<div class="wrapper">
 		<div class="content container-fluid">
-			<p> 
-				<h3 class="nametable">Кафедры и факультеты университета</h3>
-			</p>
-			<table style="margin-left: 20px;">
-				<tr>
-					<th><h4>Факультет</h4></th>
-					<th><h4>Кафедра</h4></th>
-                </tr>
-                <% for (faculty in structure) {%>
-					<tr>
-                        <td rowspan="<%=structure[faculty].length%>"><%=faculty %></td>
-						<td><%=structure[faculty][0] %></td>
-                    </tr>
-                    <% for (let i = 1; i < structure[faculty].length; i++) {%>
-                        <tr>
-                            <td><%=structure[faculty][i] %></td>
-                        </tr>
-                    <%} %>
-				<%} %>
-			</table>
+			<h1>Кафедры и факультеты университета</h1>
+			<div class="table-responsive-md">
+				<table class="table border-color-f">
+					<thead>
+						<tr>
+							<th scope="col">Факультет</th>
+							<th scope="col">Кафедра</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% for (faculty in structure) {%>
+							<tr>
+								<th scope="row" rowspan="<%=structure[faculty].length%>"><%=faculty %></th>
+								<td><%=structure[faculty][0] %></td>
+							</tr>
+							<% for (let i = 1; i < structure[faculty].length; i++) {%>
+								<tr>
+									<td><%=structure[faculty][i] %></td>
+								</tr>
+							<%} %>
+						<%} %>
+					</tbody>
+				</table>
+			</div>
 		</div>
 		
 		<div class="footer">

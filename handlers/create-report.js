@@ -151,10 +151,12 @@ exports.getReport = function(req, res) {
             wb.write(objPeriod.date1.split("-").reverse().join('_') + '-' +
                 objPeriod.date2.split("-").reverse().join('_') + '.xlsx', res);
         }).catch(err => {
+            writeErrorLogs(req.session.login, err);
             console.log(err);
             res.status(500).render('error/500');
         });
     }).catch(err => {
+        writeErrorLogs(req.session.login, err);
         console.log(err);
         res.status(500).render('error/500');
     });

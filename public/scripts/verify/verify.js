@@ -38,7 +38,9 @@ $(document).ready(function() {
 		request.open("POST", "/verify", true);
 		request.setRequestHeader("Content-Type", "application/json");
 		request.addEventListener("load", function() {
+			$('#tablekpi').hide();
 			$('#tablekpi').html(request.response);
+			$('#tablekpi').slideDown(500);
 		});
 		request.send(sendValue);
 	});
@@ -79,7 +81,9 @@ $(document).ready(function() {
 		request.open("POST", "/get-workers", true);
 		request.setRequestHeader("Content-Type", "application/json");
 		request.addEventListener("load", function() {
-			$("#usersdiv").html(request.response);
+			$('#usersdiv').hide();
+			$('#usersdiv').html(request.response);
+			$('#usersdiv').slideDown(500);
 		});
 		request.send(sendValue);
 	});

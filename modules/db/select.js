@@ -33,7 +33,7 @@ exports.selectUserFromDepartment = function(faculty, department, level) {
 
 //получить одного пользователя
 exports.selectOneUser = function(login) {
-	return query("SELECT login FROM users " +
+	return query("SELECT * FROM users " +
 		"WHERE login=?",
 		[login]);
 };

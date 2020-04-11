@@ -76,7 +76,7 @@ exports.pageGetStructure = function(req, res) {
         res.render('table-pages/page-table-structure', {action: action, structure: structure,
             infoUser: req.session, pageName: '/get-structure'});
     }).catch(err => {
-        writeErrorLogs(res.session.login, err);
+        writeErrorLogs(req.session.login, err);
         console.log(err);
         req.status(500).render('error/500');
     });
