@@ -2,17 +2,19 @@ $(document).ready(function() {
 	let num = 0;
 	let countSlide = 1;
 	let divCrit = $('#crit0').html();
+
 	$('.addcrit').slick({
 		infinite: false,
 		arrows: false,
 		swipe: false
 	});
-
-	$('#add').click(function(e) {
-		$('#crit' + num + ' #errorсrit').html('');
-		$("#next").css("border", "none");
+/*
+	$('#form-send').submit(function(e) {
+		//$('#crit' + num + ' #errorсrit').html('');
+		//$("#next").css("border", "none");
 		let check = true;
-		let inputClass = "#crit" + num + " ";
+		//let inputClass = "#crit" + num + " ";
+		/*
 		if(!checkEmpty("#infokpi ")) {
 			$('#error').html('<h4>Заполните данные о ПЭДе!</h4>');
 			check = false;
@@ -36,12 +38,15 @@ $(document).ready(function() {
 			$('#next').css("border", "2px solid red");
 			check = false;
 		}
+		if (this.checkValidity() === false) {
+			check = false;
+		}
 		if(!check) {
-			e.preventDefault();
-			$('html, body').animate({scrollTop: 0}, 500);
+			return e.preventDefault();
+			//$('html, body').animate({scrollTop: 0}, 500);
 		}
 	});
-
+*/
 	//Изменение типа ПЭДа
 	$("input[name='type']").change(function() {
 		//если выбран 1 тип
@@ -79,15 +84,6 @@ $(document).ready(function() {
 				let crit = "#crit" + (i - 1);
 				$(crit).after('<div id="crit' + i + '">' + divCrit + '</div>');
 				$('#crit' + i + ' #critname').text("Критерий №" + (i + 1));
-
-				//$('#crit' + i + ' #description').attr("name", "description_" + i);
-				//$('#crit' + i + ' .typecriterion').attr("name", "type_" + i);
-				//$('#crit' + i + ' #namecriterion').attr("name", "namecriterion_" + i);
-				/*
-				for(let j = 1; j <= 6; j++) {
-					$('#crit' + i + ' #g' + j).attr("name", "g" + j + "_" + i);
-				}
-				*/
 				if($("input[value='2']").prop("checked")) {
 					$('#crit' + i +' .hidden').show();
 				}
@@ -125,7 +121,7 @@ $(document).ready(function() {
 	$('#next').click(function(e) {
 		e.preventDefault();
 		let crit = "#crit" + num + " ";
-		if(!checkEmpty(crit)) {
+		/*if(!checkEmpty(crit)) {
 			$('#crit' + num + ' #errorсrit').html('<h4>Заполните поля!</h4>');
 			return $('html, body').animate({scrollTop: $('#crit' + num + ' #errorсrit').offset().top},
 			 500);
@@ -136,6 +132,7 @@ $(document).ready(function() {
 			 500);
 		}
 		$('#crit' + num + ' #errorсrit').html('');
+		 */
 		if(+$("#count").val() != num + 1) {
 
 			$('#prev').show();
@@ -159,6 +156,7 @@ $(document).ready(function() {
 	});
 });
 
+/*
 function checkEmpty(inputClass) {
 	$(inputClass + " input, " + inputClass + " textarea").css("border", "none");
 
@@ -190,3 +188,4 @@ function checkFigure(inputClass) {
 	$(inputClass + ' .notfigure_field').css("border", "2px solid red");
 	return $(inputClass + ' .notfigure_field').length == 0;
 }
+ */

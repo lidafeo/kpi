@@ -1,6 +1,4 @@
-//функции работы с БД
-let DBs = require('../modules/db/select.js');
-let DBi = require('../modules/db/insert.js');
+let DB = require('../modules/db');
 
 let writeLogs = require('../modules/logs').log;
 let writeErrorLogs = require('../modules/logs').error;
@@ -10,7 +8,7 @@ exports.pageAddRole = function(req, res) {
     let action = 0;
     if(req.query.action == 'ok') action = 1;
     if(req.query.action == 'err') action = 2;
-    DBs.selectAllRights().then(rights => {
+    DB.rights.selectAllRights().then(rights => {
         res.render('change-roles/page-add-role', {rights: rights, action: action,
             infoUser: req.session, pageName: '/change-roles/add-role'});
     }).catch(err => {
@@ -27,12 +25,12 @@ exports.addRole = function(req, res) {
     let rights = req.body.rights;
     let role = req.body.role;
     try {
-        DBi.insertRole(role).then(result => {
+        DB.roles.insertRole(role).then(result => {
             //записываем логи
             writeLogs(req.session.login, req.session.position, "добавил(а) роль " + role);
             if (rights && rights.length > 0) {
                 Promise.all(rights.map(el => {
-                    DBi.insertRightsInRole(el, role);
+                    DB.rightsRoles.insertRightsInRole(el, role);
                 })).then(result => {
                     //записываем логи
                     writeLogs(req.session.login, req.session.position, "добавил(а) права роли " + role);

@@ -8,23 +8,20 @@
 	<%- include("common/menu.ejs") %>
 	<div class="wrapper">
 		<div class="content container-fluid">
-			<div class="page">
-				<div class="formborderadmin">
-					<h2 class="title-page">Доступ к личным кабинетам</h2>
-					<% if(op) {%>
-						<p class="text">Состояние ЛК: кабинеты открыты</p>
-						<form name="close" action="" method="post">
-							<input type="submit" class="buttonmypage" value="Закрыть доступ к кабинетам">
-						</form>
-					<%} %>
-					<% if(!op) {%>
-						<p class="text">Состояние ЛК: кабинеты закрыты</p>
-						<form name="open" action="" method="post">
-							<input type="submit" class="buttonmypage" value="Открыть доступ к кабинетам">
-						</form>
-					<%} %>
-				</div>
-			</div>
+			<h1>Доступ к личным кабинетам ППС</h1>
+			<hr>
+			<% if(op) {%>
+				<p>Состояние ЛК: <b>кабинеты открыты</b></p>
+				<form name="close" action="" method="post">
+					<button type="submit" class="btn btn-primary btn-lg">Закрыть доступ к кабинетам</button>
+				</form>
+			<%} %>
+			<% if(!op) {%>
+				<p>Состояние ЛК: <b>кабинеты закрыты</b></p>
+				<form name="open" action="" method="post">
+					<button type="submit" class="btn btn-primary btn-lg">Открыть доступ к кабинетам</button>
+				</form>
+			<%} %>
 		</div>
 		
 		<div class="footer">

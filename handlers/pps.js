@@ -1,8 +1,7 @@
 const formidable = require("formidable");
 const fs = require("fs");
 
-let DBs = require('../modules/db/select.js');
-let DBi = require('../modules/db/insert.js');
+let DB = require('../modules/db');
 
 let writeLogs = require('../modules/logs').log;
 let writeErrorLogs = require('../modules/logs').error;
@@ -10,6 +9,9 @@ let dateModule = require('../modules/date.js');
 let generateFileName = require('../modules/additional').generateFileName;
 let createArrayOfKeyValues = require('../modules/additional').createArrayOfKeyValues;
 let getObjPeriod = require('../modules/period.js').getObjPeriod;
+
+let getPeriod = require('../modules/period.js').getPeriod;
+
 let funcKpi = require('../modules/func-kpi');
 let funcValueOfKpi = require('../modules/func-value-of-kpi');
 
@@ -17,34 +19,21 @@ let funcValueOfKpi = require('../modules/func-value-of-kpi');
 exports.pageGetMyScore = function(req, res) {
     let name = req.session.name;
     let login = req.session.login;
-    let role = req.session.role;
     let position = req.session.position;
 
-    let date1 = req.query.date1;
-    let date2 = req.query.date2;
+    getPeriod().then(period => {
 
-    //Если период отчета не задан, устанавливаем
-    if(!date1 || !date2) {
-        let dt1 = new Date();
-        let dt2 = new Date();
-        dt1.setMonth(dt1.getMonth() - 6);
-        date1 = dateModule.dateForInput(dt1);
-        date2 = dateModule.dateForInput(dt2);
-    }
-    let d1 = new Date(date1);
-    let d2 = new Date(date2);
-    //ищем опубликованные значения ПЭДов в заданный период
-    DBs.selectValueKpiUserInPeriod(login, dateModule.dateForInput(d1), dateModule.dateForInput(d2))
-        .then(result => {
-            let objPeriod = getObjPeriod();
+        //ищем опубликованные значения ПЭДов в заданный период
+        DB.userValues.selectValueKpiUserInPeriod(login, dateModule.dateForInput(period.d1), dateModule.dateForInput(period.d2)).then(result => {
+
             if(result.length == 0) {
                 res.render("pps/page-get-scores", {name: name, position: position, kpi: null, date1:
-                    date1, date2: date2, objPeriod: objPeriod, infoUser: req.session,
+                    period.date1, date2: period.date2, objPeriod: period, infoUser: req.session,
                     pageName: '/pps/get-my-score'});
             }
             else {
                 new Promise((resolve, reject) => {
-                    DBs.selectAllCriterion(position).then(result => {
+                    DB.criterions.selectAllCriterion(position).then(result => {
                         let arrObj = [];
                         let kpi = [];
                         for(let i = 0; i < result.length; i++) {
@@ -80,7 +69,6 @@ exports.pageGetMyScore = function(req, res) {
                                 arrKpi.push([]);
                             }
                             arrKpi[section.indexOf(userValues[i - 1].section)].push(info);
-
                             info = {};
                         }
                         if(i != userValues.length) {
@@ -94,11 +82,12 @@ exports.pageGetMyScore = function(req, res) {
                     for(let i = 0; i < arrKpi.length; i++)
                         arrKpi[i].sort(funcKpi.sortArr);
                     res.render("pps/page-get-scores", {name: name, position: position, kpi: arrKpi,
-                        date1: date1, date2: date2, objPeriod: objPeriod,
+                        date1: period.date1, date2: period.date2, objPeriod: period,
                         infoUser: req.session, pageName: '/pps/get-my-score'});
                 });
             }
-        }).catch(err => {
+        });
+    }).catch(err => {
         writeErrorLogs(req.session.login, err);
         console.log(err);
         res.status(500).render('error/500');
@@ -107,7 +96,7 @@ exports.pageGetMyScore = function(req, res) {
 
 //GET-запрос страницы добавления значений ПЭД
 exports.pageAddValueKpi = function(req, res) {
-    DBs.selectAllKpi().then(result => {
+    DB.kpi.selectAllKpi().then(result => {
         let obj = {};
         for(let i = 0; i < result.length; i++) {
             if(!obj[result[i].section])
@@ -143,10 +132,21 @@ exports.pageAddValueKpi = function(req, res) {
 
 //GET-запрос страницы просмотра добавленных значений ПЭД
 exports.pageGetValuesKpi = function(req, res) {
-    DBs.selectValueKpiUser(req.session.login).then(result => {
-        funcValueOfKpi.modifyDateOfValue(result);
-        res.render('pps/page-my-values', {kpi: result, infoUser: req.session,
-            pageName: '/pps/get-values-kpi'});
+    getPeriod().then(period => {
+        console.log(period);
+        period.dateStart = dateModule.dateForOut(period.d1);
+        period.dateFinish = dateModule.dateForOut(period.d2);
+        DB.userValues.selectValueKpiUserInPeriodOrderByDate(req.session.login, period.date1, period.date2).then(result => {
+            funcValueOfKpi.modifyDateOfValue(result);
+            res.render('pps/page-my-values', {
+                kpi: result, infoUser: req.session, period: period,
+                pageName: '/pps/get-values-kpi'
+            });
+        }).catch(err => {
+            writeErrorLogs(req.session.login, err);
+            console.log(err);
+            res.status(500).render('error/500');
+        });
     }).catch(err => {
         writeErrorLogs(req.session.login, err);
         console.log(err);
@@ -158,7 +158,7 @@ exports.pageGetValuesKpi = function(req, res) {
 exports.pageGetValue = function(req, res) {
     let valId = req.params["valId"];
     let login = req.session.login;
-    DBs.selectValueKpiById(valId, login).then(result => {
+    DB.userValues.selectValueKpiById(valId, login).then(result => {
         //if(!result[0]) {
         //	res.render('pps/page_one_val', {val: result[0]});
         //}
@@ -176,9 +176,9 @@ exports.pageGetValue = function(req, res) {
 exports.chooseKpiForAddValue = function(req, res) {
     let position = req.session.position;
     let login = req.session.login;
-    DBs.selectBallOneKpi(req.body.name, position).then(kpi => {
+    DB.balls.selectBallOneKpi(req.body.name, position).then(kpi => {
         if(kpi[0].ball != 0) {
-            DBs.selectValueKpiUserOneKpi(login, req.body.name).then(result => {
+            DB.userValues.selectValueKpiOfUserOneKpi(login, req.body.name).then(result => {
                 funcValueOfKpi.modifyDateOfValue(result);
                 res.render("pps/partials/table-posted-values", {kpi: result, desc: kpi, textErr: false});
             }).catch(err => {
@@ -211,7 +211,7 @@ exports.addValueKpi = function(req, res) {
         let radio = 0;
         if(fields.radio) radio = fields.radio;
         //находим в БД добавляемый ПЭД, чтобы узнать время его действия
-        DBs.selectOneKpi(fields.name).then(result => {
+        DB.kpi.selectOneKpi(fields.name).then(result => {
             let kpi = result[0];
             let finishDate = new Date(fields.date);
             if(files.file) {
@@ -224,7 +224,7 @@ exports.addValueKpi = function(req, res) {
                 "start_date": dateModule.dateForInput(new Date(fields.date)),
                 "finish_date": dateModule.dateForInput(finishDate), "text": fields.text,
                 "link": fields.link, "file": fileName, "number_criterion": radio};
-            DBi.insertValueKpi(val).then(result => {
+            DB.userValues.insertValueKpi(val).then(result => {
                 console.log("Сохранен объект uservalue");
                 res.send('ok');
                 //записываем логи

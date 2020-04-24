@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-dark mb-md-3" style="background-color: #561C75;">
+<nav class="navbar navbar-expand-lg navbar-dark mb-md-3" style="background-color: rgba(42, 2, 88, 0.9);">
 	<a class="navbar-brand ml-md-4" href="/my-page"><%=infoUser.login%></a>
 	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"></span>
@@ -50,7 +50,7 @@
 							<a class="dropdown-item" href="/change-users/add-user">Добавить</a>
 						<%} %>
 						<% if(infoUser.rights.indexOf("delete_user") !== -1) {%>
-							<a class="dropdown-item" href="/change-users/delete-user">Удалить</a>
+							<a class="dropdown-item" href="/get-users">Удалить</a>
 						<%} %>
 					</div>
 				</li>
@@ -84,7 +84,7 @@
 				<li class="nav-item dropdown">
 					<a class="nav-link dropdown-toggle
 						<%if (pageName == "/get-kpi" || pageName == "/change-kpi/add-kpi"
-							|| pageName == "/change-kpi/delete-kpi" || pageName == "/change-kpi/edit-balls") {%>
+							|| pageName == "/change-kpi/edit-kpi" || pageName == "/change-kpi/choice-kpi") {%>
 							<%='active'%>
 						<%}%>
 					" href="#" id="dropdownKpi" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -97,11 +97,8 @@
 						<% if(infoUser.rights.indexOf("create_kpi") !== -1) {%>
 							<a class="dropdown-item" href="/change-kpi/add-kpi">Добавить</a>
 						<%} %>
-						<% if(infoUser.rights.indexOf("delete_kpi") !== -1) {%>
-							<a class="dropdown-item" href="/change-kpi/delete-kpi">Удалить</a>
-						<%} %>
-						<% if(infoUser.rights.indexOf("change_balls_of_kpi") !== -1) {%>
-							<a class="dropdown-item" href="/change-kpi/edit-balls">Изменить оценки</a>
+						<% if(infoUser.rights.indexOf("change_kpi") !== -1) {%>
+							<a class="dropdown-item" href="/change-kpi/choice-kpi">Изменить</a>
 						<%} %>
 					</div>
 				</li>

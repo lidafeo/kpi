@@ -1,7 +1,6 @@
 const xl = require("excel4node");
 
-//функции работы с БД
-let DBs = require('../modules/db/select.js');
+let DB = require('../modules/db');
 
 let writeLogs = require('../modules/logs').log;
 let writeErrorLogs = require('../modules/logs').error;
@@ -38,14 +37,14 @@ exports.getReport = function(req, res) {
     let date2 = new Date(objPeriod.date2);
 
 
-    DBs.forReportPFU(dateModule.dateForInput(date1), dateModule.dateForInput(date2)).then(userValues => {
+    DB.custom.forReportPFU(dateModule.dateForInput(date1), dateModule.dateForInput(date2)).then(userValues => {
         console.log(userValues[0]);
         console.log(userValues[1]);
         console.log(userValues[2]);
         console.log(userValues[3]);
         console.log(userValues[4]);
         console.log(')))))))');
-        DBs.selectKpiAndUser().then(kpi => {
+        DB.custom.selectKpiAndUser().then(kpi => {
             console.log(kpi[0]);
             console.log(kpi[1]);
             console.log(kpi[2]);

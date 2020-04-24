@@ -14,14 +14,14 @@
 				<table class="table border-color-f table-sm">
 					<thead>
 						<tr class="row1">
-							<th scope="col" rowspan="2">Шифр показателя эффективности</th>
-							<th scope="col" rowspan="2">Показатель</th>
-							<th scope="col" rowspan="2">Критерии оценки эффективности деятельности</th>
-							<th scope="col" colspan="<%=positions.length%>">Группы</th>
+							<th class="text-center align-middle" scope="col" rowspan="2">Шифр показателя эффективности</th>
+							<th class="text-center align-middle" scope="col" rowspan="2">Показатель</th>
+							<th class="text-center align-middle" scope="col" rowspan="2">Критерии оценки эффективности деятельности</th>
+							<th class="text-center align-middle" scope="col" colspan="<%=positions.length%>">Группы</th>
 						</tr>
 						<tr class="row2">
 							<% for(let i = 0; i < positions.length; i++) {%>
-								<th scope="col"><%=positions[i]%></th>
+								<th scope="col" class="text-center align-middle th-w-85"><%=positions[i]%></th>
 							<%} %>
 						</tr>
 					</thead>
@@ -29,39 +29,39 @@
 						<% for(let u = 0; u < kpi.length; u++) {%>
 							<% if(kpi[u].length != 0) {%>
 								<tr>
-									<th scope="row"><%=kpi[u][0].section[0] + "." %></th>
-									<td colspan="<%=positions.length + 2%>" class="namesection">
-										<h4>Раздел <%=(u+1) + ". " + kpi[u][0].section %></h4>
+									<th class="text-center align-middle" scope="row"><%=kpi[u][0].section[0] + "." %></th>
+									<td class="text-center align-middle" colspan="<%=positions.length + 2%>">
+										<h5>Раздел <%=(u+1) + ". " + kpi[u][0].section %></h5>
 									</td>
 								</tr>
 								<% let arr = kpi[u]; %>
 								<% for(let i = 0; i < arr.length; i++) {%>
 									<% if(arr[i].type == 1) {%>
 										<tr>
-											<th scope="row" rowspan="<%=arr[i].count_criterion%>"><%=arr[i].name %></th>
-											<td rowspan="<%=arr[i].count_criterion%>"><%=arr[i].description %></td>
+											<th class="text-center align-middle" scope="row" rowspan="<%=arr[i].count_criterion%>"><%=arr[i].name %></th>
+											<td class="text-center align-middle" rowspan="<%=arr[i].count_criterion%>"><%=arr[i].description %></td>
 											<% for(let j = 0; j < arr[i].lines.length; j++) {%>
 												<% if(j != 0) {%>
 													</tr><tr>
 												<%} %>
-												<td><%=arr[i].lines[j].name %></td>
+												<td class="text-center align-middle"><%=arr[i].lines[j].name %></td>
 												<% for(let k = 0; k < positions.length; k++) {%>
-													<td><big><%=arr[i].lines[j].balls[positions[k]] %></big></td>
+													<td class="text-center align-middle"><%=arr[i].lines[j].balls[positions[k]] %></td>
 												<%} %>
 											<%} %>
 										</tr>
 										<%} %>
 										<% if(arr[i].type == 2) {%>
 										<tr>
-											<th scope="col" rowspan="<%=(arr[i].count_criterion + 1)%>"><%=arr[i].name %></th>
-											<td colspan="<%=positions.length + 2%>"><%=arr[i].description %></td>
+											<th class="text-center align-middle" scope="col" rowspan="<%=(arr[i].count_criterion + 1)%>"><%=arr[i].name %></th>
+											<td class="text-center align-middle" colspan="<%=positions.length + 2%>"><%=arr[i].description %></td>
 											</tr>
 											<% for(let j = 0; j < arr[i].lines.length; j++) {%>
 											<tr>
-												<td><%=arr[i].lines[j].description %></td>
-												<td><%=arr[i].lines[j].name %></td>
+												<td class="text-center align-middle"><%=arr[i].lines[j].description %></td>
+												<td class="text-center align-middle"><%=arr[i].lines[j].name %></td>
 												<% for(let k = 0; k < positions.length; k++) {%>
-													<td><big><%=arr[i].lines[j].balls[positions[k]] %></big></td>
+													<td class="text-center align-middle"><%=arr[i].lines[j].balls[positions[k]] %></td>
 												<%} %>
 											<%} %>
 

@@ -10,7 +10,7 @@
 		<div class="content container">
 			<h1>Добавление нового пользователя</h1>
 			<hr>
-			<form name="adduser" action="" method="post" class="needs-validation" id="form-add-user" novalidate>
+			<form name="adduser" action="" method="post" class="needs-validation" id="form-send" novalidate>
 				<div class="form-group row">
 					<label for="name" class="col-sm-2 col-form-label">ФИО</label>
 					<div class="col-sm-10">
@@ -106,10 +106,13 @@
 		<div class="footer">
 			<%- include("../common/footer.ejs") %>
 		</div>
+		<%- include("../common/modal.ejs") %>
 	</div>
 
 	<%- include("../common/scripts.ejs")%>
 	<script type="text/javascript" src="/scripts/check-form.js"></script>
+	<script type="text/javascript" src="/scripts/generate-password.js"></script>
+    <script type="text/javascript" src="/scripts/send-form.js"></script>
 	<script type="text/javascript" src="/plugins/carhartl-jquery-cookie-92b7715/jquery.cookie.js"></script>
 	<script type="text/javascript" src="/scripts/change-users/add-user.js"></script>
 </body>

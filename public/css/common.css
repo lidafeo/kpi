@@ -2,6 +2,16 @@
     color:  #424949;
     margin-bottom: 10px;
 }
+.nav-link {
+     color: rgba(255, 255, 255, 0.7) !important;
+ }
+.nav-link:hover {
+    text-decoration: underline !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+.active {
+    color: rgba(255, 255, 255, 1) !important;
+}
 .warning {
     background-color: #ffffcc;
     border-left: 6px solid #ffeb3b;
@@ -17,7 +27,14 @@
     content: "Обзор" !important;
 }
 
-.table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td,
-.table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th {
-    width:0% !important;
+.th-w-85{
+    width: 85px !important;
+}
+.th-w-330{
+    width: 330px !important;
+}
+@media screen and (min-width: 1200px) {
+    .th-w-85{
+        word-break: break-all;
+    }
 }

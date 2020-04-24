@@ -1,5 +1,4 @@
-let DBs = require('./db/select.js');
-let DBi = require('./db/insert.js');
+let DB = require('./db');
 
 let colunms = ['B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q',
     'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH',
@@ -29,7 +28,7 @@ module.exports = {
                 break;
             }
             // ищем пользователя в БД
-            let user = await DBs.selectOneUserByName(name);
+            let user = await DB.users.selectOneUserByName(name);
             obj.name = name;
 
             if(!user[0]) {
@@ -61,7 +60,7 @@ module.exports = {
                     for (let ival = 0; ival < parseArr.length; ival++) {
                         let objDb = getObjForSaveInDb(user[0]['login'], namesKpi[j], parseArr[ival]);
                         //console.log(objDb);
-                        let result = await DBi.insertValueKpiFromObj(objDb);
+                        let result = await DB.userValues.insertValueKpiFromObj(objDb);
                         obj.countVal++;
                         if(ival == 0) {
                             obj.countKpi ++;
@@ -224,7 +223,7 @@ async function getNamesKpiFromFile(workSheet) {
             nameKpi = nameKpi[0];
         }
         nameKpi = getNormNameKpi(nameKpi);
-        let result = await DBs.selectOneKpi(nameKpi);
+        let result = await DB.kpi.selectOneKpi(nameKpi);
         if(!result || !result[0]) {
             return "ПЭД " + nameKpi + "не найден в БД";
         }

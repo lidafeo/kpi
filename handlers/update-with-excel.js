@@ -3,10 +3,7 @@ const bcrypt = require("bcrypt");
 const formidable = require("formidable");
 const xlsx = require("xlsx");
 
-//функции работы с БД
-let DBs = require('../modules/db/select.js');
-let DBi = require('../modules/db/insert.js');
-let DBd = require('../modules/db/delete.js');
+let DB = require('../modules/db');
 
 let BCRYPT_SALT_ROUNDS = 12;
 
@@ -92,7 +89,7 @@ exports.addUsersFromFile1 = function(req, res) {
         //добавляем
         Promise.all(arrUsers.map(async function (user) {
             user.password = await bcrypt.hash(user.password, BCRYPT_SALT_ROUNDS);
-            let result = await DBi.insertUserFromObj(user);
+            let result = await DB.users.insertUserFromObj(user);
             //записываем логи
             writeLogs(req.session.login, req.session.position, "добавил(а) нового пользователя: login - " + user.login);
             console.log("Сохранен объект user", user.login);
@@ -121,7 +118,7 @@ exports.addUsersFromFile2 = function(req, res) {
             //удаляем, если нужно
             new Promise(async (resolve, reject) => {
                 if (fields['del_pps'] == 'on') {
-                    await DBd.deleteAllPps();
+                    await DB.users.deleteAllPps();
                     //записываем логи
                     writeLogs(req.session.login, req.session.position, "удалил(а) всех пользователей - ППС");
                 }
@@ -132,7 +129,7 @@ exports.addUsersFromFile2 = function(req, res) {
                     Promise.all(users.addUsers.map(async function (user) {
                         user.passwordWithoutHash = user.password;
                         user.password = await bcrypt.hash(user.password, BCRYPT_SALT_ROUNDS);
-                        let result = await DBi.insertUserFromObj(user);
+                        let result = await DB.users.insertUserFromObj(user);
                         //записываем логи
                         writeLogs(req.session.login, req.session.position, "добавил(а) нового пользователя: login - " + user.login);
                         console.log("Сохранен объект user", user.login);
@@ -203,17 +200,17 @@ exports.updateStructure = function(req, res) {
             num++;
         }
         //чистим таблицу
-        DBd.deleteStructure().then(function(result) {
+        DB.structure.deleteStructure().then(function(result) {
             //добавляем
             Promise.all(arrStruct.map(function (object) {
-                let result = DBi.insertDepartment(object);
+                let result = DB.structure.insertDepartment(object);
                 //записываем логи
                 writeLogs(req.session.login, req.session.position, "добавил(а) кафедру " + object.department + " факультета " + object.faculty);
                 console.log("Сохранен объект structure", "кафедра: " + object.department + " факультет: " + object.faculty);
             })).then(result => {
                 res.redirect('/update-db/update-structure?action=ok');
 
-                DBs.selectStructureOrderByFaculty().then(result => {
+                DB.structure.selectStructureOrderByFaculty().then(result => {
                     let structure = {};
                     let fac = [];
                     let dep = [];
@@ -260,7 +257,7 @@ exports.addPastKpi = function(req, res) {
             new Promise((resolve, reject) => {
                 if (fields['del_val'] == 'on') {
                     console.log('Нужно удалить');
-                    DBd.deleteAllUservalues().then(result => {
+                    DB.userValues.deleteAllUserValues().then(result => {
                         //записываем логи
                         writeLogs(req.session.login, req.session.position, "удалил(а) все значения ПЭД пользователей");
                         resolve('ok');
@@ -275,7 +272,7 @@ exports.addPastKpi = function(req, res) {
                     /*
                     Promise.all(users.addUsers.map(async function (user) {
                         user.passwordHash = await bcrypt.hash(user.password, BCRYPT_SALT_ROUNDS);
-                        let result = await DBi.insertUserFromObj(user);
+                        let result = await DB.users.insertUserFromObj(user);
                         //записываем логи
                         writeLogs(req.session.login, req.session.level, "добавил(а) нового пользователя: login - " + user.login);
                         console.log("Сохранен объект user", user.login);

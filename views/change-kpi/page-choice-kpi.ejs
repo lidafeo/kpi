@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Выбор ПЭД</title>
+    <%- include("../common/head.ejs")%>
+</head>
+<body>
+    <%- include("../common/menu.ejs") %>
+    <div class="wrapper">
+        <div class="content container-fluid">
+            <h1>Выбор действия для изменения ПЭД</h1>
+            <hr>
+            <% if(kpi && kpi.length > 0) {%>
+            <div class="table-responsive-md">
+                <table class="table border-color-f">
+                    <thead>
+                    <tr>
+                        <th class="text-center align-middle" scope="col">Шифр показателя эффективности</th>
+                        <th class="text-center align-middle" scope="col">Показатель</th>
+                        <th class="text-center align-middle" scope="col">Действия</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <% for(let i = 0; i < kpi.length; i++) {%>
+                        <tr>
+                            <th class="text-center align-middle" scope="row"><%=kpi[i].name%></th>
+                            <td><%=kpi[i].description%></td>
+                            <td class="text-center align-middle">
+                                <a href="/change-kpi/edit-kpi?name=<%=kpi[i].name%>" class="edit-kpi">
+                                    <img src="/img/icons/pencil.svg" alt="изменить" title="изменить" width="28px">
+                                </a>
+                                <a href="#" class="delete-kpi" data-name="<%=kpi[i].name%>">
+                                    <img src="/img/icons/trash.svg" alt="удалить" title="удалить" width="28px">
+                                </a>
+                            </td>
+                        </tr>
+                    <%} %>
+                    </tbody>
+                </table>
+            </div>
+            <%} %>
+            <% if(!kpi || kpi.length == 0) {%>
+                <h4>Нет Показателей эффективности деятельности</h4>
+            <%} %>
+        </div>
+
+        <div class="footer">
+            <%- include("../common/footer.ejs") %>
+        </div>
+        <%- include("../common/modal.ejs") %>
+        <%- include("../common/modal-confirm.ejs") %>
+    </div>
+
+    <%- include("../common/scripts.ejs")%>
+    <script type="text/javascript" src="/scripts/change-kpi/actions.js"></script>
+
+</body>
+</html>

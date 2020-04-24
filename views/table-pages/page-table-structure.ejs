@@ -13,19 +13,19 @@
 				<table class="table border-color-f">
 					<thead>
 						<tr>
-							<th scope="col">Факультет</th>
-							<th scope="col">Кафедра</th>
+							<th scope="col" class="text-center">Факультет</th>
+							<th scope="col" class="text-center">Кафедра</th>
 						</tr>
 					</thead>
 					<tbody>
 						<% for (faculty in structure) {%>
 							<tr>
-								<th scope="row" rowspan="<%=structure[faculty].length%>"><%=faculty %></th>
-								<td><%=structure[faculty][0] %></td>
+								<th class="text-center align-middle" scope="row" rowspan="<%=structure[faculty].length%>"><%=faculty %></th>
+								<td class="text-center"><%=structure[faculty][0] %></td>
 							</tr>
 							<% for (let i = 1; i < structure[faculty].length; i++) {%>
 								<tr>
-									<td><%=structure[faculty][i] %></td>
+									<td class="text-center"><%=structure[faculty][i] %></td>
 								</tr>
 							<%} %>
 						<%} %>

@@ -41,7 +41,7 @@
                         <a class="list-group-item list-group-item-action" href="/change-users/add-user">Добавить</a>
                     <%} %>
                     <% if(infoUser.rights.indexOf("delete_user") !== -1) {%>
-                         <a class="list-group-item list-group-item-action" href="/change-users/delete-user">Удалить</a>
+                         <a class="list-group-item list-group-item-action" href="/get-users">Удалить</a>
                     <%} %>
                 <%} %>
                 <% if(infoUser.rights.indexOf("create_pps") !== -1 || infoUser.rights.indexOf("change_password_pps") !== -1
@@ -67,14 +67,12 @@
                      <% if(infoUser.rights.indexOf("create_kpi") !== -1) {%>
                          <a class="list-group-item list-group-item-action" href="/change-kpi/add-kpi">Добавить</a>
                      <%} %>
-                     <% if(infoUser.rights.indexOf("delete_kpi") !== -1) {%>
-                         <a class="list-group-item list-group-item-action" href="/change-kpi/delete-kpi">Удалить</a>
-                     <%} %>
-                     <% if(infoUser.rights.indexOf("change_balls_of_kpi") !== -1) {%>
-                        <a class="list-group-item list-group-item-action" href="/change-kpi/edit-balls">Изменить оценки</a>
+                     <% if(infoUser.rights.indexOf("change_kpi") !== -1) {%>
+                        <a class="list-group-item list-group-item-action" href="/change-kpi/choice-kpi">Изменить</a>
                      <%} %>
                 <%} %>
                 <% if(infoUser.rights.indexOf("get_all_values_of_kpi") !== -1) {%>
+                    <li class="list-group-item list-group-item-info">Выполнение ПЭД ППС:</li>
                     <a class="list-group-item list-group-item-action" href="/get-all-values">Значения ПЭД</a>
                 <%} %>
                 <% if(infoUser.rights.indexOf("get_all_roles") !== -1 || infoUser.rights.indexOf("add_role") !== -1) {%>

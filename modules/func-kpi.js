@@ -1,3 +1,33 @@
+let DB = require('./db');
+
+//получение информации о конкретном ПЭД
+exports.getInfoOneKpi = async function(name) {
+    let info = {};
+    let kpi = (await DB.kpi.selectOneKpi(name))[0];
+    info.kpi = kpi;
+    info.criterions = [];
+    let positions = [];
+    let criterions = await DB.criterions.selectCriterionsOneKPi(name);
+    if(criterions) {
+        for (let i = 0; i < criterions.length; i++) {
+            let criterion = criterions[i];
+            let balls = await DB.balls.selectBallOneCriterion(criterion.id);
+            let ballsArr = [];
+            if(balls) {
+                for (let j = 0; j < balls.length; j++) {
+                    ballsArr[balls[j].position] = balls[j].ball;
+                    if(i == 0) {
+                        positions.push(balls[j].position);
+                    }
+                }
+            }
+            criterion.balls = ballsArr;
+            info.criterions.push(criterion);
+        }
+    }
+    info.positions = positions;
+    return info;
+};
 //получение массива оценок объекта одного ПЭД
 exports.getKpiObj = function(arr, positions) {
     if(!positions)

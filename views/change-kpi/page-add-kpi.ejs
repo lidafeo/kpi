@@ -12,139 +12,249 @@
     <%- include("../common/menu.ejs") %>
     <div class="wrapper">
         <div class="content container-fluid">
-			<% if(action == 1) {%>
-				<p class="uspeshno">Успешно</p>
-			<%} %>
-			<% if(action == 2) {%>
-				<p class="errormess">Ошибка добавления</p>
-			<%} %>
-			<h2>Добавление Показателя эффективности деятельности</h2>
-			<form name="addkpi" action="" method="post" class="form-add" style="width: 80%; margin-top: 5%;">
-				<div class="form-inner">
-					<div class="error-text" id="error"></div>
-					<div class="input__container" id="infokpi">
-						<div>
-							<label>Шифр</label>
-							<input type="text" name="name" id="name" class="notempty" placeholder="О.Д.1" autocomplete="off" required>
+			<h1>Добавление Показателя эффективности деятельности</h1>
+			<hr>
+			<form name="addkpi" action="" method="post" id="form-send" class="needs-validation" novalidate>
+				<div id="infokpi">
+					<div class="form-group row">
+						<label for="name" class="col-sm-2 col-form-label">Шифр</label>
+						<div class="col-sm-10">
+							<input type="text" name="name" class="form-control" id="name" maxlength="45" pattern="[A-Za-zА-Яа-я0-9Ёё.]+$" placeholder="например, О.Д.1" autocomplete="off" required>
+                            <div class="invalid-feedback">
+                                Пожалуйста введите шифр ПЭД
+                            </div>
 						</div>
-						<div>
-							<label>Раздел</label>
-							<input name="section" list="section" id="inputsection" class="notempty" placeholder="Образовательная деятельность" autocomplete="off" required>
-						</div>
+					</div>
 
+					<div class="form-group row">
+						<label for="inputsection" class="col-sm-2 col-form-label">Раздел</label>
+						<div class="col-sm-10">
+							<input name="section" list="section" class="form-control" id="inputsection" maxlength="70" pattern="[A-Za-zА-Яа-я0-9Ёё ]+$" placeholder="например, Образовательная деятельность" autocomplete="off" required>
+                            <div class="invalid-feedback">
+                                Пожалуйста выберите или введите новый раздел ПЭД
+                            </div>
+						</div>
 						<datalist id="section">
 							<% for(let i = 0; i < section.length; i++) {%>
-								<option><%=section[i].section%></option>
+							<option><%=section[i].section%></option>
 							<%} %>
 						</datalist>
-						<div>
-							<label>Подраздел</label>
-							<select name="subtype" id="subtype">
+					</div>
+
+					<div class="form-group row">
+						<label for="subtype" class="col-sm-2 col-form-label">Подраздел</label>
+						<div class="col-sm-10">
+							<select name="subtype" class="form-control" id="subtype" required>
 								<option>Должностные</option>
 								<option>Персональные</option>
 								<option>-</option>
 							</select>
+                            <div class="invalid-feedback">
+                                Пожалуйста выберите подраздел ПЭД
+                            </div>
 						</div>
-						<div>
-							<label>Номер</label>
-							<input type="number" name="number" id="number" class="figure" placeholder="1" autocomplete="off" required>
+					</div>
+
+					<div class="form-group row">
+						<label for="number" class="col-sm-2 col-form-label">Номер</label>
+						<div class="col-sm-10">
+							<input type="number" class="form-control" name="number" id="number" placeholder="1" max="1000" min="1" autocomplete="off" required>
+                            <div class="invalid-feedback">
+                                Пожалуйста введите порядковый номер ПЭД
+                            </div>
 						</div>
-						<div>
-							<label>Показатель</label>
-							<p><textarea name="desc" id="desc" class="notempty" placeholder="Качество знаний студентов по дисциплинам" required></textarea></p>
+					</div>
+
+					<div class="form-group row">
+						<label for="desc" class="col-sm-2 col-form-label">Показатель (описание)</label>
+						<div class="col-sm-10">
+							<textarea name="desc" id="desc" class="form-control" rows="3" maxlength="500" pattern="^[А-Яа-яЁё\s.]+$" placeholder="например, Качество знаний студентов по дисциплинам" required></textarea>
+                            <div class="invalid-feedback">
+                                Пожалуйста введите описание ПЭД на русском языке
+                            </div>
 						</div>
-						<div>
-							<label>Время действия подтверждения ПЭДа (в месяцах)</label>
-							<input type="text" name="implementationPeriod" class="figure" value="6" autocomplete="off" required>
+					</div>
+
+					<div class="form-group row">
+						<label for="implementationPeriod" class="col-sm-2 col-form-label">Время действия подтверждения ПЭД (в месяцах)</label>
+						<div class="col-sm-10">
+							<input type="number" name="implementationPeriod" id="implementationPeriod" class="form-control" value="0" min="0" max="1000" autocomplete="off" required>
+                            <div class="invalid-feedback">
+                                Пожалуйста введите время действия значения ПЭД
+                            </div>
 						</div>
-						<div>
-							<label>При подтверждении показателя:</label><br>
-							<input type="radio" name="indicatorssumm" value="false" id="rad1" class="radio" checked="">
-							<label for="rad1">Преподаватель должен указывать значение</label><br>
-							<input type="radio" name="indicatorssumm" value="true" id="rad2" class="radio">
-							<label for="rad2">Автоматически добавлять значение 1 к действующему значению</label>
+					</div>
+
+					<fieldset class="form-group">
+						<div class="row">
+							<legend class="col-form-label col-sm-2 pt-0">При добавлении выполненного значения:</legend>
+							<div class="col-sm-10">
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="indicatorssumm" id="rad1" value="false" checked required>
+									<label class="form-check-label" for="rad1">
+										Преподаватель должен указывать значение
+									</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="indicatorssumm" id="rad2" value="true">
+                                    <div class="invalid-feedback">
+                                        Пожалуйста выберите подходящее выражение
+                                    </div>
+									<label class="form-check-label" for="rad2">
+										Автоматически добавлять значение 1 к действующему значению
+									</label>
+								</div>
+							</div>
 						</div>
-						<div>
-							<label>Могут ли выполняться несколько критериев одновременно?</label><br>
-							<input type="radio" name="type" value="1" id="radio1" class="radio" checked="">
-							<label for="radio1">Нет</label>
-							<input type="radio" name="type" value="2" id="radio2" class="radio">
-							<label for="radio2">Да</label>
+					</fieldset>
+
+					<fieldset class="form-group">
+						<div class="row">
+							<legend class="col-form-label col-sm-2 pt-0">Могут ли выполняться несколько критериев одновременно?</legend>
+							<div class="col-sm-10">
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="type" id="radio1" value="1" checked required>
+									<label class="form-check-label" for="radio1">
+										Нет
+									</label>
+								</div>
+								<div class="form-check">
+									<input class="form-check-input" type="radio" name="type" id="radio2" value="2">
+                                    <div class="invalid-feedback">
+                                        Пожалуйста выберите ответ на вопрос
+                                    </div>
+									<label class="form-check-label" for="radio2">
+										Да
+									</label>
+								</div>
+							</div>
 						</div>
-						<div>
-							<label>Количество критериев оценки</label>
-							<select name="count" id="count">
+					</fieldset>
+
+					<div class="form-group row">
+						<label for="count" class="col-sm-2 col-form-label">Количество критериев оценки</label>
+						<div class="col-sm-10">
+							<select name="count" id="count" class="form-control">
 								<% for(let i = 1; i <= 10; i++) {%>
-									<option><%=i%></option>
+								<option><%=i%></option>
 								<%} %>
 							</select>
-						</div><br><br>
+                            <div class="invalid-feedback">
+                                Пожалуйста выберите количество критериев оценки ПЭД
+                            </div>
+						</div>
 					</div>
-					<div class="addcrit">
-						<div id="crit0">
-							<br><hr>
-							<label id="critname">Критерий №1</label>
-							<div class="" id="errorсrit"></div>
-							<div class="input__container">
-								<div class="hidden">
-									<label>Показатель критерия</label>
-									<p><textarea name="description" id="description" class="notempty"></textarea></p>
-								</div>
-								<div>
-									<label>Описание критерия</label>
-									<p><textarea name="namecriterion" id="namecriterion" placeholder="Не менее 60%" class="notempty"></textarea></p>
-								</div>
-								<div>
-									<label>Тип</label>
-									<select name="typecrit" class="typecriterion">
-										<option>Да/Нет</option>
-										<option>Не менее n</option>
-										<option>От a до b</option>
-									</select>
-								</div>
-								<div>
-									<div class="n">
-										<label>n</label>
-										<input type="text" name="n" id="n" class="figure">
-									</div>
-									<div class="a">
-										<label>a</label>
-										<input type="text" name="a" id="a" class="figure">
-									</div>
-									<div class="b">
-										<label>b</label>
-										<input type="text" name="b" id="b" class="figure">
-									</div>
+				</div>
+				<div class="addcrit">
+					<div id="crit0">
+						<h3 id="critname">Критерий № 1</h3>
+
+						<div class="form-group row hidden">
+							<label for="description" class="col-sm-2 col-form-label">Показатель критерия</label>
+							<div class="col-sm-10">
+								<textarea name="description" id="description" pattern="[A-Za-zА-Яа-я0-9Ёё.]+$" class="form-control notempty"></textarea>
+                                <div class="invalid-feedback">
+                                    Пожалуйста введите описание критерия
+                                </div>
+							</div>
+						</div>
+
+						<div class="form-group row">
+							<label for="namecriterion" class="col-sm-2 col-form-label">Условие критерия</label>
+							<div class="col-sm-10">
+								<input type="text" name="namecriterion" id="namecriterion" maxlength="250" pattern="[A-Za-zА-Яа-я0-9Ёё\s]+$" placeholder="например, Не менее 60%" class="form-control">
+                                <div class="invalid-feedback">
+                                    Пожалуйста введите условие критерия
+                                </div>
+							</div>
+						</div>
+
+						<div class="form-group row">
+							<label for="typeCrit" class="col-sm-2 col-form-label">Тип условия</label>
+							<div class="col-sm-10">
+								<select name="typecrit" id="typeCrit" class="form-control typecriterion" required>
+									<option>Да/Нет</option>
+									<option>Не менее n</option>
+									<option>От a до b</option>
+								</select>
+                                <div class="invalid-feedback">
+                                    Пожалуйста выберите тип условия критерия
+                                </div>
+							</div>
+						</div>
+						<div>
+							<div class="form-group row n">
+								<label for="n" class="col-sm-2 col-form-label">n</label>
+								<div class="col-sm-10">
+									<input type="number" name="n" min="0" max="1000" class="form-control" id="n">
+                                    <div class="invalid-feedback">
+                                        Пожалуйста введите n (смотри тип условия)
+                                    </div>
 								</div>
 							</div>
 
-							<label>Оценки по группам пользователей:</label>
-							<div class="input__container">
-								<% for(let i = 0; i < positions.length; i++) {%>
-									<div>
-										<label><%=positions[i].position%></label>
-										<input type="number" name="<%=positions[i].position%>" id="<%=positions[i].position%>" class="figure" placeholder="0" autocomplete="off" required>
-									</div>
-								<%} %>
+							<div class="form-group row a">
+								<label for="a" class="col-sm-2 col-form-label">a</label>
+								<div class="col-sm-10">
+									<input type="number" name="a" min="0" max="1000" class="form-control" id="a">
+                                    <div class="invalid-feedback">
+                                        Пожалуйста введите a (начальное число условия)
+                                    </div>
+								</div>
+							</div>
+
+							<div class="form-group row b">
+								<label for="b" class="col-sm-2 col-form-label">b</label>
+								<div class="col-sm-10">
+									<input type="number" name="b" min="0" max="1000" class="form-control" id="b">
+                                    <div class="invalid-feedback">
+                                        Пожалуйста введите b (конечное число условия)
+                                    </div>
+								</div>
 							</div>
 						</div>
+						<div>
+							<h4>Оценки по группам пользователей:</h4>
+							<% for(let i = 0; i < positions.length; i++) {%>
+								<div class="form-group row">
+									<label for="<%=positions[i].position%>" class="col-sm-2 col-form-label"><%=positions[i].position%></label>
+									<div class="col-sm-10">
+										<input type="number" name="<%=positions[i].position%>" class="form-control" min="0" max="100" id="<%=positions[i].position%>" placeholder="0" autocomplete="off" required>
+                                        <div class="invalid-feedback">
+                                            Пожалуйста введите оценку для должности "<%=positions[i].position%>"
+                                        </div>
+									</div>
+								</div>
+							<%} %>
+						</div>
 					</div>
-					<div class="input__container">
-						<div><input type="submit" name="prev" id="prev" value="Предыдущий критерий"></div>
-						<div><input type="submit" name="next" id="next" value="Следующий критерий"></div>
-					</div>
-					<input type="submit" name="submit" id="add" value="Добавить ПЭД">
 				</div>
+				<div class="form-group row">
+					<div class="col-sm-2">
+                        <button type="submit" name="prev" class="btn btn-outline-info" id="prev">Предыдущий критерий</button>
+                    </div>
+					<div class="col-sm-2">
+                        <button type="submit" name="next" class="btn btn-outline-info" id="next">Следующий критерий</button>
+                    </div>
+				</div>
+                <div class="form-group row">
+                    <div class="col-sm-10">
+                        <button type="submit" class="btn btn-primary btn-lg" id="add">Добавить ПЭД</button>
+                    </div>
+                </div>
 			</form>
 		</div>
 
 		<div class="footer">
 			<%- include("../common/footer.ejs") %>
 		</div>
+        <%- include("../common/modal.ejs") %>
 	</div>
 
 	<%- include("../common/scripts.ejs")%>
 	<script type="text/javascript" src="/plugins/slick-1.8.1/slick/slick.min.js"></script>
+    <script type="text/javascript" src="/scripts/check-form.js"></script>
+    <script type="text/javascript" src="/scripts/send-form.js"></script>
 	<script type="text/javascript" src="/scripts/change-kpi/add-kpi.js"></script>
 </body>
 </html>

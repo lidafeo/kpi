@@ -33,5 +33,14 @@ module.exports = {
 		if(myDate < 10) myDate = "0" + myDate;
 		if(myMonth < 10) myMonth = "0" + myMonth;
 		return myYear + '-' + myMonth + '-' + myDate;
+	},
+	//преобразование даты для ввода в HTML date
+	dateForOut: function (date) {
+		let myDate = date.getDate();
+		let myMonth = date.getMonth() + 1;
+		let myYear = date.getFullYear();
+		if(myDate < 10) myDate = "0" + myDate;
+		if(myMonth < 10) myMonth = "0" + myMonth;
+		return myDate + '.' + myMonth + '.' + myYear;
 	}
-}
+};

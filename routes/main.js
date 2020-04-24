@@ -19,11 +19,10 @@ let checkRight = require('../modules/check-right');
 
 exports.routes = function(app) {
 	app.get('/', handlers.auth.pageHome);
+	app.post('/', urlencodedParser, handlers.auth.auth);
 
 	app.post('/exit', handlers.auth.exit);
 	app.get('/exit', handlers.auth.exit);
-
-	app.post('/user', urlencodedParser, handlers.auth.auth);
 
 	app.use(handlers.auth.checkOpenAccount);
 	app.use(handlers.auth.checkSession);

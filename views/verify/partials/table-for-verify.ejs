@@ -6,12 +6,12 @@
 	<table class="table border-color-f">
 		<thead>
 			<tr>
-				<td scope="col">Дата</td>
-				<td scope="col">ПЭД</td>
-				<td scope="col">Значение</td>
-				<td scope="col">Файл</td>
-				<td scope="col">Статус</td>
-				<td scope="col"></td>
+				<th class="text-center align-middle" scope="col">Дата</th>
+				<th class="text-center align-middle" scope="col">ПЭД</th>
+				<th class="text-center align-middle" scope="col">Значение</th>
+				<th class="text-center align-middle" scope="col">Файл</th>
+				<th class="text-center align-middle" scope="col">Статус</th>
+				<th class="text-center align-middle" scope="col">Действие</th>
 			</tr>
 		</thead>
 		<tbody>
@@ -19,27 +19,31 @@
 				<tr id=<%="tr" + i %>>
 					<input type="hidden" id=<%="hd" + i %> name="hidd" value=<%=kpi[i].id%>>
 					<input type="hidden" id=<%="kpi" + i %>  value=<%=kpi[i].name_kpi%>>
-					<td><%=kpi[i].modifydate %></td>
+					<td class="text-center align-middle"><%=kpi[i].modifydate %></td>
 					<% if(kpi[i].type == 1) {%>
-						<td><%=kpi[i].name_kpi %></td>
+						<td class="text-center align-middle"><%=kpi[i].name_kpi %></td>
 					<%} %>
 					<% if(kpi[i].type == 2) {%>
-						<td><%=(kpi[i].name_kpi + " (" + kpi[i].description + ")")%></td>
+						<td class="text-center align-middle"><%=(kpi[i].name_kpi + " (" + kpi[i].description + ")")%></td>
 					<%} %>
-					<td><%=kpi[i].value %></td>
+					<td class="text-center align-middle"><%=kpi[i].value %></td>
 					<% if(kpi[i].file) {%>
-						<td><a href=<%="/download-file?file="+kpi[i].file %> download=""><img src="/img/icons/download.svg" width="25" alt="Скачать файл"></a></td>
+						<td class="text-center align-middle">
+							<a href=<%="/download-file?file="+kpi[i].file %> download="">
+								<img src="/img/icons/download.svg" width="25" alt="Скачать файл">
+							</a>
+						</td>
 					<%} %>
 					<% if(!kpi[i].file) {%>
 						<td></td>
 					<%} %>
 					<% if(!kpi[i].valid) {%>
-						<td class="text-danger">Недействительно</td>
+						<td class="text-center align-middle text-danger">Недействительно</td>
 					<%} %>
 					<% if(kpi[i].valid) {%>
-						<td class="text-success">Выполнено</td>
+						<td class="text-center align-middle text-success">Выполнено</td>
 					<%} %>
-					<td><a href="/verify/val/<%=kpi[i].id%>">Проверить</a></td>
+					<td class="text-center align-middle"><a href="/verify/val/<%=kpi[i].id%>">Проверить</a></td>
 				</tr>
 			<%} %>
 		</tbody>

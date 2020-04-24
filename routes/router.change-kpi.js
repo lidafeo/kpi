@@ -11,13 +11,12 @@ let checkRight = require('../modules/check-right');
 router.route('/add-kpi')
     .get(handler.pageAddKpi)
     .post(urlencodedParser, handler.addKpi);
+router.route('/choice-kpi')
+    .get(handler.pageChoiceKpi);
+router.route('/edit-kpi')
+    .get(handler.pageEditKpi)
+    .post(urlencodedParser, handler.editKpi);
 router.route('/delete-kpi')
-    .get(handler.pageDeleteKpi)
     .post(urlencodedParser, handler.deleteKpi);
-router.route('/edit-balls')
-    .get(handler.pageEditBallsKpi)
-    .post(urlencodedParser, handler.editBallsKpi);
-
-router.post('/edit-balls-kpi', urlencodedParser, handler.editBallsKpi);
 
 module.exports = router;

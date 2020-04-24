@@ -1,5 +1,4 @@
-let DBs = require('../modules/db/select.js');
-let DBu = require('../modules/db/update.js');
+let DB = require('../modules/db');
 
 let writeLogs = require('../modules/logs').log;
 let writeErrorLogs = require('../modules/logs').error;
@@ -38,7 +37,7 @@ exports.pageValPps = function(req, res) {
     }
     let department = req.session.department;
     let faculty = req.session.faculty;
-    DBs.selectValueKpiByIdForVerify(valId).then(result => {
+    DB.userValues.selectValueKpiByIdForVerify(valId).then(result => {
         //if(!result[0]) {
         //	res.render('pps/page_one_val', {val: result[0]});
         //}
@@ -63,12 +62,29 @@ exports.pageValPps = function(req, res) {
     });
 };
 
+//получить сотрудников кафедры
+exports.getWorkers = function(req, res) {
+    let level = req.session.level;
+    let faculty = req.body.faculty;
+    let department = req.body.department;
+    if(!req.session.position) {
+        level = 10;
+    }
+    DB.users.selectUserFromDepartment(faculty, department, level).then(result => {
+        res.render('verify/partials/list-workers', {worker: result});
+    }).catch(err => {
+        writeErrorLogs(req.session.login, err);
+        console.log(err);
+        res.status(500).render('error/500');
+    });
+};
+
 //POST-запрос на получение таблицы для проверки значений ПЭД ППС
 exports.verify = function(req, res) {
     let login = req.body.name;
     console.log(login);
     //находим значения ПЭД выбранного сотрудника
-    DBs.selectValueKpiByLogin(login).then(result => {
+    DB.userValues.selectValueKpiByLogin(login).then(result => {
         if(result.length == 0) {
             res.render("verify/partials/table-for-verify", {kpi: [], textErr: "Нет добавленных действительных значений"});
         }
@@ -88,7 +104,7 @@ exports.invalidValue = function(req, res) {
     let invalidId = req.body.id;
     let invalidComment = req.body.comment;
     let login = req.session.login;
-    DBu.updateValueInvalid(invalidId, login, invalidComment).then(result => {
+    DB.userValues.updateValueInvalid(invalidId, login, invalidComment).then(result => {
         console.log(result);
         //записываем логи
         writeLogs(login, req.session.position, "сделал(а) отметку о недействительности значения ПЭД с id " +
@@ -105,7 +121,7 @@ exports.invalidValue = function(req, res) {
 exports.cancelInvalidValue = function(req, res) {
     let invalidId = req.body.id;
     let login = req.session.login;
-    DBu.updateValueCancelInvalid(invalidId).then(result => {
+    DB.userValues.updateValueCancelInvalid(invalidId).then(result => {
         //записываем логи
         writeLogs(login, req.session.position, "сделал(а) значения ПЭД с id" +
             invalidId + " действительной (отмена отметки)");
@@ -117,26 +133,9 @@ exports.cancelInvalidValue = function(req, res) {
     });
 };
 
-//получить сотрудников кафедры
-exports.getWorkers = function(req, res) {
-    let level = req.session.level;
-    let faculty = req.body.faculty;
-    let department = req.body.department;
-    if(!req.session.position) {
-        level = 10;
-    }
-    DBs.selectUserFromDepartment(faculty, department, level).then(result => {
-        res.render('verify/partials/list-workers', {worker: result});
-    }).catch(err => {
-        writeErrorLogs(req.session.login, err);
-        console.log(err);
-        res.status(500).render('error/500');
-    });
-};
-
 //получить структуру
 exports.getStructure = function(req, res) {
-    DBs.selectStructure().then(result => {
+    DB.structure.selectStructure().then(result => {
         let structure = {faculty: [], department: []};
         for(let i = 0; i < result.length; i ++) {
             if(structure.faculty.indexOf(result[i].faculty) == -1) {

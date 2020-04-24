@@ -9,7 +9,6 @@ const router = express.Router();
 let checkRight = require('../modules/check-right');
 
 router.route('/delete-user')
-    .get(handler.pageDeleteUser)
     .post(urlencodedParser, handler.deleteUser);
 router.route('/add-user')
     .get(handler.pageAddUser)

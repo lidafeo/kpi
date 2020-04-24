@@ -1,9 +1,6 @@
 const bcrypt = require("bcrypt");
 
-//функции работы с БД
-let DBs = require('../modules/db/select.js');
-let DBi = require('../modules/db/insert.js');
-let DBu = require('../modules/db/update.js');
+let DB = require('../modules/db');
 
 let BCRYPT_SALT_ROUNDS = 12;
 
@@ -42,11 +39,11 @@ exports.addPps = function(req, res) {
 
     bcrypt.hash(newUser.password, BCRYPT_SALT_ROUNDS).then(function(hashedPassword) {
         newUser.password = hashedPassword;
-        DBi.insertUserFromObj(newUser).then(result => {
+        DB.users.insertUserFromObj(newUser).then(result => {
             //запись логов
             writeLogs(req.session.login, req.session.position, "добавил(а) нового пользователя: login - " + newUser.login);
             console.log("Сохранен объект user");
-            res.json({result: 'Пользователь успешно добавлен'});
+            res.json({result: 'Пользователь ' + newUser.login + ' успешно добавлен'});
         }).catch(err => {
             writeErrorLogs(req.session.login, err);
             console.log(err);
@@ -69,7 +66,7 @@ exports.pageChangePassword = function(req, res) {
     if(!loginUser)  {
         return res.status(404).render('error/404');
     }
-    DBs.selectOneUser(loginUser).then(users => {
+    DB.users.selectOneUser(loginUser).then(users => {
         //проверка, что это ППС
         if(!users || users.length == 0 || !users[0].position)  {
             return res.status(404).render('error/404');
@@ -95,7 +92,7 @@ exports.changePassword = function(req, res) {
     }
     bcrypt.hash(user.password, BCRYPT_SALT_ROUNDS).then(function(hashedPassword) {
         user.password = hashedPassword;
-        DBu.updatePassword(user.login, user.password).then(result => {
+        DB.users.updatePassword(user.login, user.password).then(result => {
             //запись логов
             writeLogs(req.session.login, req.session.position, "изменил(а) пароль пользователю: login - " + user.login);
             res.json({result: 'Пароль пользователя успешно изменен'});
@@ -114,7 +111,7 @@ exports.changePassword = function(req, res) {
 };
 
 async function getPositionsAndStructure() {
-    let structure = await DBs.selectStructure();
-    let positions = await DBs.selectPositions();
+    let structure = await DB.structure.selectStructure();
+    let positions = await DB.positions.selectPositions();
     return {'structure': structure, 'positions': positions};
 }

@@ -1,4 +1,4 @@
-let DBs = require('./db/select.js');
+let DB = require('./db');
 
 function getFaculty (structure) {
     let faculty = [];
@@ -25,13 +25,13 @@ exports.getFacultyForVerify = async function (level, faculty, department) {
     switch(level) {
         //проректор
         case 10:
-            let structure = await DBs.selectStructure();
+            let structure = await DB.structure.selectStructure();
             facultyArr = getFaculty(structure);
             departmentArr = getDepartment(facultyArr[0], structure);
             break;
         //декан
         case 2:
-            let result = await DBs.selectDepartments(faculty);
+            let result = await DB.structure.selectDepartments(faculty);
             facultyArr.push(faculty);
             for(let i = 0; i < result.length; i++) {
                 departmentArr.push(result[i].department);

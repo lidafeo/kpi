@@ -2,8 +2,7 @@ const bcrypt = require("bcrypt");
 
 let BCRYPT_SALT_ROUNDS = 12;
 
-//функции работы с БД
-let DBu = require('../modules/db/update.js');
+let DB = require('../modules/db');
 
 let writeLogs = require('../modules/logs').log;
 let writeErrorLogs = require('../modules/logs').error;
@@ -40,5 +39,5 @@ exports.changePassword = function(req, res) {
 //обновление пароля
 async function changePassword (login, password) {
     let passwordHash = await bcrypt.hash(password, BCRYPT_SALT_ROUNDS);
-    await DBu.updatePassword(login, passwordHash);
+    await DB.users.updatePassword(login, passwordHash);
 }

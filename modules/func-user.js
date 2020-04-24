@@ -1,4 +1,4 @@
-let DBs = require('./db/select.js');
+let DB = require('./db');
 module.exports = {
     main: async function(workSheet) {
         let num = 1;
@@ -66,7 +66,7 @@ module.exports = {
             } else {
                 if (!obj.error) {
                     //ищем такого пользователя в БД
-                    let user = await DBs.selectOneUser(obj.login);
+                    let user = await DB.users.selectOneUser(obj.login);
                     if(user[0] && user[0].login != "") {
                         obj.error = "Такой пользователь существует в БД";
                         obj.errField = "login";
@@ -130,14 +130,14 @@ module.exports = {
                 let ind = arrPosition[po].trim().toLowerCase().indexOf('исполняющий обязанности');
                 arrPosition[po] = arrPosition[po].slice(ind + 'исполняющий обязанности'.length).trim();
             }
-            let position = await DBs.selectOnePositionWithLike(arrPosition[po].trim());
+            let position = await DB.positions.selectOnePositionWithLike(arrPosition[po].trim());
             if(position[0] && position.length == 1) {
                 find = true;
                 obj.position = position[0]['position'];
                 obj.positionLevel = position[0]['level'];
             }
             else {
-                position = await DBs.selectOnePosition(arrPosition[po].trim());
+                position = await DB.positions.selectOnePosition(arrPosition[po].trim());
                 if(position[0]) {
                     find = true;
                     obj.position = position[0]['position'];
@@ -167,7 +167,7 @@ module.exports = {
             let dep = getSearchOption(department,['кафедра']);
             //сам поиск
             for(let i = 0; i < dep.length; i++) {
-                let  result = await DBs.selectDepartmentWithLike(dep[i]);
+                let  result = await DB.structure.selectDepartmentWithLike(dep[i]);
                 if(result[0] && result[0]['department'] && result[0]['faculty'] && result.length == 1) {
                     obj.department = result[0]['department'];
                     obj.faculty = result[0]['faculty'];
@@ -176,7 +176,7 @@ module.exports = {
                 }
                 //пробуем найти без like
                 if(result[0] && result.length > 1) {
-                    let result = await DBs.selectDepartment(dep[i]);
+                    let result = await DB.structure.selectDepartment(dep[i]);
                     if (result[0] && result[0]['department'] && result[0]['faculty'] && result.length == 1) {
                         obj.department = result[0]['department'];
                         obj.faculty = result[0]['faculty'];
@@ -196,7 +196,7 @@ module.exports = {
             let fac = getSearchOption(department,['деканат факультета', 'деканат']);
             //сам поиск
             for(let i = 0; i < fac.length; i++) {
-                result = await DBs.selectOneFaculty(fac[i]);
+                result = await DB.structure.selectOneFaculty(fac[i]);
                 if(result[0] && result[0]['faculty']) {
                     obj.department = "";
                     obj.faculty = result[0]['faculty'];

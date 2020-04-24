@@ -1,5 +1,5 @@
 const mariadb = require('mariadb');
-const config = require('../config/config.json');
+const config = require('../../config/config.json');
 
 const pool = mariadb.createPool({
 	host: config.db.host, 
@@ -24,4 +24,4 @@ module.exports = async function (query, obj) {
 	} finally {
 		if(conn) conn.end();
 	}
-}
+};

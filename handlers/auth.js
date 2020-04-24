@@ -1,8 +1,8 @@
 const bcrypt = require("bcrypt");
 
-let DBs = require('../modules/db/select.js');
+let DB = require('../modules/db');
 
-let getObjClose = require('../modules/period.js').getObjClose;
+let getClose = require('../modules/period').getObjClose;
 let setNotify = require('../modules/period.js').setNotify;
 
 let writeErrorLogs = require('../modules/logs').error;
@@ -31,7 +31,7 @@ exports.auth = function(req, res) {
 			req.session.level = result.level;
 			req.session.department = result.department;
 			req.session.faculty = result.faculty;
-			DBs.selectRightsRolesByRole(result.role).then(resultRights => {
+			DB.rightsRoles.selectRightsRolesByRole(result.role).then(resultRights => {
 				let rights = [];
 				for(let i = 0; i < resultRights.length; i++) {
 					rights.push(resultRights[i].right_name);
@@ -39,8 +39,8 @@ exports.auth = function(req, res) {
 				req.session.rights = rights;
 
 				//проверка доступа к личному кабинету
-				let closeAccount = getObjClose();
-				if(closeAccount && result.func_pps)
+				let closeAccount = getClose();
+				if(closeAccount && result.position)
 					return res.render("auth", {checkPassword: false, close: true});
 
 				res.redirect('/my-page');
@@ -60,8 +60,8 @@ exports.auth = function(req, res) {
 //проверка открытия кабинетов
 exports.checkOpenAccount = function(req, res, next) {
 	//проверка доступа к личному кабинету
-	let closeAccount = getObjClose();
-	if(closeAccount && req.session.rights.pps)
+	let closeAccount = getClose();
+	if(closeAccount && req.session.position)
 		return res.redirect("/exit");
 	else next();
 };
@@ -107,7 +107,7 @@ exports.myPage = function(req, res) {
 //проверка введенного логина
 function checkPassword(login, password) {
 	return new Promise( function(res, rej) {
-		DBs.selectUserByLogin(login).then(result => {
+		DB.users.selectUserByLogin(login).then(result => {
 			if(result.length == 0)
 				return res(false);
 			bcrypt.compare(password, result[0].password).then(function(samePassword) {

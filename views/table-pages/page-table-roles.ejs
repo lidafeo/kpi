@@ -8,26 +8,31 @@
 	<%- include("../common/menu.ejs") %>
 	<div class="wrapper">
 		<div class="content container-fluid">
-			<p> 
-				<h3 class="nametable">Роли системы</h3>
-			</p>
-			<table style="margin-left: 20px;">
-				<tr>
-					<th><h4>Роль</h4></th>
-					<th><h4>Право</h4></th>
-                </tr>
-                <% for (role in roles) {%>
-					<tr>
-                        <td rowspan="<%=roles[role].length%>"><%=role %></td>
-						<td><%=roles[role][0] %></td>
-                    </tr>
-                    <% for (let i = 1; i < roles[role].length; i++) {%>
-                        <tr>
-                            <td><%=roles[role][i] %></td>
-                        </tr>
-                    <%} %>
-				<%} %>
-			</table>
+			<h1>Роли системы и их права</h1>
+			<hr>
+			<div class="table-responsive-md">
+				<table class="table border-color-f">
+					<thead>
+						<tr>
+							<th class="text-center align-middle" scope="col">Роль</th>
+							<th class="text-center align-middle" scope="col">Право</th>
+						</tr>
+					</thead>
+					<tbody>
+						<% for (role in roles) {%>
+							<tr>
+								<th class="text-center align-middle" scope="row" rowspan="<%=roles[role].length%>"><%=role %></th>
+								<td class="text-center align-middle"><%=roles[role][0] %></td>
+							</tr>
+							<% for (let i = 1; i < roles[role].length; i++) {%>
+								<tr>
+									<td class="text-center align-middle"><%=roles[role][i] %></td>
+								</tr>
+							<%} %>
+						<%} %>
+					</tbody>
+				</table>
+			</div>
 		</div>
 		
 		<div class="footer">

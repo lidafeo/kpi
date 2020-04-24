@@ -87,37 +87,37 @@
 		<table class="table border-color-f table-sm mt-3">
 			<thead>
 				<tr>
-					<th scope="col">Добавлено</th>
-					<th scope="col">Выполнено</th>
-					<th scope="col">Файл</th>
+					<th class="text-center align-middle" scope="col">Добавлено</th>
+					<th class="text-center align-middle" scope="col">Выполнено</th>
+					<th class="text-center align-middle" scope="col">Файл</th>
 					<% if(desc[0].type == 2) {%>
-						<th scope="col">Показатель</th>
+						<th class="text-center align-middle" scope="col">Показатель</th>
 					<%} %>
-					<th scope="col">Статус</th>
-					<th scope="col"></th>
+					<th class="text-center align-middle" scope="col">Статус</th>
+					<th class="text-center align-middle" scope="col"></th>
 				</tr>
 			</thead>
 			<tbody>
 			<% for(let i = 0; i < kpi.length; i++) {%>
 				<tr>
-					<td><%=kpi[i].modifydate %></td>
-					<td><%=kpi[i].modifystart_date%></td>
+					<td class="text-center align-middle"><%=kpi[i].modifydate %></td>
+					<td class="text-center align-middle"><%=kpi[i].modifystart_date%></td>
 					<% if(kpi[i].file != "" && kpi[i].file != null) {%>
-						<td><a href=<%="/upload-file?file="+kpi[i].file %> download=""><img src="/img/icons/download.svg" width="25" alt="Скачать файл"></a></td>
+						<td class="text-center align-middle"><a href=<%="/upload-file?file="+kpi[i].file %> download=""><img src="/img/icons/download.svg" width="25" alt="Скачать файл"></a></td>
 					<%} %>
 					<% if(kpi[i].file == "" || kpi[i].file == null) {%>
 						<td></td>
 					<%} %>
 					<% if(desc[0].type == 2) {%>
-						<td><%=desc[kpi[i].number_criterion].criterion_description %></td>
+						<td class="text-center align-middle"><%=desc[kpi[i].number_criterion].criterion_description %></td>
 					<%} %>
 					<% if(!kpi[i].valid) {%>
-						<td class="text-danger">Недействительно</td>
+						<td class="text-danger text-center align-middle">Недействительно</td>
 					<%} %>
 					<% if(kpi[i].valid) {%>
-						<td class="text-success">Выполнено</td>
+						<td class="text-success text-center align-middle">Выполнено</td>
 					<%} %>
-					<td><a href="/pps/val/<%=kpi[i].id%>">Подробнее</a></td>
+					<td class="text-center align-middle"><a href="/pps/val/<%=kpi[i].id%>">Подробнее</a></td>
 				</tr>
 			<%} %>
 			</tbody>

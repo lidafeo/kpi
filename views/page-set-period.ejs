@@ -10,27 +10,25 @@
 		<div class="content container-fluid">
 			<div class="page">
 				<div class="formborderadmin">
-					<h2 class="title-page">Текущий период для отчета</h2>
-					<% if(set) {%>
-						<p style="margin: 1% auto;">Текущий период: с <%=period.date1Str + " по " + period.date2Str %></p>
-						<% if(!period.notify) {%>
-							<form action="/notify" method="post">
-								<input type="submit" class="buttonmypage" value="Оповестить работников">
-							</form><br>
-						<%} %>
-						<form action="" method="post">
-							<input type="submit" class="buttonmypage" value="Удалить период">
-						</form>
+					<h2 class="title-page">Расчетный период</h2>
+					<% if(period) {%>
+						<p style="margin: 1% auto;">Текущий период: с <%=period.date1 + " по " + period.date2%></p>
 					<%} %>
-					<% if(!set) {%>
+					<% if(!period) {%>
 						<p style="color: peru;">Период для отчета не установлен</p>
-						<div id="text"></div>
-						<form action="" method="post">
-							с <input type="date" class="date" name="date1" id="date1" required>
-							до <input type="date" class="date" name="date2" id="date2" required>
-							<input type="submit" id="sub" class="buttonmypage" value="Установить">
-						</form>
 					<%} %>
+					<hr>
+					<div id="text"></div>
+					<h4>Установить новый расчетный период:</h4>
+					<form action="" method="post">
+						<div>
+							<label for="name_period">Название расчетного периода:</label>
+							<input type="text" name="name_period" id="name_period" autocomplete="зима 2000" required>
+						</div>
+						с <input type="date" class="date" name="date1" id="date1" required>
+						до <input type="date" class="date" name="date2" id="date2" required>
+						<input type="submit" id="sub" class="buttonmypage" value="Установить">
+					</form>
 				</div>
 			</div>
 		</div>

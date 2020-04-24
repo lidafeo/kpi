@@ -18,13 +18,13 @@
 			<table class="table">
 				<thead>
 					<tr>
-						<th scope="col"><h4>ФИО</h4></th>
-						<th scope="col"><h4>Логин</h4></th>
-						<th scope="col"><h4>Должность</h4></th>
-						<th scope="col"><h4>Факультет</h4></th>
-						<th scope="col"><h4>Кафедра</h4></th>
+						<th scope="col">ФИО</th>
+						<th scope="col">Логин</th>
+						<th scope="col">Должность</th>
+						<th scope="col">Факультет</th>
+						<th scope="col">Кафедра</th>
                         <% if(infoUser.rights.indexOf("change_password_pps") !== -1) {%>
-                            <th scope="col"><h4>Действия</h4></th>
+                            <th class="text-center align-middle" scope="col">Действия</th>
                         <%}%>
 					</tr>
 				</thead>
@@ -37,7 +37,7 @@
 							<td><%=users[i].faculty %></td>
 							<td><%=users[i].department %></td>
                             <% if(infoUser.rights.indexOf("change_password_pps") !== -1) {%>
-                                <td><a href="/change-pps/change-password?login=<%=users[i].login%>"><img src="/img/icons/pencil.svg" alt="изменить пароль" title="изменить пароль" width="28px"></a></td>
+                                <td class="text-center align-middle"><a href="/change-pps/change-password?login=<%=users[i].login%>"><img src="/img/icons/pencil.svg" alt="изменить пароль" title="изменить пароль" width="28px"></a></td>
                             <%}%>
 						</tr>
 					<%} %>

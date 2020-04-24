@@ -29,19 +29,6 @@ $(document).ready(function() {
 		$('#department').html(departmentHTML);
 	});
 
-	$('#form-add-user').submit(function(e) {
-		if (this.checkValidity() === false) {
-			e.preventDefault();
-			return;
-		}
-	});
-
-	//генерация пароля
-	$("body").on('click', "#generate-pass", function (e) {
-		e.preventDefault();
-		$("#password").val(generatePassword(12));
-	});
-
 	function getInfo() {
 		let role = $("#role option:selected").text();
 		let position = $("#position option:selected").text();
@@ -104,15 +91,5 @@ $(document).ready(function() {
 			resolve();
 		});
 		request.send();
-	}
-
-	function generatePassword(length) {
-		let result = '';
-		let characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-		let charactersLength = characters.length;
-		for ( var i = 0; i < length; i++ ) {
-			result += characters.charAt(Math.floor(Math.random() * charactersLength));
-		}
-		return result;
 	}
 });

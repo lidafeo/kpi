@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Изменить ПЭД</title>
+    <%- include("../common/head.ejs")%>
+</head>
+<body>
+    <%- include("../common/menu.ejs") %>
+    <div class="wrapper">
+        <div class="content container-fluid">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/change-kpi/choice-kpi">Выбор ПЭД для изменения</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Изменение ПЭД <%=info.kpi.name%></li>
+                </ol>
+            </nav>
+            <form name="editballskpi" action="" method="post" id="form-send" class="needs-validation" novalidate>
+                <input type="hidden" name="name" value=<%=info.kpi.name%>>
+                <h1>Изменение ПЭД: <%=info.kpi.name%></h1>
+                <p><%=info.kpi.description%></p>
+                <hr>
+                <div class="table-responsive">
+                    <table class="table border-color-f">
+                        <thead>
+                            <tr>
+                                <% if(info.kpi.type == 2) {%>
+                                    <th class="text-center align-middle px-1 th-w-330" scope="col" rowspan="2">Показатель</th>
+                                <%} %>
+                                <th class="text-center align-middle px-1" scope="col" colspan="3">Критерий оценки</th>
+                                <th class="text-center align-middle px-1" scope="col" colspan="<%=info.positions.length%>">Группы</th>
+                            </tr>
+                            <tr>
+                                <th class="text-center align-middle px-1" scope="col">Название</th>
+                                <th class="text-center align-middle px-1" scope="col">От</th>
+                                <th class="text-center align-middle px-1" scope="col">До</th>
+                                <% for(let i = 0; i < info.positions.length; i++) {%>
+                                    <th class="text-center align-middle px-1 th-w-85" scope="col"><%=info.positions[i]%></th>
+                                <%} %>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% for(let i = 0; i < info.criterions.length; i++) {%>
+                                <input type="hidden" name="id" value="<%=info.criterions[i].id%>">
+                                <tr>
+                                    <% if(info.kpi.type == 2) {%>
+                                        <td class="px-1"><input type="text" class="form-control" size="20" name="criterion_description" maxlength="200" value="<%=info.criterions[i].criterion_description%>"></td>
+                                    <%} %>
+
+                                    <td class="px-1"><input type="text" class="form-control" name="name_criterion" maxlength="200" value="<%=info.criterions[i].name_criterion%>" required></td>
+                                    <td class="px-1"><input type="number" class="form-control" name="start_val" min="0" max="1000" value="<%=info.criterions[i].start_val%>" required></td>
+                                    <td class="px-1"><input type="number" class="form-control" name="final_val" min="0" max="1000" value="<%=info.criterions[i].final_val%>"></td>
+
+                                    <% for(let k = 0; k < info.positions.length; k++) {%>
+                                        <td class="px-1"><input type="number" class="form-control" min="0" max="1000" name="<%=info.positions[k]%>" value="<%=info.criterions[i].balls[info.positions[k]]%>" required></td>
+                                    <%} %>
+                                </tr>
+                            <%} %>
+                        </tbody>
+                    </table>
+                </div>
+                <input type="hidden" name="count_criterion" value="<%=info.kpi.count_criterion%>">
+                <button type="submit" class="btn btn-primary btn-lg" id="submit">Изменить</button>
+            </form>
+        </div>
+
+        <div class="footer">
+            <%- include("../common/footer.ejs") %>
+        </div>
+        <%- include("../common/modal.ejs") %>
+    </div>
+
+    <%- include("../common/scripts.ejs")%>
+    <script type="text/javascript" src="/scripts/check-form.js"></script>
+    <script type="text/javascript" src="/scripts/send-form.js"></script>
+
+</body>
+</html>

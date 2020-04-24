@@ -1,5 +1,4 @@
-//функции работы с БД
-let DBs = require('../modules/db/select.js');
+let DB = require('../modules/db');
 
 let getKpiObj = require('../modules/func-kpi').getKpiObj;
 let writeLogs = require('../modules/logs').log;
@@ -8,7 +7,7 @@ let dateModule = require('../modules/date.js');
 
 //GET-запрос страницы получения списка ПЭД
 exports.pageGetAllKpi = function(req, res) {
-    DBs.selectAllKpiWithCriterion().then(result => {
+    DB.kpi.selectAllKpiWithCriterion().then(result => {
         let section = [];
         let kpi = [];
         let positions = [];
@@ -39,7 +38,7 @@ exports.pageGetAllKpi = function(req, res) {
 
 //GET-запрос страницы со списком пользователей
 exports.pageGetUsers = function(req, res) {
-    DBs.selectAllUsers().then(users => {
+    DB.users.selectAllUsers().then(users => {
         res.render('table-pages/page-table-users', {users: users, infoUser: req.session, pageName: '/get-users'});
     }).catch(err => {
         console.log(err);
@@ -50,7 +49,7 @@ exports.pageGetUsers = function(req, res) {
 
 //GET-запрос страницы со списком ППС
 exports.pageGetPps = function(req, res) {
-    DBs.selectAllPps().then(users => {
+    DB.users.selectAllPps().then(users => {
         res.render('table-pages/page-table-pps', {users: users,
             infoUser: req.session, pageName: '/get-pps'});
     }).catch(err => {
@@ -65,7 +64,7 @@ exports.pageGetStructure = function(req, res) {
     let action = 0;
     if(req.query.action == 'ok') action = 1;
     if(req.query.action == 'err') action = 2;
-    DBs.selectStructureOrderByFaculty().then(result => {
+    DB.structure.selectStructureOrderByFaculty().then(result => {
         let structure = {};
         for(let i = 0; i < result.length; i++) {
             if(!structure[result[i].faculty]) {
@@ -84,7 +83,7 @@ exports.pageGetStructure = function(req, res) {
 
 //GET-запрос страницы со списком значений ПЭД пользователей
 exports.pageGetAllValuesOfKpi = function(req, res) {
-    DBs.selectAllValueKpi().then(result => {
+    DB.userValues.selectAllValueKpi().then(result => {
         for(let i = 0; i < result.length; i++) {
             result[i].date_str = dateModule.dateToString(result[i].date).split('_').join('.');
             result[i].start_date_str = dateModule.dateToString(result[i].start_date).split('_').join('.');
@@ -103,7 +102,7 @@ exports.pageGetAllRoles = function(req, res) {
     let action = 0;
     if(req.query.action == 'ok') action = 1;
     if(req.query.action == 'err') action = 2;
-    DBs.selectAllRightsRolesOrderByRole().then(result => {
+    DB.rightsRoles.selectAllRightsRolesOrderByRole().then(result => {
         let roles = {};
         for(let i = 0; i < result.length; i++) {
             if(!roles[result[i].role]) {
