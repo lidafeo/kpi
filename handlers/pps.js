@@ -245,3 +245,65 @@ exports.addValueKpi = function(req, res) {
         });
     });
 };
+
+//POST-запрос на изменение полей значения
+exports.changeFieldVal = function(req, res) {
+    let login = req.session.login;
+    let form = new formidable.IncomingForm();
+    form.parse(req, function (err, fields, files) {
+        if (err) return console.log(err);
+        let id = fields.id;
+        let val = fields;
+        if (files.file) {
+            let ext = files.file.name.split('.').pop();
+            let fileName = generateFileName(login) + '.' + ext;
+            //сохраняем  файл
+            if (files.file) {
+                let readableStream = fs.createReadStream(files.file.path);
+                let writeableStream = fs.createWriteStream("./user_files/" +
+                    fileName);
+                readableStream.pipe(writeableStream);
+            }
+            val.file = fileName;
+        }
+        let nameField, valueField;
+        for (key in val) {
+            if(key !== 'id') {
+                nameField = key;
+                valueField = val[key];
+            }
+        }
+        DB.userValues.updateFieldValue(id, nameField, valueField).then(result => {
+            //записываем логи
+            writeLogs(login, req.session.position, "изменил(а) поле " + nameField + " на " + valueField + " значения с id=" + id);
+            if (result.affectedRows > 0) {
+                res.json({name: nameField, value: valueField});
+            } else {
+                res.json({err: "Не удалось", name: nameField});
+            }
+        }).catch(err => {
+            writeErrorLogs(req.session.login, err);
+            console.log(err);
+            res.status(500).render('error/500');
+        });
+    });
+};
+
+//POST-запрос на удаление значения
+exports.deleteVal = function(req, res) {
+    let login = req.session.login;
+    let id = req.body.id;
+    DB.userValues.deleteVal(id, login).then(result => {
+        //записываем логи
+        writeLogs(login, req.session.position, "удалил(а) значение с id=" + id);
+        if (result.affectedRows > 0) {
+            res.json({result: "Значение успешно удалено"});
+        } else {
+            res.json({err: "Не удалось удалить значение"});
+        }
+    }).catch(err => {
+        writeErrorLogs(req.session.login, err);
+        console.log(err);
+        res.status(500).render('error/500');
+    });
+};

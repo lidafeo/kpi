@@ -26,6 +26,12 @@ exports.deleteAllUserValues = function() {
     return query("DELETE FROM user_values");
 };
 
+//удаление одного значения
+exports.deleteVal = function(id, login) {
+    return query("DELETE FROM user_values WHERE id=? AND login_user=?",
+        [id, login]);
+};
+
 //SELECT
 
 //получить значения ПЭД всех пользователей
@@ -88,9 +94,9 @@ exports.selectFileValueKpiById = function(id) {
 
 //получить значение одного ПЭД по id с проверкой пользователя
 exports.selectValueKpiById = function(id, login) {
-    return query("SELECT user_values.*, kpi.type, kpi.description, " +
-        "criterions.criterion_description, users.name author_verify_name, " +
-        "users.role author_verify_role FROM user_values " +
+    return query("SELECT user_values.*, kpi.type, kpi.description, kpi.indicator_sum, " +
+            "criterions.criterion_description, users.name author_verify_name, " +
+            "users.role author_verify_role FROM user_values " +
         "INNER JOIN kpi ON user_values.name_kpi = kpi.name " +
         "INNER JOIN criterions ON criterions.name_kpi = user_values.name_kpi " +
         "AND criterions.number_criterion = user_values.number_criterion " +
@@ -102,8 +108,8 @@ exports.selectValueKpiById = function(id, login) {
 //получить значение одного ПЭД по id для проверки руководителем структурных подразделений
 exports.selectValueKpiByIdForVerify = function(id) {
     return query("SELECT user_values.*, kpi.type, kpi.description, " +
-        "criterions.criterion_description, users.name, users.department, " +
-        "users.faculty FROM user_values " +
+            "criterions.criterion_description, users.name, users.department, " +
+            "users.faculty FROM user_values " +
         "INNER JOIN kpi ON user_values.name_kpi = kpi.name " +
         "INNER JOIN criterions ON criterions.name_kpi = user_values.name_kpi " +
         "AND criterions.number_criterion = user_values.number_criterion " +
@@ -115,7 +121,7 @@ exports.selectValueKpiByIdForVerify = function(id) {
 //получить значения ПЭД для пользователя по логину
 exports.selectValueKpiByLogin = function(login) {
     return query("SELECT user_values.id, user_values.name_kpi, value, date, text, file, type, " +
-        "valid, criterion_description description " +
+            "valid, criterion_description description " +
         "FROM user_values " +
         "INNER JOIN kpi ON kpi.name=user_values.name_kpi " +
         "INNER JOIN criterions ON criterions.name_kpi=kpi.name AND " +
@@ -134,7 +140,13 @@ exports.updateValueInvalid = function(id, author, text) {
 };
 
 //отменяем недействительный ПЭД
-exports.updateValueCancelInvalid = function(id) {
+exports.updateValueCancelInvalid = function(id, login) {
     return query("UPDATE user_values SET author_verify=NULL, text_verify=NULL, valid=1 " +
-        "WHERE id=?", [id]);
+        "WHERE id=? AND author_verify=?", [id, login]);
+};
+
+//изменяем поля значения
+exports.updateFieldValue = function(id, nameField, valueField) {
+    return query("UPDATE user_values SET " + nameField + "=? " +
+        "WHERE id=?", [valueField, id]);
 };

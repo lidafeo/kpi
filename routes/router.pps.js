@@ -25,6 +25,8 @@ router.route('/val/:valId')
     .get(handler.pageGetValue);
 
 router.post('/choose-kpi', jsonParser, handler.chooseKpiForAddValue);
+router.post('/change-field-val', jsonParser, handler.changeFieldVal);
+router.post('/delete-val', urlencodedParser, handler.deleteVal);
 
 //app.post('/edit-kpi', jsonParser, user.postChooseKpiForAddValue);
 

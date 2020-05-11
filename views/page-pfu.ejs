@@ -8,19 +8,19 @@
 	<%- include("common/menu.ejs") %>
 	<div class="wrapper">
 		<div class="content container">
-			<% if(set) {%>
+			<% if(period) {%>
 				<h3>Формирование отчета</h3>
 				<hr>
 				<form action="" method="post">
 					<div class="form-group">
-						<div>Текущий период: с <%=period.date1Str%> по <%=period.date2Str%></div>
+						<div>Текущий период: с <%=period.date1%> по <%=period.date2%></div>
 					</div>
 					<div class="form-group">
 						<input type="submit" class="btn btn-primary" value="Сформировать отчет за этот период">
 					</div>
 				</form>
 			<%} %> 
-			<% if(!set) {%>
+			<% if(!period) {%>
 				<div>
 					<p>Не был установлен период для отчета.</p>
 					<p>Обратитесь к администратору сайта.</p>

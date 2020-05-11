@@ -1,5 +1,9 @@
 let DB = require('./db');
 
+let funcKpi = require('../modules/func-kpi');
+let writeLogs = require('../modules/logs').log;
+let writeErrorLogs = require('../modules/logs').error;
+
 //получение информации о конкретном ПЭД
 exports.getInfoOneKpi = async function(name) {
     let info = {};

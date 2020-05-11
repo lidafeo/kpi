@@ -51,6 +51,7 @@ exports.routes = function(app) {
 	app.post('/pfu', handlers.createReport.getReport);
 
 	app.get('/get-actions-users', checkRight(["get_actions_users"]), handlers.getActionsUsers.pageGetActionsUsers);
+    //app.get('/actions-users', handlers.getActionsUsers.pageGetActionsUsers);
 
 	app.get('/get-users', handlers.getInfo.pageGetUsers);
 	app.get('/get-pps', handlers.getInfo.pageGetPps);
@@ -58,8 +59,6 @@ exports.routes = function(app) {
 	app.get('/get-structure', handlers.getInfo.pageGetStructure);
 	app.get('/get-all-values', handlers.getInfo.pageGetAllValuesOfKpi);
 	app.get('/get-all-roles', handlers.getInfo.pageGetAllRoles);
-
-	app.get('/actions-users', handlers.getActionsUsers.pageGetActionsUsers);
 
 	app.route('/set-period')
 		.get(handlers.setPeriod.pageSetPeriod)

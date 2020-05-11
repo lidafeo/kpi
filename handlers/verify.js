@@ -67,6 +67,8 @@ exports.getWorkers = function(req, res) {
     let level = req.session.level;
     let faculty = req.body.faculty;
     let department = req.body.department;
+    console.log('--------');
+    console.log(req.body);
     if(!req.session.position) {
         level = 10;
     }
@@ -82,6 +84,7 @@ exports.getWorkers = function(req, res) {
 //POST-запрос на получение таблицы для проверки значений ПЭД ППС
 exports.verify = function(req, res) {
     let login = req.body.name;
+    console.log("00000");
     console.log(login);
     //находим значения ПЭД выбранного сотрудника
     DB.userValues.selectValueKpiByLogin(login).then(result => {
@@ -121,7 +124,7 @@ exports.invalidValue = function(req, res) {
 exports.cancelInvalidValue = function(req, res) {
     let invalidId = req.body.id;
     let login = req.session.login;
-    DB.userValues.updateValueCancelInvalid(invalidId).then(result => {
+    DB.userValues.updateValueCancelInvalid(invalidId, login).then(result => {
         //записываем логи
         writeLogs(login, req.session.position, "сделал(а) значения ПЭД с id" +
             invalidId + " действительной (отмена отметки)");
