@@ -1,11 +1,7 @@
-const bcrypt = require("bcrypt");
-
-let BCRYPT_SALT_ROUNDS = 12;
-
-let DB = require('../modules/db');
-
 let writeLogs = require('../modules/logs').log;
 let writeErrorLogs = require('../modules/logs').error;
+
+let changeMyPasswordService = require('../services/change-my-password');
 
 //GET-запрос страницы изменения пароля
 exports.pageChangePassword = function(req, res) {
@@ -15,29 +11,12 @@ exports.pageChangePassword = function(req, res) {
 //POST-запрос для смены пароля
 exports.changePassword = function(req, res) {
     let password = req.body.password;
-    let login = req.session.login;
-    if(password) {
-        changePassword(login, password).then(result => {
-            //записываем логи
-            writeLogs(login, req.session.position, "изменил(а) пароль");
-            res.json({result: 'Пароль успешно изменен'});
-            //res.render('pps/page_settings', {level: req.session.level, action: 1});
-        }).catch(err => {
-            writeErrorLogs(req.session.login, err);
-            console.log(err);
-            res.status(500).render('error/500');
-        });
-    }
-    else {
-        console.log("Задан пустой пароль");
-        res.json({err: 'Пустой пароль'});
-        //res.render('pps/page_settings', {level: req.session.level});
-    }
+    let user = req.session;
+    changeMyPasswordService.changePassword(user, password).then(result => {
+        res.json(result);
+    }).catch(err => {
+        writeErrorLogs(req.session.login, err);
+        console.log(err);
+        res.status(500).render('error/500');
+    });
 };
-
-
-//обновление пароля
-async function changePassword (login, password) {
-    let passwordHash = await bcrypt.hash(password, BCRYPT_SALT_ROUNDS);
-    await DB.users.updatePassword(login, passwordHash);
-}

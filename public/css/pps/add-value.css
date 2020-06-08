@@ -3,13 +3,7 @@
 }
 .treeCSS {
 	border: 1px solid #A1B9D5;
-	box-shadow: 0 2px 4px 1px rgba(0,0,0,0.2), 1px 3px 15px 1px rgba(0,0,0,0.1);
-}
-
-.treeCSS a:hover {
-	background: rgb(236, 240, 243); 
-	color: rgb(38, 29, 58);
-	border: 1px solid #8b8b8b;
+	box-shadow: 0 2px 2px 1px rgba(0,0,0,0.2), 1px 3px 8px 1px rgba(0,0,0,0.1);
 }
 
 .treeCSS, .treeCSS ul, .treeCSS li {
@@ -45,16 +39,14 @@
 
 .treeCSS .drop {
 	position: absolute;
-	left: -6px;
-	top: 5px;
-	width: 12px;
-	height: 12px;
+	left: -9px;
+	top: 1px;
+	width: 18px;
+	height: 18px;
 	line-height: 1em;
-	text-align: center;
-	background: #9a6d9f;
 	color: #fff;
-	font-size: 75%;
 	cursor: pointer;
+	background-color: white;
 	-webkit-user-select: none;
 	-moz-user-select: none;
 }

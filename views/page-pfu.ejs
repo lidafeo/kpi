@@ -4,12 +4,14 @@
 	<title>ПФУ</title>
 	<%- include("common/head.ejs")%>
 	</head>
-<body>
-	<%- include("common/menu.ejs") %>
-	<div class="wrapper">
-		<div class="content container">
+<body class="d-flex flex-column h-100">
+	<header>
+		<%- include("common/menu.ejs") %>
+	</header>
+	<main role="main" class="flex-shrink-0">
+		<div class="content container-fluid">
 			<% if(period) {%>
-				<h3>Формирование отчета</h3>
+				<h2>Формирование отчета</h2>
 				<hr>
 				<form action="" method="post">
 					<div class="form-group">
@@ -27,10 +29,10 @@
 				</div>
 			<%} %>
 		</div>
-		
-		<div class="footer">
-			<%- include("common/footer.ejs") %>
-		</div>
+	</main>
+
+	<div class="footer mt-auto py-3">
+		<%- include("common/footer.ejs") %>
 	</div>
 
 	<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>

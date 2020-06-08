@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Добавление пользователя</title>
+	<%- include("../common/head.ejs")%>
+</head>
+<body class="d-flex flex-column h-100">
+	<header>
+		<%- include("../common/menu.ejs") %>
+	</header>
+	<main role="main" class="flex-shrink-0">
+		<div class="content container-fluid">
+			<h2>Изменение пользователя <%=user.login%></h2>
+			<hr>
+			<form name="adduser" action="" method="post" class="needs-validation" id="form-send" novalidate>
+				<input type="hidden" name="login" id="login" class="form-control" value="<%=user.login%>">
+				<div class="form-group row">
+					<label for="name" class="col-sm-2 col-form-label">ФИО</label>
+					<div class="col-sm-10">
+						<input type="text"name="name" class="form-control" id="name" value="<%=user.name%>" maxlength="100" autocomplete="off" required>
+						<div class="invalid-feedback">
+							Пожалуйста введите ФИО
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group row">
+					<label for="role" class="col-sm-2 col-form-label">Роль</label>
+					<div class="col-sm-10">
+						<select class="form-control" name="role" id="role" required>
+							<% for(let i = 0; i < roles.length; i++) {%>
+								<% if(roles[i].role == user.role) {%>
+									<option selected><%=roles[i].role%></option>
+								<%} %>
+								<% if(roles[i].role != user.role) {%>
+									<option><%=roles[i].role%></option>
+								<%} %>
+							<%} %>
+						</select>
+						<div class="invalid-feedback">
+							Пожалуйста выберите роль
+						</div>
+					</div>
+				</div>
+
+				<div class="form-group row<% if(!user.position){%> d-none<%}%>" id="position-div">
+					<label for="position" class="col-sm-2 col-form-label">Должность</label>
+					<div class="col-sm-10">
+						<select name="position" class="form-control" id="position">
+							<% for(let i = 0; i < positions.length; i++) {%>
+								<% if(positions[i].position == user.position) {%>
+									<option selected><%=positions[i].position%></option>
+								<%} %>
+								<% if(positions[i].position != user.position) {%>
+									<option data-level="<%=positions[i].level%>"><%=positions[i].position%></option>
+								<%} %>
+							<%} %>
+						</select>
+					</div>
+				</div>
+
+				<div class="form-group row<% if(!user.faculty){%> d-none<%}%>" id="faculty-div">
+					<% if(faculty.length != 0) {%>
+						<label for="faculty" class="col-sm-2 col-form-label">Факультет</label>
+						<div class="col-sm-10">
+							<select name="faculty" id="faculty" class="form-control">
+								<% for(let i = 0; i < faculty.length; i++) {%>
+									<% if(faculty[i] == user.faculty) {%>
+										<option selected><%=faculty[i]%></option>
+									<%} %>
+									<% if(faculty[i] != user.faculty) {%>
+										<option><%=faculty[i]%></option>
+									<%} %>
+								<%} %>
+							</select>
+						</div>
+					<%}%>
+				</div>
+
+				<div class="form-group row<% if(!user.department){%> d-none<%}%>" id="department-div">
+					<label for="department" class="col-sm-2 col-form-label">Кафедра</label>
+					<div class="col-sm-10">
+						<select name="department" id="department" class="form-control">
+							<% for(let i = 0; i < department.length; i++) {%>
+								<% if(department[i] == user.department) {%>
+									<option selected><%=department[i]%></option>
+								<%} %>
+								<% if(department[i] != user.department) {%>
+									<option><%=department[i]%></option>
+								<%} %>
+							<%} %>
+						</select>
+					</div>
+				</div>
+
+				<div class="form-group row">
+					<div class="col-sm-10">
+						<button type="submit" class="btn btn-primary btn-lg">Сохранить</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</main>
+
+	<div class="footer mt-auto py-3">
+		<%- include("../common/footer.ejs") %>
+	</div>
+	<%- include("../common/modal.ejs") %>
+
+	<%- include("../common/scripts.ejs")%>
+	<script type="text/javascript" src="/scripts/check-form.js"></script>
+    <script type="text/javascript" src="/scripts/send-form.js"></script>
+	<script type="text/javascript" src="/plugins/carhartl-jquery-cookie-92b7715/jquery.cookie.js"></script>
+	<script type="text/javascript" src="/scripts/change-users/add-user.js"></script>
+</body>
+</html>

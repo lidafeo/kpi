@@ -1,3 +1,5 @@
+const xl = require("excel4node");
+
 let DB = require('./db');
 module.exports = {
     main: async function(workSheet) {
@@ -8,6 +10,10 @@ module.exports = {
         let countExternal = 0;
         addNames = []; addUsers = [];
         allNames = []; allUsers = [];
+        let excel = createExcel();
+        let ws = excel.ws;
+        let wb = excel.wb;
+        let style = excel.style;
         //currUser = {};
         while(true) {
             let obj = {};
@@ -75,6 +81,12 @@ module.exports = {
                     else {
                         addUsers.push(obj);
                         addNames.push(obj.name);
+                        ws.cell(addNames.length + 1, 1).string(obj.name).style(style);
+                        ws.cell(addNames.length + 1, 2).string(obj.faculty).style(style);
+                        ws.cell(addNames.length + 1, 3).string(obj.department).style(style);
+                        ws.cell(addNames.length + 1, 4).string(obj.position).style(style);
+                        ws.cell(addNames.length + 1, 5).string(obj.login).style(style);
+                        ws.cell(addNames.length + 1, 6).string(obj.password).style(style);
                     }
                 }
             }
@@ -92,6 +104,12 @@ module.exports = {
             //console.log(obj.numb, obj.name, obj.faculty, obj.department);//, obj.empl, obj.faculty, obj.department);
             num++;
         }
+        try {
+            if (fs.existsSync('workers.xlsx')) {
+                fs.unlinkSync('workers.xlsx');
+            }
+        } catch (e) {}
+        wb.write('workers.xlsx');
         return {allUsers: allUsers, addUsers: addUsers, counts: {countError: countError,
                 countIgnore: countIgnore, countExists: countExists, countExternal: countExternal}};
     },
@@ -279,4 +297,26 @@ function generatePassword(length) {
         result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
     return result;
+}
+
+function createExcel() {
+    let wb = new xl.Workbook();
+    let style = wb.createStyle({
+        font: {
+            color: '#000000',
+            size: 12
+        },
+        numberFormat: '#0; (#); -'
+    });
+
+    let ws = wb.addWorksheet('Sheet1');
+
+    ws.cell(1, 1).string('ФИО').style(style).style({font:{bold: true}});
+    ws.cell(1, 2).string('Факультет').style(style).style({font:{bold: true}});
+    ws.cell(1, 3).string('Кафедра').style(style).style({font:{bold: true}});
+    ws.cell(1, 4).string('Должность').style(style).style({font:{bold: true}});
+    ws.cell(1, 5).string('Логин').style(style).style({font:{bold: true}});
+    ws.cell(1, 6).string('Пароль').style(style).style({font:{bold: true}});
+
+    return {ws: ws, wb: wb, style: style};
 }

@@ -11,7 +11,7 @@ let writeErrorLogs = require('../modules/logs').error;
 exports.pageHome = function(req, res) {
 	if(req.session.name)
 		return res.redirect('/my-page');
-	res.render("auth", {checkPassword: false, close: false});
+	res.render("auth");
 };
 
 //Аутентификация
@@ -41,14 +41,14 @@ exports.auth = function(req, res) {
 				//проверка доступа к личному кабинету
 				let closeAccount = getClose();
 				if(closeAccount && result.position)
-					return res.render("auth", {checkPassword: false, close: true});
+					return res.json({err: 'Доступ к личным кабинетам временно закрыт'});
 
-				res.redirect('/my-page');
+				res.json({result: 'ok'});
 			}).catch(err => {
 				res.status(500).render('error/500');
 			});
 		} else {
-			res.render("auth", {checkPassword: true, close: false});
+			res.json({err: 'Неправильно введен логин или пароль'});
 		}
 	}).catch(err => {
 		writeErrorLogs('error auth', err);

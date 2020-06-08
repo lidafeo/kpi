@@ -19,6 +19,14 @@ exports.insertValueKpiFromObj = function(userValue) {
         "text, link, file, number_criterion) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", arr);
 };
 
+//добавить значение ПЭД с объекта со статусом
+exports.insertValueKpiFromObjWithValid = function(userValue) {
+    let arr = [userValue.login_user, userValue.name_kpi, userValue.value, userValue.date,
+        userValue.start_date, userValue.finish_date, userValue.text, userValue.link, userValue.file,
+        userValue.number_criterion, userValue.valid];
+    return query("INSERT INTO user_values(login_user, name_kpi, value, date, start_date, finish_date, " +
+        "text, link, file, number_criterion, valid) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", arr);
+};
 //DELETE
 
 //очистка таблицы user_values
@@ -34,11 +42,19 @@ exports.deleteVal = function(id, login) {
 
 //SELECT
 
-//получить значения ПЭД всех пользователей
-exports.selectAllValueKpi = function() {
+//получить значения ПЭД всех пользователей в заданный период
+exports.selectAllValueKpiInPeriod = function(date1, date2) {
     return query("SELECT * FROM user_values " +
-        "ORDER BY id DESC " +
-        "LIMIT 100");
+        "WHERE ((start_date BETWEEN DATE(?) AND DATE(?)) OR " +
+        "(finish_date BETWEEN DATE(?) AND DATE(?)) OR ((start_date<=DATE(?)) AND (finish_date>=DATE(?)))) " +
+        "ORDER BY date DESC, id DESC " +
+        "LIMIT 1000",
+        [date1, date2, date1, date2, date1, date2]);
+};
+
+//получить все значения ПЭД
+exports.selectAllValueKpi = function() {
+    return query("SELECT * FROM user_values");
 };
 
 //получить значения ПЭД пользователя
@@ -65,7 +81,17 @@ exports.selectValueKpiUserInPeriod = function(userName, date1, date2) {
 };
 
 //получить действующие значения ПЭД пользователя в заданный период и отсортировать по дате добавления
-exports.selectValueKpiUserInPeriodOrderByDate = function(userName, date1, date2) {
+exports.selectAllValueKpiUserInPeriodOrderByDate = function(userName, date1, date2) {
+    return query("SELECT * FROM user_values " +
+        "INNER JOIN kpi ON kpi.name=user_values.name_kpi " +
+        "WHERE login_user=? AND ((start_date BETWEEN DATE(?) AND DATE(?)) OR " +
+        "(finish_date BETWEEN DATE(?) AND DATE(?)) OR ((start_date<=DATE(?)) AND (finish_date>=DATE(?)))) " +
+        "ORDER BY date DESC, user_values.id DESC ",
+        [userName, date1, date2, date1, date2, date1, date2]);
+};
+
+//получить действующие значения ПЭД пользователя в заданный период и отсортировать по дате добавления
+exports.selectValidValueKpiUserInPeriodOrderByDate = function(userName, date1, date2) {
     return query("SELECT * FROM user_values " +
         "INNER JOIN kpi ON kpi.name=user_values.name_kpi " +
         "WHERE valid=1 AND login_user=? AND ((start_date BETWEEN DATE(?) AND DATE(?)) OR " +
@@ -80,7 +106,7 @@ exports.selectValueKpiOfUserOneKpi = function(login, name_kpi) {
         "LEFT JOIN users ON users.login=user_values.author_verify " +
         "WHERE name_kpi=? AND login_user=? " +
         "ORDER BY date DESC, user_values.id DESC " +
-        "LIMIT 50",
+        "LIMIT 30",
         [name_kpi, login]);
 };
 /*
@@ -95,8 +121,8 @@ exports.selectFileValueKpiById = function(id) {
 //получить значение одного ПЭД по id с проверкой пользователя
 exports.selectValueKpiById = function(id, login) {
     return query("SELECT user_values.*, kpi.type, kpi.description, kpi.indicator_sum, " +
-            "criterions.criterion_description, users.name author_verify_name, " +
-            "users.role author_verify_role FROM user_values " +
+        "criterions.criterion_description, users.name author_verify_name, " +
+        "users.role author_verify_role FROM user_values " +
         "INNER JOIN kpi ON user_values.name_kpi = kpi.name " +
         "INNER JOIN criterions ON criterions.name_kpi = user_values.name_kpi " +
         "AND criterions.number_criterion = user_values.number_criterion " +
@@ -121,7 +147,7 @@ exports.selectValueKpiByIdForVerify = function(id) {
 //получить значения ПЭД для пользователя по логину
 exports.selectValueKpiByLogin = function(login) {
     return query("SELECT user_values.id, user_values.name_kpi, value, date, text, file, type, " +
-            "valid, criterion_description description " +
+        "valid, criterion_description description " +
         "FROM user_values " +
         "INNER JOIN kpi ON kpi.name=user_values.name_kpi " +
         "INNER JOIN criterions ON criterions.name_kpi=kpi.name AND " +

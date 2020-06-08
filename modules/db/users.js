@@ -23,7 +23,7 @@ exports.deleteUser = function(login) {
 
 //удаление всех ППС
 exports.deleteAllPps = function() {
-    return query("DELETE users FROM users " +
+    return query("DELETE FROM users " +
         "WHERE role='ППС' OR role='Руководитель подразделения'");
 };
 
@@ -78,4 +78,20 @@ exports.selectOneUserByName = function(name) {
 exports.updatePassword = function(login, newPassword) {
     return query("UPDATE users SET password='" + newPassword +
         "' WHERE login=?", [login]);
+};
+
+//добавление пользователя с объекта
+exports.updateUser = function(login, user) {
+    if(!user.faculty) {
+        user.faculty = null;
+    }
+    if(!user.department) {
+        user.department = null;
+    }
+    if(!user.position) {
+        user.position = null;
+    }
+    let arr = [user.name, user.role, user.position, user.faculty, user.department, login];
+    return query("UPDATE users SET name=?, role=?, position=?, faculty=?, " +
+        "department=? WHERE login=?", arr);
 };

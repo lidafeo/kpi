@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Справка</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8" />
+    <link rel="shortcut icon" href="/img/favicon.png" type="image/png">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+</head>
+<body>
+    <main role="main" class="flex-shrink-0">
+        <div class="content container mt-md-2 mb-md-5">
+            <div class="mb-md-5">
+                <h2>Выберите интересующую справку:</h2>
+                <div id="list-example">
+                    <ul class="list-group list-group-flush">
+                        <a class="list-group-item list-group-item-action" href="#list-item-1"><h4>1. Как добавить новое значение показателя?</h4></a>
+                        <a class="list-group-item list-group-item-action" href="#list-item-2"><h4>2. Как просмотреть информацию о своих значениях?</h4></a>
+                        <a class="list-group-item list-group-item-action" href="#list-item-3"><h4>3. Как посмотреть баллы за расчетный период?</h4></a>
+                        <a class="list-group-item list-group-item-action" href="#list-item-4"><h4>4. Что делать, если в значении неправильная кодировка?</h4></a>
+                    </ul>
+                </div>
+            </div>
+            <div data-spy="scroll" data-target="#list-example" data-offset="0" class="scrollspy-example">
+                <h2 id="list-item-1">1. Добавление нового значения</h2>
+                <hr>
+                <ul>
+                    <li><p>Перейдите на <a href="/pps/add-value-kpi" target="_blank">эту страницу</a>
+                        с помощью навигационной панели, которая находится в верхней части страницы.</p>
+                        <p class="ml-md-3"><img class="border-secondary img-thumbnail" src="/img/help/pps/1_0.png"></p>
+                    </li>
+                    <li><p>В списке показателей эффективности деятельности, который находится по левой стороне страницы,
+                        выберите тот, значение которого собираетесь добавить.</p>
+                        <p><span class="text-warning">Внимание!</span> Если Вы хотите увидеть полное название показателя,
+                            наведите курсором на нужный показатель эффективности, должно отобразиться его полное название.</p>
+                        <p>Например, если Вы хотите добавить значение показателя Н.П.3, найдите и нажмите на "Н.П.3":</p>
+                        <p class="ml-md-3"><img class="border-secondary img-thumbnail" src="/img/help/pps/1_1.png"></p>
+                    </li>
+                    <li>
+                        <p>Затем справа от списка показателей эффективности (снизу, если Вы зашли на сайт с телефона или другого небольшого устройства)
+                        появится описание выбранного показателя, кнопка "+ Добавить значение", а также таблица с уже добавленными Вами ранее значениями
+                         (если таковые имеются).
+                            Для добавления нового значения нажмите на кнопку "+ Добавить значение".</p>
+                        <p><span class="text-warning">Внимание!</span> Если вместо кнопки "+ Добавить значение" появилась надпись "<span class="text-danger">Этот ПЭД недоступен для Вашей должности</span>",
+                            то значение выбранного показателя не может быть добавлено для Вашей должности.</p>
+                        <p class="ml-md-3"><img class="border-secondary img-thumbnail" src="/img/help/pps/1_2.png"></p>
+                    </li>
+                    <li>
+                        <p>После нажатия на кнопку "+ Добавить значение" должна появиться форма для добавления нового значения.
+                            Ее необходимо заполнить данными:</p>
+                        <p><b>Тип</b> - к какому типу относится событие/действие</p>
+                        <p><b>Дата реализации</b> - дата события/действия, либо дата добавления значения при отсутствии события</p>
+                        <p><b>Значение</b> - значение показателя эффективности</p>
+                        <p><b>Ссылка</b> - ссылка на источник, подтверждающий получение значения показателя</p>
+                        <p><b>Пояснительная записка</b> - текстовое сообщение, подтверждающее получение значения показателя</p>
+                        <p><b>Файл для подтверждения</b> - файл, подтверждающий получение значения показателя</p>
+                        <p class="ml-md-3"><img class="border-secondary img-thumbnail" src="/img/help/pps/1_3.png"></p>
+                    </li>
+                    <li>
+                        <p>После ввода всех необходимых данных в форму, нажмите на кнопку "Сохранить".</p>
+                        <p class="ml-md-3"><img class="border-secondary img-thumbnail" src="/img/help/pps/1_4.png"></p>
+                    </li>
+                    <li>
+                        <p>Если значение было успешно добавлено, должна появиться таблица с добавленным значением.</p>
+                        <p class="ml-md-3"><img class="border-secondary img-thumbnail" src="/img/help/pps/1_5.png"></p>
+                    </li>
+                </ul>
+
+                <h2 id="list-item-2" class="mt-md-4">2. Просмотр существующих значений</h2>
+                <hr>
+                <ul>
+                    <li>
+                        <p>Перейдите на <a href="/pps/get-values-kpi" target="_blank">эту страницу</a>
+                            с помощью навигационной панели, которая находится в верхней части страницы.</p>
+                        <p class="ml-md-3"><img class="border-secondary img-thumbnail" src="/img/help/pps/2_0.png"></p>
+                    </li>
+                    <li>
+                        <p>Страница содержит таблицу со всеми значениями, действительных на расчетный период, который также указан на странице.</p>
+                        <p><span class="text-warning">Внимание!</span> Если значений в этот период нет, вместо таблицы выводитcя надпись "<span class="text-warning">Нет отмеченных значений ПЭД</span>".</p>
+                        <p>В таблице отображена следующая информация:</p>
+                        <p><b>Дата добавления</b> - дата добавления значения в систему</p>
+                        <p><b>ПЭД</b> - шифр показателя эффективности, значение которого было добавлено</p>
+                        <p><b>Дата реализации</b> - дата события/действия, либо дата добавления значения при отсутствии события (указывается при добавлении)</p>
+                        <p><b>Значение</b> - значение показателя эффективности</p>
+                        <p><b>Файл</b> - ссылка на скачивание файла, подтверждающего получение значения</p>
+                        <p><b>Статус</b> - "<span class="text-success">Выполнено</span>" - если значение действительно,
+                            "<span class="text-danger">Недействительно</span>", если значение было отмечено руководителем подразделения как неверное</p>
+                        <p><b>Подробнее</b> - ссылка на полную информацию о значении</p>
+                        <p class="ml-md-3"><img class="border-secondary img-thumbnail" src="/img/help/pps/2_1.png"></p>
+                    </li>
+                    <li>
+                        <p>Для получения полной информации о значении нажмите на ссылку "Подробнее" в таблице.</p>
+                    </li>
+                </ul>
+
+                <h2 id="list-item-3" class="mt-md-4">3. Просмотр баллов за расчетный период</h2>
+                <hr>
+                <ul>
+                    <li>
+                        <p>Перейдите на <a href="/pps/get-my-score" target="_blank">эту страницу</a>
+                            с помощью навигационной панели, которая находится в верхней части страницы.</p>
+                        <p class="ml-md-3"><img class="border-secondary img-thumbnail" src="/img/help/pps/3_0.png"></p>
+                    </li>
+                    <li>
+                        <p>Страница содержит таблицу с баллами за внесенные значения. Баллы расчитываются за расчетный период, который указан на странице.</p>
+                        <p><span class="text-warning">Внимание!</span> Если значений в этот период нет, вместо таблицы выводитcя надпись "<b>За выбранный период нет выполненных ПЭД</b>".</p>
+                        <p>В таблице отображена следующая информация:</p>
+                        <p><b>Шифр</b> - шифр показателя эффективности</p>
+                        <p><b>Показатель</b> - полноназвание показателя эффективности</p>
+                        <p><b>Оценка</b> - балл за показатель, расчитанный на основе добавленных значений</p>
+                        <p class="ml-md-3"><img class="border-secondary img-thumbnail" src="/img/help/pps/3_1.png"></p>
+                    </li>
+                </ul>
+
+                <h2 id="list-item-4" class="mt-md-4">4. Что делать, если в значениях неправильная кодировка?</h2>
+                <hr>
+                <ul>
+                    <li>
+                        <p>Если Вы нашли в личном кабинете строку в неправильной кодировке,
+                            для устранения этой проблемы необходимо написать о проблеме на почту <u>ithelp@mtuci.ru</u></p>
+                        <p class="ml-md-3">Пример строки в неправильной кодировке:
+                            <img class="border-secondary img-thumbnail" src="/img/help/pps/4_1.png"></p>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <script type="text/javascript" src="/plugins/jquery-3.3.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+</body>
+</html>

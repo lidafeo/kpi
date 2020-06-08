@@ -2,10 +2,15 @@ $(document).ready(function() {
 	let structure;
 
 	if($("#faculty > option").length > 1) {
+		debugger;
 		$("#faculty").attr("disabled", true);
-		getStructure().then(result => {
-			checkCookie();
+		getStructure().then(function (result) {
+			checkCookie('faculty').then(function(result){});
 		});
+	} else if($("#department > option").length > 1) {
+		checkCookie('department').then(function(result){});
+	} else {
+		checkCookie('workers').then(function(result){});
 	}
 
 	let data = {};
@@ -16,7 +21,7 @@ $(document).ready(function() {
 	//нажатие на кнопку отправки на сервер сотрудника
 	$("#usersdiv").on('click', "#submit", function(e) {
 		e.preventDefault();
-		getTableForVerify().then(result => {});
+		getTableForVerify().then(function(result){});
 	});
 	function getTableForVerify() {
 		return new Promise(function(resolve, reject) {
@@ -79,11 +84,12 @@ $(document).ready(function() {
 
 	$("#choosedep").click(function(e) {
 		e.preventDefault();
-		getWorkers().then(result => {});
+		getWorkers().then(function(result){});
 	});
 
 	function getWorkers() {
 		return new Promise(function(resolve, reject) {
+			console.log("UUUUUU");
 			let faculty = $("#faculty").val();
 			let department = $("#department").val();
 			//добавляем в cookie
@@ -102,17 +108,10 @@ $(document).ready(function() {
 				$('#usersdiv').hide();
 				$('#usersdiv').html(request.response);
 				$('#usersdiv').slideDown(500);
-				resolve();
+				setTimeout(resolve, 500);
 			});
 			request.send(sendValue);
 		});
-	}
-
-	if($("#department").attr("disabled") == "disabled") {
-		(async function() {
-			let chooseDep = await $("#choosedep").click();
-			$("#choosedep").remove();
-		})();
 	}
 
 	function getStructure() {
@@ -129,23 +128,40 @@ $(document).ready(function() {
 			request.send();
 		});
 	}
-    function checkCookie() {
-	    let chooseFaculty = $.cookie("choose-faculty");
-        let chooseDepartment = $.cookie("choose-department");
-        let chooseUser = $.cookie("choose-user");
-        if(chooseFaculty) {
-            $("#faculty").val(chooseFaculty);
-			changeFaculty();
-        }
-        if(chooseDepartment) {
-            $("#department").val(chooseDepartment);
-			getWorkers().then(result => {
-				if(chooseUser) {
+	function checkCookie(option) {
+		return new Promise(function (resolve, reject) {
+			debugger;
+			let chooseFaculty = $.cookie("choose-faculty");
+			let chooseDepartment = $.cookie("choose-department");
+			let chooseUser = $.cookie("choose-user");
+			console.log(chooseFaculty);
+			console.log(chooseDepartment);
+			console.log(chooseUser);
+			console.log(option);
+			if(chooseFaculty && option == 'faculty') {
+				$("#faculty").val(chooseFaculty);
+				changeFaculty();
+			}
+			if(chooseDepartment && chooseDepartment != 'null' && option != 'workers') {
+				$("#department").val(chooseDepartment);
+			}
+			if($("#faculty").val() && $("#department").val()) {
+				getWorkers().then(function (result) {
 					let name = $('#worker option[data-value="' + chooseUser + '"]').val();
-					$("#name").val(name);
-					getTableForVerify().then(result => {});
-				}
-			});
-        }
+					console.log($('#worker option[data-value="' + chooseUser + '"]'));
+					console.log("name!", name);
+					if(name) {
+						$("#name").val(name);
+						getTableForVerify().then(function (result) {
+							resolve();
+						});
+					} else {
+						resolve();
+					}
+				});
+			} else {
+				resolve();
+			}
+		});
     }
 });

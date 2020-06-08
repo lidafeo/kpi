@@ -4,9 +4,11 @@
 	<title>Добавление пользователя</title>
 	<%- include("../common/head.ejs")%>
 </head>
-<body>
-	<%- include("../common/menu.ejs") %>
-	<div class="wrapper">
+<body class="d-flex flex-column h-100">
+	<header>
+		<%- include("../common/menu.ejs") %>
+	</header>
+	<main role="main" class="flex-shrink-0">
 		<div class="content container-fluid">
 			<h2>Добавление нового сотрудника</h2>
 			<hr>
@@ -16,7 +18,7 @@
 				<div class="form-group row">
 					<label for="name" class="col-sm-2 col-form-label">ФИО</label>
 					<div class="col-sm-10">
-						<input type="text" class="form-control" id="name" name="name" maxlength="100" required autocomplete="off">
+						<input type="text" class="form-control" id="name" name="name" placeholder="Пример: Иванов Иван Иванович" maxlength="100" required autocomplete="off">
 						<div class="invalid-feedback">
 							Пожалуйста введите ФИО
 						</div>
@@ -68,7 +70,7 @@
 				<div class="form-group row">
 					<label for="login" class="col-sm-2 col-form-label">Логин</label>
 					<div class="col-sm-10">
-						<input type="text" class="form-control" id="login" name="login" maxlength="45" required autocomplete="off">
+						<input type="text" class="form-control" id="login" name="login" maxlength="45" placeholder="Пример: i.i.ivanov" required autocomplete="off">
 						<div class="invalid-feedback">
 							Пожалуйста введите логин
 						</div>
@@ -90,12 +92,12 @@
 				<button type="submit" class="btn btn-primary btn-lg">Добавить</button>
 			</form>
 		</div>
-		
-		<div class="footer">
-			<%- include("../common/footer.ejs") %>
-		</div>
-		<%- include("../common/modal.ejs") %>
+	</main>
+
+	<div class="footer mt-auto py-3">
+		<%- include("../common/footer.ejs") %>
 	</div>
+	<%- include("../common/modal.ejs") %>
 
 	<%- include("../common/scripts.ejs")%>
 	<script type="text/javascript" src="/plugins/carhartl-jquery-cookie-92b7715/jquery.cookie.js"></script>

@@ -4,200 +4,203 @@
         <title>Настройки</title>
         <%- include("../common/head.ejs")%>
     </head>
-    <body>
-    <%- include("../common/menu.ejs") %>
-    <div class="wrapper">
-        <div class="content container">
-            <% if(val) {%>
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="/pps/get-values-kpi">Список выполненных ПЭД</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Просмотр значения</li>
-                    </ol>
-                </nav>
-                <% if(!val.valid) {%>
-                <h3 class="text-danger">Данное значение отмечено как неверное</h3>
+    <body class="d-flex flex-column h-100">
+        <header>
+            <%- include("../common/menu.ejs") %>
+        </header>
+        <main role="main" class="flex-shrink-0">
+            <div class="content container">
+                <% if(val) {%>
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/pps/get-values-kpi">Список выполненных ПЭД</a></li>
+                            <li class="breadcrumb-item" aria-current="page">Просмотр значения</li>
+                        </ol>
+                    </nav>
+                    <% if(!val.valid) {%>
+                    <h3 class="text-danger">Данное значение отмечено как неверное</h3>
+                        <table class="table">
+                            <tbody>
+                            <tr>
+                                <th scope="row">Проверил</th>
+                                <td><%=val.author_verify_name%>, <%=val.author_verify_role%></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Причина отметки о недействительности</th>
+                                <td><%=val.text_verify%></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    <%}%>
+                    <h3>Просмотр добавленного значения ПЭД</h3>
                     <table class="table">
                         <tbody>
                         <tr>
-                            <th scope="row">Проверил</th>
-                            <td><%=val.author_verify_name%>, <%=val.author_verify_role%></td>
+                            <th scope="row">ПЭД (шифр)</th>
+                            <td><%=val.name_kpi%></td>
                         </tr>
                         <tr>
-                            <th scope="row">Причина отметки о недействительности</th>
-                            <td><%=val.text_verify%></td>
+                            <th scope="row">ПЭД (полное название)</th>
+                            <td><%=val.description%></td>
                         </tr>
-                        </tbody>
-                    </table>
-                <%}%>
-                <h3>Просмотр добавленного значения ПЭД</h3>
-                <table class="table">
-                    <tbody>
-                    <tr>
-                        <th scope="row">ПЭД (шифр)</th>
-                        <td><%=val.name_kpi%></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">ПЭД (полное название)</th>
-                        <td><%=val.description%></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Дата добавления</th>
-                        <td><%=val.modifydate%></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Дата исполнения</th>
-                        <td><%=val.modifystart_date%></td>
-                    </tr>
-                    <% if(val.type == 2) {%>
-                    <tr>
-                        <th scope="row">Тип</th>
-                        <td><%=val.criterion_description%></td>
-                    </tr>
-                    <%} %>
-                    <tr>
-                        <th scope="row">Значение</th>
-                        <td id="value">
-                            <div class="field-value">
-                                <span><%=val.value%></span>
+                        <tr>
+                            <th scope="row">Дата добавления</th>
+                            <td><%=val.modifydate%></td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Дата исполнения</th>
+                            <td><%=val.modifystart_date%></td>
+                        </tr>
+                        <% if(val.type == 2) {%>
+                        <tr>
+                            <th scope="row">Тип</th>
+                            <td><%=val.criterion_description%></td>
+                        </tr>
+                        <%} %>
+                        <tr>
+                            <th scope="row">Значение</th>
+                            <td id="value">
+                                <div class="field-value">
+                                    <span><%=val.value%></span>
+                                    <% if (!val.indicator_sum) {%>
+                                        <a data-type="value" class="change-val ml-sm-2">
+                                            <img src="/img/icons/pencil.svg" alt="изменить" title="изменить" width="28px">
+                                        </a>
+                                    <%}%>
+                                </div>
                                 <% if (!val.indicator_sum) {%>
-                                    <a data-type="value" class="change-val ml-sm-2">
+                                    <div class="d-none form-change">
+                                        <form data-id="<%=val.id%>" class="needs-validation change-sub" novalidate>
+                                            <div class="form-row">
+                                                <div class="col-sm-4">
+                                                    <input type="number" class="form-control" name="value" value="<%=val.value%>" required>
+                                                    <div class="invalid-feedback">
+                                                        Пожалуйста введите значение ПЭД
+                                                    </div>
+                                                </div>
+                                                <div class="col-sm">
+                                                    <button class="btn btn-primary ml-sm-2" type="submit">сохранить</button>
+                                                    <button class="btn btn-secondary ml-sm-2 cancel" data-type="value" type="button">отменить</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                <%}%>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th scope="row">Статус</th>
+                            <%if (val.valid) {%>
+                                <td class="text-success">Выполнено</td>
+                            <%}%>
+                            <%if (!val.valid) {%>
+                                <td class="text-danger">Недействительно</td>
+                            <%}%>
+                        </tr>
+                        <% if (val.link) {%>
+                        <tr>
+                            <th scope="row">Ссылка</th>
+                            <td id="link">
+                                <div class="field-value">
+                                    <a href="<%=val.link%>" target="_blank" class="a-link"><%=val.link%></a>
+                                    <a data-type="link" class="change-val ml-sm-2">
                                         <img src="/img/icons/pencil.svg" alt="изменить" title="изменить" width="28px">
                                     </a>
-                                <%}%>
-                            </div>
-                            <% if (!val.indicator_sum) {%>
+                                </div>
                                 <div class="d-none form-change">
                                     <form data-id="<%=val.id%>" class="needs-validation change-sub" novalidate>
                                         <div class="form-row">
                                             <div class="col-sm-4">
-                                                <input type="number" class="form-control" name="value" value="<%=val.value%>" required>
+                                                <input type="text" class="form-control" name="link" value="<%=val.link%>" required>
                                                 <div class="invalid-feedback">
-                                                    Пожалуйста введите значение ПЭД
+                                                    Пожалуйста введите ссылку
                                                 </div>
                                             </div>
                                             <div class="col-sm">
                                                 <button class="btn btn-primary ml-sm-2" type="submit">сохранить</button>
-                                                <button class="btn btn-secondary ml-sm-2 cancel" data-type="value" type="button">отменить</button>
+                                                <button class="btn btn-secondary ml-sm-2 cancel" data-type="link" type="button">отменить</button>
                                             </div>
                                         </div>
                                     </form>
                                 </div>
-                            <%}%>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Статус</th>
-                        <%if (val.valid) {%>
-                            <td class="text-success">Выполнено</td>
+                            </td>
+                        </tr>
                         <%}%>
-                        <%if (!val.valid) {%>
-                            <td class="text-danger">Недействительно</td>
+                        <% if (val.file) {%>
+                        <tr>
+                            <th scope="row">Файл</th>
+                            <td id="file">
+                                <div class="field-value">
+                                    <a href="/download-file?file=<%=val.file%>" class="a-file" download="">
+                                        <img src="/img/icons/download.svg" alt="Скачать файл" width="25">
+                                    </a>
+                                    <a data-type="file" href="#" class="change-val ml-sm-2">заменить файл</a>
+                                </div>
+                                <div class="d-none form-change">
+                                    <form data-id="<%=val.id%>" class="needs-validation change-sub" novalidate>
+                                        <div class="form-row">
+                                            <div class="custom-file col-sm-4">
+                                                <input type="file" class="custom-file-input" name="file" required>
+                                                <label class="custom-file-label" id="label-file" for="file">Выберите файл...</label>
+                                                <div class="invalid-feedback">
+                                                    Пожалуйста выберите файл
+                                                </div>
+                                            </div>
+                                            <div class="col-sm">
+                                                <button class="btn btn-primary ml-sm-2 col-sm-2" type="submit">сохранить</button>
+                                                <button class="btn btn-secondary ml-sm-2 cancel col-sm-2" data-type="file" type="button">отменить</button>
+                                            </div>
+                                            </div>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
                         <%}%>
-                    </tr>
-                    <% if (val.link) {%>
-                    <tr>
-                        <th scope="row">Ссылка</th>
-                        <td id="link">
-                            <div class="field-value">
-                                <a href="<%=val.link%>" target="_blank" class="a-link"><%=val.link%></a>
-                                <a data-type="link" class="change-val ml-sm-2">
-                                    <img src="/img/icons/pencil.svg" alt="изменить" title="изменить" width="28px">
-                                </a>
-                            </div>
-                            <div class="d-none form-change">
-                                <form data-id="<%=val.id%>" class="needs-validation change-sub" novalidate>
-                                    <div class="form-row">
-                                        <div class="col-sm-4">
-                                            <input type="text" class="form-control" name="link" value="<%=val.link%>" required>
-                                            <div class="invalid-feedback">
-                                                Пожалуйста введите ссылку
+                        <% if (val.text) {%>
+                        <tr>
+                            <th scope="row">Пояснительная записка</th>
+                            <td id="text">
+                                <div class="field-value">
+                                    <span><%=val.text%></span>
+                                    <a data-type="text" class="change-val ml-sm-2">
+                                        <img src="/img/icons/pencil.svg" alt="изменить" title="изменить" width="28px">
+                                    </a>
+                                </div>
+                                <div class="d-none form-change">
+                                    <form data-id="<%=val.id%>" class="needs-validation change-sub" novalidate>
+                                        <div class="form-row">
+                                            <div class="col-sm-7">
+                                                <textarea class="form-control" name="text" maxlength="1024" rows="6" required><%=val.text%></textarea>
+                                                <div class="invalid-feedback">
+                                                    Пожалуйста введите пояснительную записку
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="col-sm">
-                                            <button class="btn btn-primary ml-sm-2" type="submit">сохранить</button>
-                                            <button class="btn btn-secondary ml-sm-2 cancel" data-type="link" type="button">отменить</button>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                    <%}%>
-                    <% if (val.file) {%>
-                    <tr>
-                        <th scope="row">Файл</th>
-                        <td id="file">
-                            <div class="field-value">
-                                <a href="/download-file?file=<%=val.file%>" class="a-file" download="">
-                                    <img src="/img/icons/download.svg" alt="Скачать файл" width="25">
-                                </a>
-                                <a data-type="file" href="#" class="change-val ml-sm-2">заменить файл</a>
-                            </div>
-                            <div class="d-none form-change">
-                                <form data-id="<%=val.id%>" class="needs-validation change-sub" novalidate>
-                                    <div class="form-row">
-                                        <div class="custom-file col-sm-4">
-                                            <input type="file" class="custom-file-input" name="file" required>
-                                            <label class="custom-file-label" id="label-file" for="file">Выберите файл...</label>
-                                            <div class="invalid-feedback">
-                                                Пожалуйста выберите файл
+                                            <div class="col-sm">
+                                                <button class="btn btn-primary ml-sm-2" type="submit">сохранить</button>
+                                                <button class="btn btn-secondary ml-sm-2 cancel" data-type="text" type="button">отменить</button>
                                             </div>
-                                        </div>
-                                        <div class="col-sm">
-                                            <button class="btn btn-primary ml-sm-2 col-sm-2" type="submit">сохранить</button>
-                                            <button class="btn btn-secondary ml-sm-2 cancel col-sm-2" data-type="file" type="button">отменить</button>
-                                        </div>
-                                        </div>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                    <%}%>
-                    <% if (val.text) {%>
-                    <tr>
-                        <th scope="row">Пояснительная записка</th>
-                        <td id="text">
-                            <div class="field-value">
-                                <span><%=val.text%></span>
-                                <a data-type="text" class="change-val ml-sm-2">
-                                    <img src="/img/icons/pencil.svg" alt="изменить" title="изменить" width="28px">
-                                </a>
-                            </div>
-                            <div class="d-none form-change">
-                                <form data-id="<%=val.id%>" class="needs-validation change-sub" novalidate>
-                                    <div class="form-row">
-                                        <div class="col-sm-4">
-                                            <input type="text" class="form-control" name="text" value="<%=val.text%>" required>
-                                            <div class="invalid-feedback">
-                                                Пожалуйста введите пояснительную записку
                                             </div>
-                                        </div>
-                                        <div class="col-sm">
-                                            <button class="btn btn-primary ml-sm-2" type="submit">сохранить</button>
-                                            <button class="btn btn-secondary ml-sm-2 cancel" data-type="text" type="button">отменить</button>
-                                        </div>
-                                        </div>
-                                </form>
-                            </div>
-                        </td>
-                    </tr>
-                    <%}%>
-                    </tbody>
-                </table>
-                <button type="button" class="btn btn-secondary delete-value mb-sm-2" data-id="<%=val.id%>">Удалить это значение</button>
-            <%}%>
-            <% if(!val) {%>
-                <h3 class="text-danger">Страница не найдена:(</h3>
-                <a href="/">Вернуться к сайту</a>
-            <%}%>
-        </div>
-        <div class="footer">
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        <%}%>
+                        </tbody>
+                    </table>
+                    <button type="button" class="btn btn-secondary delete-value mb-sm-2" data-id="<%=val.id%>">Удалить это значение</button>
+                <%}%>
+                <% if(!val) {%>
+                    <h3 class="text-danger">Страница не найдена:(</h3>
+                    <a href="/">Вернуться к сайту</a>
+                <%}%>
+            </div>
+        </main>
+
+        <div class="footer mt-auto py-3">
             <%- include("../common/footer.ejs") %>
         </div>
         <%- include("../common/modal-confirm.ejs") %>
         <%- include("../common/modal.ejs") %>
-    </div>
 
     <%- include("../common/scripts.ejs")%>
     <script type="text/javascript" src="/scripts/pps/change-field-val.js"></script>

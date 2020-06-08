@@ -1,15 +1,21 @@
 const query = require('./connect-db');
 
 //добавление kpi
-exports.insertKpi = function(name, section, subtype, number, count_criterion, description, type,
-                             indicator_sum, action_time) {
-    let arr = [name, section, subtype, number, count_criterion, description, type, indicator_sum, action_time];
+exports.insertKpi = function(newKpi) {
+    let arr = [newKpi.name, newKpi.section, newKpi.subtype, newKpi.number,
+        newKpi.count_criterion, newKpi.description, newKpi.type, newKpi.indicator_sum,
+        newKpi.action_time];
     return query("INSERT INTO kpi VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)", arr);
 };
 
 //удаление ПЭД
 exports.deleteKpi = function(name) {
     return query("DELETE FROM kpi WHERE name=?", [name]);
+};
+
+//удаление всех ПЭД
+exports.deleteAllKpi = function() {
+    return query("DELETE FROM kpi");
 };
 
 //получить все ПЭД
@@ -22,10 +28,10 @@ exports.selectAllKpi = function() {
 exports.selectAllKpiWithCriterion = function() {
     return query("SELECT * FROM kpi " +
         "INNER JOIN criterions ON criterions.name_kpi=kpi.name " +
-        "INNER JOIN balls ON balls.id_criterion=criterions.id " +
-        "INNER JOIN positions ON positions.position=balls.position " +
+        "INNER JOIN marks ON marks.id_criterion=criterions.id " +
+        "INNER JOIN positions ON positions.position=marks.position " +
         "ORDER BY section ASC, subtype ASC, number ASC, name ASC, id_criterion ASC, " +
-        "positions.sort ASC, balls.position ASC");
+        "positions.sort ASC, marks.position ASC");
 };
 
 //получить один ПЭД
@@ -36,13 +42,13 @@ exports.selectOneKpi = function(name) {
 };
 /*
 //получить один ПЭД с баллами
-exports.selectOneKpiWithBalls = function(name) {
+exports.selectOneKpiWithMarks = function(name) {
     return query("SELECT * FROM kpi " +
         "INNER JOIN criterions ON criterions.name_kpi=kpi.name " +
-        "INNER JOIN balls ON balls.id_criterion=criterions.id " +
-        "INNER JOIN positions ON positions.position=balls.position "+
+        "INNER JOIN marks ON marks.id_criterion=criterions.id " +
+        "INNER JOIN positions ON positions.position=marks.position "+
         "WHERE kpi.name=? " +
-        "ORDER BY id_criterion ASC, positions.sort ASC, balls.position ASC",
+        "ORDER BY id_criterion ASC, positions.sort ASC, marks.position ASC",
         [name]);
 };
  */

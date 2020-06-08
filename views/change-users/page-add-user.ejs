@@ -1,119 +1,121 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Добавление пользователя</title>
-	<%- include("../common/head.ejs")%>
+    <title>Изменение пользователя</title>
+    <%- include("../common/head.ejs")%>
 </head>
-<body>
-	<%- include("../common/menu.ejs") %>
-	<div class="wrapper">
-		<div class="content container">
-			<h1>Добавление нового пользователя</h1>
-			<hr>
-			<form name="adduser" action="" method="post" class="needs-validation" id="form-send" novalidate>
-				<div class="form-group row">
-					<label for="name" class="col-sm-2 col-form-label">ФИО</label>
-					<div class="col-sm-10">
-						<input type="text"name="name" class="form-control" id="name" maxlength="100" placeholder="Иванов Иван Иванович" autocomplete="off" required>
-						<div class="invalid-feedback">
-							Пожалуйста введите ФИО
-						</div>
-					</div>
-				</div>
+<body class="d-flex flex-column h-100">
+    <header>
+        <%- include("../common/menu.ejs") %>
+    </header>
+    <main role="main" class="flex-shrink-0">
+        <div class="content container-fluid">
+            <h2>Добавление нового пользователя</h2>
+            <hr>
+            <form action="" method="post" class="needs-validation" id="form-send" novalidate>
+                <div class="form-group row">
+                    <label for="name" class="col-sm-2 col-form-label">ФИО</label>
+                    <div class="col-sm-10">
+                        <input type="text"name="name" class="form-control" id="name" maxlength="100" placeholder="Пример: Иванов Иван Иванович" autocomplete="off" required>
+                        <div class="invalid-feedback">
+                            Пожалуйста введите ФИО
+                        </div>
+                    </div>
+                </div>
 
-				<div class="form-group row">
-					<label for="role" class="col-sm-2 col-form-label">Роль</label>
-					<div class="col-sm-10">
-						<select class="form-control" name="role" id="role" required>
-							<% for(let i = 0; i < roles.length; i++) {%>
-							<option><%=roles[i].role%></option>
-							<%} %>
-						</select>
-						<div class="invalid-feedback">
-							Пожалуйста выберите роль
-						</div>
-					</div>
-				</div>
+                <div class="form-group row">
+                    <label for="role" class="col-sm-2 col-form-label">Роль</label>
+                    <div class="col-sm-10">
+                        <select class="form-control" name="role" id="role" required>
+                            <% for(let i = 0; i < roles.length; i++) {%>
+                            <option><%=roles[i].role%></option>
+                            <%} %>
+                        </select>
+                        <div class="invalid-feedback">
+                            Пожалуйста выберите роль
+                        </div>
+                    </div>
+                </div>
 
-				<div class="form-group row" id="position-div">
-					<label for="position" class="col-sm-2 col-form-label">Должность</label>
-					<div class="col-sm-10">
-						<select name="position" class="form-control" id="position">
-							<% for(let i = 0; i < positions.length; i++) {%>
-							<option><%=positions[i].position%></option>
-							<%} %>
-						</select>
-					</div>
-				</div>
+                <div class="form-group row<% if(roles[0].role != 'ППС' && roles[0].role != 'Руководитель подразделения'){%> d-none<%}%>" id="position-div">
+                    <label for="position" class="col-sm-2 col-form-label">Должность</label>
+                    <div class="col-sm-10">
+                        <select name="position" class="form-control" id="position">
+                            <% for(let i = 0; i < positions.length; i++) {%>
+                                <option data-level="<%=positions[i].level%>"><%=positions[i].position%></option>
+                            <%} %>
+                        </select>
+                    </div>
+                </div>
 
-				<div class="form-group row" id="faculty-div">
-					<% if(faculty.length != 0) {%>
-						<label for="faculty" class="col-sm-2 col-form-label">Факультет</label>
-						<div class="col-sm-10">
-							<select name="faculty" id="faculty" class="form-control">
-								<% for(let i = 0; i < faculty.length; i++) {%>
-								<option><%=faculty[i]%></option>
-								<%} %>
-							</select>
-						</div>
-					<%}%>
-				</div>
+                <div class="form-group row<% if (roles[0].role != 'ППС' && roles[0].role != 'Руководитель подразделения'){%> d-none<%}%>" id="faculty-div">
+                    <% if(faculty.length != 0) {%>
+                        <label for="faculty" class="col-sm-2 col-form-label">Факультет</label>
+                        <div class="col-sm-10">
+                            <select name="faculty" id="faculty" class="form-control">
+                                <% for(let i = 0; i < faculty.length; i++) {%>
+                                <option><%=faculty[i]%></option>
+                                <%} %>
+                            </select>
+                        </div>
+                    <%}%>
+                </div>
 
-				<input type="hidden" name="numdepartment" id="numdepartment">
+                <input type="hidden" name="numdepartment" id="numdepartment">
 
-				<div class="form-group row" id="department-div">
-					<label for="department" class="col-sm-2 col-form-label">Кафедра</label>
-					<div class="col-sm-10">
-						<select name="department" id="department" class="form-control">
-							<% for(let i = 0; i < department.length; i++) {%>
-							<option><%=department[i]%></option>
-							<%} %>
-						</select>
-					</div>
-				</div>
+                <div class="form-group row<% if((roles[0].role != 'ППС' && roles[0].role != 'Руководитель подразделения') || positions[0].level > 2){%> d-none<%}%>" id="department-div">
+                    <label for="department" class="col-sm-2 col-form-label">Кафедра</label>
+                    <div class="col-sm-10">
+                        <select name="department" id="department" class="form-control">
+                            <% for(let i = 0; i < department.length; i++) {%>
+                            <option><%=department[i]%></option>
+                            <%} %>
+                        </select>
+                    </div>
+                </div>
 
-				<div class="form-group row">
-					<label for="login" class="col-sm-2 col-form-label">Логин</label>
-					<div class="col-sm-10">
-						<input type="text" name="login" class="form-control" pattern="[A-Za-z_.]+$" id="login" maxlength="45" autocomplete="off" placeholder="i.i.ivanov" required>
-						<div class="invalid-feedback">
-							Пожалуйста введите логин
-						</div>
-					</div>
-				</div>
+                <div class="form-group row">
+                    <label for="login" class="col-sm-2 col-form-label">Логин</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="login" class="form-control" pattern="[A-Za-z_.]+$" id="login" maxlength="45" autocomplete="off" placeholder="Пример: i.i.ivanov" required>
+                        <div class="invalid-feedback">
+                            Пожалуйста введите логин, используя латинские буквы и символ «.»
+                        </div>
+                    </div>
+                </div>
 
-				<div class="form-group row">
-					<label for="password" class="col-sm-2 col-form-label">Пароль</label>
-					<div class="col-sm-9">
-						<input type="text" class="form-control" id="password" name="password" maxlength="50" required autocomplete="off">
-						<div class="invalid-feedback">
-							Пожалуйста введите или сгенерируйте пароль
-						</div>
-					</div>
-					<div class="col-sm-1">
-						<a href="#" id="generate-pass"><img src="/img/icons/arrow-repeat.svg" title="сгенерировать" width="28px"></a>
-					</div>
-				</div>
+                <div class="form-group row">
+                    <label for="password" class="col-sm-2 col-form-label">Пароль</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="password" name="password" maxlength="50" required autocomplete="off">
+                        <div class="invalid-feedback">
+                            Пожалуйста введите или сгенерируйте пароль
+                        </div>
+                    </div>
+                    <div class="col-sm-1">
+                        <a href="#" id="generate-pass"><img src="/img/icons/arrow-repeat.svg" title="сгенерировать" width="28px"></a>
+                    </div>
+                </div>
 
-				<div class="form-group row">
-					<div class="col-sm-10">
-						<button type="submit" class="btn btn-primary btn-lg">Добавить</button>
-					</div>
-				</div>
-			</form>
-		</div>
-		
-		<div class="footer">
-			<%- include("../common/footer.ejs") %>
-		</div>
-		<%- include("../common/modal.ejs") %>
-	</div>
+                <div class="form-group row">
+                    <div class="col-sm-10">
+                        <button type="submit" class="btn btn-primary btn-lg">Добавить</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </main>
 
-	<%- include("../common/scripts.ejs")%>
-	<script type="text/javascript" src="/scripts/check-form.js"></script>
-	<script type="text/javascript" src="/scripts/generate-password.js"></script>
+    <div class="footer mt-auto py-3">
+        <%- include("../common/footer.ejs") %>
+    </div>
+    <%- include("../common/modal.ejs") %>
+
+    <%- include("../common/scripts.ejs")%>
+    <script type="text/javascript" src="/scripts/check-form.js"></script>
+    <script type="text/javascript" src="/scripts/generate-password.js"></script>
     <script type="text/javascript" src="/scripts/send-form.js"></script>
-	<script type="text/javascript" src="/plugins/carhartl-jquery-cookie-92b7715/jquery.cookie.js"></script>
-	<script type="text/javascript" src="/scripts/change-users/add-user.js"></script>
+    <script type="text/javascript" src="/plugins/carhartl-jquery-cookie-92b7715/jquery.cookie.js"></script>
+    <script type="text/javascript" src="/scripts/change-users/add-user.js"></script>
 </body>
 </html>

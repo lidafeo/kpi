@@ -4,11 +4,14 @@
 	<title>Список Показателей</title>
 	<%- include("../common/head.ejs")%>
 </head>
-<body>
-	<%- include("../common/menu.ejs") %>
-	<div class="wrapper">
+<body class="d-flex flex-column h-100">
+	<header>
+		<%- include("../common/menu.ejs") %>
+	</header>
+	<main role="main" class="flex-shrink-0">
 		<div class="content container-fluid">
-			<h1>Список Показателей эффективности деятельности</h1>
+			<h2>Список Показателей эффективности деятельности</h2>
+			<hr>
 			<% if(kpi) {%>
 			<div class="table-responsive-md">
 				<table class="table border-color-f table-sm">
@@ -46,7 +49,7 @@
 												<%} %>
 												<td class="text-center align-middle"><%=arr[i].lines[j].name %></td>
 												<% for(let k = 0; k < positions.length; k++) {%>
-													<td class="text-center align-middle"><%=arr[i].lines[j].balls[positions[k]] %></td>
+													<td class="text-center align-middle"><%=arr[i].lines[j].marks[positions[k]] %></td>
 												<%} %>
 											<%} %>
 										</tr>
@@ -61,7 +64,7 @@
 												<td class="text-center align-middle"><%=arr[i].lines[j].description %></td>
 												<td class="text-center align-middle"><%=arr[i].lines[j].name %></td>
 												<% for(let k = 0; k < positions.length; k++) {%>
-													<td class="text-center align-middle"><%=arr[i].lines[j].balls[positions[k]] %></td>
+													<td class="text-center align-middle"><%=arr[i].lines[j].marks[positions[k]] %></td>
 												<%} %>
 											<%} %>
 
@@ -78,10 +81,10 @@
 			<h4>Нет Показателей эффективности деятельности</h4>
 			<%} %>
 		</div>
-		
-		<div class="footer">
-			<%- include("../common/footer.ejs") %>
-		</div>
+	</main>
+
+	<div class="footer mt-auto py-3">
+		<%- include("../common/footer.ejs") %>
 	</div>
 
 	<%- include("../common/scripts.ejs")%>

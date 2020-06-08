@@ -4,11 +4,13 @@
     <title>Выбор ПЭД</title>
     <%- include("../common/head.ejs")%>
 </head>
-<body>
-    <%- include("../common/menu.ejs") %>
-    <div class="wrapper">
+<body class="d-flex flex-column h-100">
+    <header>
+        <%- include("../common/menu.ejs") %>
+    </header>
+    <main role="main" class="flex-shrink-0">
         <div class="content container-fluid">
-            <h1>Выбор действия для изменения ПЭД</h1>
+            <h2>Выбор действия для изменения ПЭД</h2>
             <hr>
             <% if(kpi && kpi.length > 0) {%>
             <div class="table-responsive-md">
@@ -43,13 +45,12 @@
                 <h4>Нет Показателей эффективности деятельности</h4>
             <%} %>
         </div>
-
-        <div class="footer">
-            <%- include("../common/footer.ejs") %>
-        </div>
-        <%- include("../common/modal.ejs") %>
-        <%- include("../common/modal-confirm.ejs") %>
+    </main>
+    <div class="footer mt-auto py-3">
+        <%- include("../common/footer.ejs") %>
     </div>
+    <%- include("../common/modal.ejs") %>
+    <%- include("../common/modal-confirm.ejs") %>
 
     <%- include("../common/scripts.ejs")%>
     <script type="text/javascript" src="/scripts/change-kpi/actions.js"></script>

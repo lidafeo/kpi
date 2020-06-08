@@ -1,7 +1,7 @@
 //подключаемые модули
 const express = require("express");
 
-let config = require('./config/config.json').server;
+let config = require('./config/dev.json').server;
 let credentials = require('./modules/credentials.js');
 let routes = require("./routes/main.js").routes;
 

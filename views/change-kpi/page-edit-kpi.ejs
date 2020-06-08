@@ -4,21 +4,23 @@
     <title>Изменить ПЭД</title>
     <%- include("../common/head.ejs")%>
 </head>
-<body>
-    <%- include("../common/menu.ejs") %>
-    <div class="wrapper">
+<body class="d-flex flex-column h-100">
+    <header>
+        <%- include("../common/menu.ejs") %>
+    </header>
+    <main role="main" class="flex-shrink-0">
         <div class="content container-fluid">
             <nav aria-label="breadcrumb">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item"><a href="/change-kpi/choice-kpi">Выбор ПЭД для изменения</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Изменение ПЭД <%=info.kpi.name%></li>
+                    <li class="breadcrumb-item" aria-current="page">Изменение ПЭД <%=info.kpi.name%></li>
                 </ol>
             </nav>
-            <form name="editballskpi" action="" method="post" id="form-send" class="needs-validation" novalidate>
+            <form name="editmarkskpi" action="" method="post" id="form-send" class="needs-validation" novalidate>
                 <input type="hidden" name="name" value=<%=info.kpi.name%>>
-                <h1>Изменение ПЭД: <%=info.kpi.name%></h1>
-                <p><%=info.kpi.description%></p>
+                <h2>Изменение ПЭД: <%=info.kpi.name%></h2>
                 <hr>
+                <h5><%=info.kpi.description%></h5>
                 <div class="table-responsive">
                     <table class="table border-color-f">
                         <thead>
@@ -51,7 +53,7 @@
                                     <td class="px-1"><input type="number" class="form-control" name="final_val" min="0" max="1000" value="<%=info.criterions[i].final_val%>"></td>
 
                                     <% for(let k = 0; k < info.positions.length; k++) {%>
-                                        <td class="px-1"><input type="number" class="form-control" min="0" max="1000" name="<%=info.positions[k]%>" value="<%=info.criterions[i].balls[info.positions[k]]%>" required></td>
+                                        <td class="px-1"><input type="number" class="form-control" min="0" max="1000" name="<%=info.positions[k]%>" value="<%=info.criterions[i].marks[info.positions[k]]%>" required></td>
                                     <%} %>
                                 </tr>
                             <%} %>
@@ -59,15 +61,15 @@
                     </table>
                 </div>
                 <input type="hidden" name="count_criterion" value="<%=info.kpi.count_criterion%>">
-                <button type="submit" class="btn btn-primary btn-lg" id="submit">Изменить</button>
+                <button type="submit" class="btn btn-primary btn-lg mb-md-3" id="submit">Изменить</button>
             </form>
         </div>
+    </main>
 
-        <div class="footer">
-            <%- include("../common/footer.ejs") %>
-        </div>
-        <%- include("../common/modal.ejs") %>
+    <div class="footer mt-auto py-3">
+        <%- include("../common/footer.ejs") %>
     </div>
+    <%- include("../common/modal.ejs") %>
 
     <%- include("../common/scripts.ejs")%>
     <script type="text/javascript" src="/scripts/check-form.js"></script>

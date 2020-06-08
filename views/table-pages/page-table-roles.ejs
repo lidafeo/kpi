@@ -4,11 +4,13 @@
 	<title>Структура</title>
 	<%- include("../common/head.ejs")%>
 </head>
-<body>
-	<%- include("../common/menu.ejs") %>
-	<div class="wrapper">
+<body class="d-flex flex-column h-100">
+	<header>
+		<%- include("../common/menu.ejs") %>
+	</header>
+	<main role="main" class="flex-shrink-0">
 		<div class="content container-fluid">
-			<h1>Роли системы и их права</h1>
+			<h2>Роли системы и их права</h2>
 			<hr>
 			<div class="table-responsive-md">
 				<table class="table border-color-f">
@@ -16,17 +18,20 @@
 						<tr>
 							<th class="text-center align-middle" scope="col">Роль</th>
 							<th class="text-center align-middle" scope="col">Право</th>
+							<th class="text-center align-middle" scope="col">Пояснение</th>
 						</tr>
 					</thead>
 					<tbody>
 						<% for (role in roles) {%>
 							<tr>
 								<th class="text-center align-middle" scope="row" rowspan="<%=roles[role].length%>"><%=role %></th>
-								<td class="text-center align-middle"><%=roles[role][0] %></td>
+								<td class="text-center align-middle"><%=roles[role][0].name %></td>
+								<td class="text-center align-middle"><%=roles[role][0].comment %></td>
 							</tr>
 							<% for (let i = 1; i < roles[role].length; i++) {%>
 								<tr>
-									<td class="text-center align-middle"><%=roles[role][i] %></td>
+									<td class="text-center align-middle"><%=roles[role][i].name %></td>
+									<td class="text-center align-middle"><%=roles[role][i].comment %></td>
 								</tr>
 							<%} %>
 						<%} %>
@@ -34,10 +39,10 @@
 				</table>
 			</div>
 		</div>
-		
-		<div class="footer">
-			<%- include("../common/footer.ejs") %>
-		</div>
+	</main>
+
+	<div class="footer mt-auto py-3">
+		<%- include("../common/footer.ejs") %>
 	</div>
 
 	<%- include("../common/scripts.ejs")%>

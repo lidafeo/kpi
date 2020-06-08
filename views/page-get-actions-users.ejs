@@ -4,15 +4,17 @@
 	<title>История действий</title>
 	<%- include("common/head.ejs")%>
 </head>
-<body>
-	<%- include("common/menu.ejs") %>
-	<div class="wrapper">
+<body class="d-flex flex-column h-100">
+	<header>
+		<%- include("common/menu.ejs") %>
+	</header>
+	<main role="main" class="flex-shrink-0">
 		<div class="content container-fluid">
 			<form action="" method="get">
 				<div class="row">
 					<div class="input-group mb-3 col-sm-6">
 						<div class="input-group-prepend">
-							<span class="input-group-text" id="basic">История действий пользователей за</span>
+							<span class="input-group-text" id="basic">Действия пользователей </span>
 						</div>
 						<input type="date" class="form-control" name="date" id="date" aria-label="дата" value=<%=date%> aria-describedby="button">
 						<div class="input-group-append">
@@ -31,12 +33,11 @@
 				<p>Нет действий</p>
 			<%} %>
 		</div>
+	</main>
 		
-		<div class="footer">
-			<%- include("./common/footer.ejs") %>
-		</div>
+	<div class="footer mt-auto py-3">
+		<%- include("./common/footer.ejs") %>
 	</div>
-
 	<%- include("common/scripts.ejs")%>
 	<script type="text/javascript" src="./main.js"></script>
 </body>

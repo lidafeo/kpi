@@ -8,11 +8,13 @@
 	<link rel="stylesheet" type="text/css" href="/plugins/slick-1.8.1/slick/slick.css">
 	<link rel="stylesheet" type="text/css" href="/plugins/slick-1.8.1/slick/slick-theme.css">
 </head>
-<body>
-    <%- include("../common/menu.ejs") %>
-    <div class="wrapper">
+<body class="d-flex flex-column h-100">
+	<header>
+		<%- include("../common/menu.ejs") %>
+	</header>
+	<main role="main" class="flex-shrink-0">
         <div class="content container-fluid">
-			<h1>Добавление Показателя эффективности деятельности</h1>
+			<h2>Добавление Показателя эффективности деятельности</h2>
 			<hr>
 			<form name="addkpi" action="" method="post" id="form-send" class="needs-validation" novalidate>
 				<div id="infokpi">
@@ -244,12 +246,12 @@
                 </div>
 			</form>
 		</div>
+	</main>
 
-		<div class="footer">
-			<%- include("../common/footer.ejs") %>
-		</div>
-        <%- include("../common/modal.ejs") %>
+	<div class="footer mt-auto py-3">
+		<%- include("../common/footer.ejs") %>
 	</div>
+	<%- include("../common/modal.ejs") %>
 
 	<%- include("../common/scripts.ejs")%>
 	<script type="text/javascript" src="/plugins/slick-1.8.1/slick/slick.min.js"></script>

@@ -5,11 +5,13 @@
 	<%- include("../common/head.ejs")%>
 	<link rel="stylesheet" type="text/css" href="/css/pps/add-value.css">
 </head>
-<body>
-	<%- include("../common/menu.ejs") %>
-	<div class="wrapper container-fluid">
-		<div class="content">
-			<h2 class="ml-md-1">Отметить выполнение ПЭД</h2>
+<body class="d-flex flex-column h-100">
+	<header>
+		<%- include("../common/menu.ejs") %>
+	</header>
+	<main role="main" class="flex-shrink-0">
+		<div class="content container-fluid">
+			<h2>Отметить выполнение ПЭД</h2>
 			<hr>
 			<div class="row">
 				<div class="col-sm-3 px-0 px-sm-2 mx-0">
@@ -18,11 +20,15 @@
 							<li>Выберите ПЭД
 								<ul>
 									<% for (key in obj) {%>
-									<li><div class="drop dropM">-</div><%=key%>
+									<li><div class="drop dropM">
+											<img src="/img/icons/dash-square.svg" alt="скрыть" width="18px">
+										</div><%=key%>
 										<ul>
 											<% for(key2 in obj[key])  {%>
 												<% if(key2 != 'nosubtype') {%>
-												<li><div class="drop dropM">-</div><%=key2%>
+												<li><div class="drop dropM">
+														<img src="/img/icons/dash-square.svg" alt="скрыть" width="18px">
+													</div><%=key2%>
 													<ul>
 												<%} %>
 												<% for(let i = 0; i < obj[key][key2].length; i++) {%>
@@ -42,13 +48,13 @@
 				</div>
 				<div id="tablekpi" class="tablekpiborder col-sm px-0 mx-0 mr-sm-2 p-3"></div>
 			</div>
-
-
-		<div class="footer">
-			<%- include("../common/footer.ejs") %>
 		</div>
+	</main>
 
+	<div class="footer mt-auto py-3">
+		<%- include("../common/footer.ejs") %>
 	</div>
+
 	<%- include("../common/scripts.ejs")%>
 	<script type="text/javascript" src="/scripts/pps/add-value.js"></script>
 	<script type="text/javascript" src="/scripts/custom-file.js"></script>

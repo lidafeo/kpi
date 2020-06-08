@@ -6,12 +6,12 @@ const query = require('./connect-db');
 exports.insertCriterion = function(criterion) {
     let arr = [criterion.name_kpi, criterion.name_criterion, criterion.number_criterion, criterion.description,
         criterion.start_val, criterion.final_val];
-    let balls = criterion.balls;
+    let marks = criterion.marks;
     return new Promise((resolve, reject) => {
         query("INSERT INTO criterions VALUES (NULL, ?, ?, ?, ?, ?, ?)", arr).then(result => {
-            for(let i = 0; i < balls.length; i++)
-                balls[i][0] = result.insertId;
-            Promise.all(balls.map(insertBalls)).then(result => {
+            for(let i = 0; i < marks.length; i++)
+                marks[i][0] = result.insertId;
+            Promise.all(marks.map(insertMarks)).then(result => {
                 resolve(result);
             }).catch(err => {
                 console.log(err);
@@ -24,15 +24,15 @@ exports.insertCriterion = function(criterion) {
     });
 };
 
-function insertBalls(ball) {
-    return query("INSERT INTO balls VALUES (?, ?, ?)", ball);
+function insertMarks(mark) {
+    return query("INSERT INTO marks VALUES (?, ?, ?)", mark);
 }
 
 //SELECT
 
 //получить все критерии
 exports.selectAllCriterion = function(position) {
-    return query("SELECT * FROM criterions, balls WHERE id=id_criterion AND position=? " +
+    return query("SELECT * FROM criterions, marks WHERE id=id_criterion AND position=? " +
         "ORDER BY name_kpi, criterions.number_criterion ASC", [position]);
 };
 /*

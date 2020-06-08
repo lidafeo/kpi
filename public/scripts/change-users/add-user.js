@@ -5,7 +5,9 @@ $(document).ready(function() {
 	new Promise((resolve, reject) => {
 		getStructure(resolve);
 	}).then(result => {
-		getInfo();
+		if($('#login').attr('type') != 'hidden') {
+			getInfo();
+		}
 	});
 
 	//изменение роли
@@ -31,17 +33,34 @@ $(document).ready(function() {
 
 	function getInfo() {
 		let role = $("#role option:selected").text();
-		let position = $("#position option:selected").text();
-		//console.log(structure);
-		$('#position-div').hide();
+		let level = $("#position option:selected").data('level');
+		$('#position-div').addClass('d-none');
 		$("#position").attr("disabled", true);
 
 		if(role == "ППС" || role == "Руководитель подразделения") {
-			$('#position-div').show();
+			let rolePps = (role == "ППС") ? true : false;
+			let first = true;
+			let needChange = ((rolePps && level == 0) || (!rolePps && level > 0)) == false;
+			$("#position > option").each(function() {
+				let lev = $(this).data('level');
+				debugger;
+				if((rolePps && lev == 0) || (!rolePps && lev > 0)) {
+					$(this).removeClass('d-none');
+					if(first && needChange) {
+						$(this).attr("selected", "selected");
+						level = lev;
+					}
+					first = false;
+				} else {
+					$(this).addClass('d-none');
+				}
+			});
+			$('#position-div').removeClass('d-none');
 			$("#position").attr("disabled", false);
 		}
-		if((role == "ППС" || role == "Руководитель подразделения") && position != "Декан") {
-			$('#faculty-div').show();
+
+		if((role == "ППС" || role == "Руководитель подразделения") && level < 2) {
+			$('#faculty-div').removeClass('d-none');
 			$("#faculty").attr("disabled", false);
 			$("#department").attr("disabled", false);
 			let str;
@@ -55,26 +74,25 @@ $(document).ready(function() {
 				departmentHTML += "<option>" + arrDep[i] + "</option>";
 			}
 			$('#department').html(departmentHTML);
-			$("#numdepartment").val(1);
-			$('#department-div').show();
+			//$("#numdepartment").val(1);
+			$('#department-div').removeClass('d-none');
 		}
-		else if((role == "ППС" || role == "Руководитель подразделения") && position == "Декан") {
+		else if((role == "ППС" || role == "Руководитель подразделения") && level >= 2) {
 			let str = "";
 			for(let i = 0; i < structure.faculty.length; i++) {
 				str +="<option>" + structure.faculty[i] + "</option>";
 			}
 			$("#department").attr("disabled", true);
 			$('#faculty').html(str);
-			$('#faculty-div').show();
+			$('#faculty-div').removeClass('d-none');
 			$("#faculty").attr("disabled", false);
-			$("#numdepartment").val(0);
-			$('#department-div').hide();
+			//$("#numdepartment").val(0);
+			$('#department-div').addClass('d-none');
 		}
 		else {
-			$("#numdepartment").val(0);
 			$("#faculty option:selected").text("");
-			$('#department-div').hide();
-			$('#faculty-div').hide();
+			$('#department-div').addClass('d-none');
+			$('#faculty-div').addClass('d-none');
 			$("#faculty").attr("disabled", true);
 			$("#department").attr("disabled", true);
 		}

@@ -15,17 +15,17 @@ exports.getInfoOneKpi = async function(name) {
     if(criterions) {
         for (let i = 0; i < criterions.length; i++) {
             let criterion = criterions[i];
-            let balls = await DB.balls.selectBallOneCriterion(criterion.id);
-            let ballsArr = [];
-            if(balls) {
-                for (let j = 0; j < balls.length; j++) {
-                    ballsArr[balls[j].position] = balls[j].ball;
+            let marks = await DB.marks.selectMarkOneCriterion(criterion.id);
+            let marksArr = [];
+            if(marks) {
+                for (let j = 0; j < marks.length; j++) {
+                    marksArr[marks[j].position] = marks[j].mark;
                     if(i == 0) {
-                        positions.push(balls[j].position);
+                        positions.push(marks[j].position);
                     }
                 }
             }
-            criterion.balls = ballsArr;
+            criterion.marks = marksArr;
             info.criterions.push(criterion);
         }
     }
@@ -38,7 +38,7 @@ exports.getKpiObj = function(arr, positions) {
         positions = [];
     let kpi = {};
     for (key in arr[0]) {
-        if(key != 'ball' && key !='positions')
+        if(key != 'mark' && key !='positions')
             kpi[key] = arr[0][key];
     }
     let lines = [];
@@ -46,14 +46,14 @@ exports.getKpiObj = function(arr, positions) {
         let idCrit = arr[i].id;
         let criterion = arr[i].name_criterion;
         let desc = arr[i].criterion_description;
-        let balls = [];
+        let marks = [];
         while (i != arr.length && idCrit == arr[i].id) {
             if(positions.indexOf(arr[i].position) == -1)
                 positions.push(arr[i].position);
-            balls[arr[i].position] = arr[i].ball;
+            marks[arr[i].position] = arr[i].mark;
             i++;
         }
-        lines.push({name: criterion, description: desc, balls: balls, id: idCrit});
+        lines.push({name: criterion, description: desc, marks: marks, id: idCrit});
         i--;
     }
     kpi.lines = lines;

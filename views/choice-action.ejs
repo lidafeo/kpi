@@ -4,24 +4,26 @@
     <title>Выбор действия</title>
     <%- include("common/head.ejs")%>
 </head>
-<body>
-    <%- include("common/menu.ejs") %>
-    <div class="wrapper">
+<body class="d-flex flex-column h-100">
+    <header>
+        <%- include("common/menu.ejs") %>
+    </header>
+    <main role="main" class="flex-shrink-0">
         <div class="content container">
-            <h3>Выберите необходимое действие:</h3>
+            <h2>Выберите необходимое действие:</h2>
             <ul class="list-group">
                 <% if(infoUser.rights.indexOf("get_my_score") !== -1 || infoUser.rights.indexOf("add_value_of_kpi") !== -1
                     || infoUser.rights.indexOf("get_my_values_of_kpi") !== -1) {%>
                     <li class="list-group-item list-group-item-info">ППС:</li>
                 <%} %>
                 <% if(infoUser.rights.indexOf("get_my_score") !== -1) {%>
-                    <a class="list-group-item list-group-item-action" href="/pps/get-my-score">Вычислить оценки <span class="sr-only">(current)</span></a>
+                    <a class="list-group-item list-group-item-action" href="/pps/get-my-score">Получить оценки <span class="sr-only">(current)</span></a>
                 <%} %>
                 <% if(infoUser.rights.indexOf("add_value_of_kpi") !== -1) {%>
                     <a class="list-group-item list-group-item-action" href="/pps/add-value-kpi">Отметить выполнение</a>
                 <%} %>
                 <% if(infoUser.rights.indexOf("get_my_values_of_kpi") !== -1) {%>
-                    <a class="list-group-item list-group-item-action" href="/pps/get-values-kpi">Список выполненных ПЭД</a>
+                    <a class="list-group-item list-group-item-action" href="/pps/get-values-kpi">Список добавленных ПЭД</a>
                 <%} %>
                 <% if(infoUser.rights.indexOf("verify") !== -1) {%>
                     <li class="list-group-item list-group-item-info">Проверка объективности заполнения значений:</li>
@@ -32,13 +34,16 @@
                     <a class="list-group-item list-group-item-action" href="/get-actions-users">Логи</a>
                 <%} %>
                 <% if(infoUser.rights.indexOf("get_all_users") !== -1 || infoUser.rights.indexOf("create_user") !== -1
-                        || infoUser.rights.indexOf("delete_user") !== -1) {%>
+                        || infoUser.rights.indexOf("delete_user") !== -1 || infoUser.rights.indexOf("change_user") !== -1) {%>
                     <li class="list-group-item list-group-item-info">Пользователи:</li>
                     <% if(infoUser.rights.indexOf("get_all_users") !== -1) {%>
                          <a class="list-group-item list-group-item-action" href="/get-users">Список</a>
                     <%} %>
                     <% if(infoUser.rights.indexOf("create_user") !== -1) {%>
                         <a class="list-group-item list-group-item-action" href="/change-users/add-user">Добавить</a>
+                    <%} %>
+                    <% if(infoUser.rights.indexOf("change_user") !== -1) {%>
+                        <a class="list-group-item list-group-item-action" href="/get-users">Изменить</a>
                     <%} %>
                     <% if(infoUser.rights.indexOf("delete_user") !== -1) {%>
                          <a class="list-group-item list-group-item-action" href="/get-users">Удалить</a>
@@ -58,7 +63,7 @@
                       <%} %>
                 <%} %>
                 <% if(infoUser.rights.indexOf("get_all_kpi") !== -1 || infoUser.rights.indexOf("change_kpi") !== -1
-                        || infoUser.rights.indexOf("change_balls_of_kpi") !== -1 || infoUser.rights.indexOf("create_kpi") !== -1
+                        || infoUser.rights.indexOf("change_marks_of_kpi") !== -1 || infoUser.rights.indexOf("create_kpi") !== -1
                         || infoUser.rights.indexOf("delete_kpi") !== -1) {%>
                      <li class="list-group-item list-group-item-info">ПЭД:</li>
                      <% if(infoUser.rights.indexOf("get_all_kpi") !== -1) {%>
@@ -92,8 +97,8 @@
                 <%} %>
                 <% if(infoUser.rights.indexOf("update_with_excel") !== -1) {%>
                     <li class="list-group-item list-group-item-info">Обновление БД:</li>
-                    <a class="list-group-item list-group-item-action" href="/update-db/add-users-from-file1">Добавить пользователей вариант 1</a>
-                    <a class="list-group-item list-group-item-action" href="/update-db/add-users-from-file2">Добавить пользователей (ППС) вариант 2</a>
+                    <a class="list-group-item list-group-item-action" href="/update-db/add-users-from-file1">Добавить ППС вариант 1</a>
+                    <a class="list-group-item list-group-item-action" href="/update-db/add-users-from-file2">Добавить ППС вариант 2</a>
                     <a class="list-group-item list-group-item-action" href="/update-db/past-kpi">Добавить прошлые значения</a>
                     <a class="list-group-item list-group-item-action" href="/update-db/update-structure">Обновить структуру</a>
                 <%} %>
@@ -115,9 +120,10 @@
                 <%} %>
             </ul>
         </div>
-        <div class="footer">
-            <%- include("common/footer.ejs") %>
-        </div>
+    </main>
+
+    <div class="footer mt-auto py-3">
+        <%- include("common/footer.ejs") %>
     </div>
 
     <%- include("common/scripts.ejs")%>

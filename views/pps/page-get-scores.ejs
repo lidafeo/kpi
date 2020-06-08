@@ -4,82 +4,83 @@
 	<title>Моя страница</title>
 	<%- include("../common/head.ejs")%>
 </head>
-<body>
-	<%- include("../common/menu.ejs") %>
-	<div class="wrapper">
+<body class="d-flex flex-column h-100">
+	<header>
+		<%- include("../common/menu.ejs") %>
+	</header>
+	<main role="main" class="flex-shrink-0">
 		<div class="content container-fluid">
-			<h4><div id="name"><%=name %>, <%=position %></div></h4>
+			<h2><div id="name"><%=name %>, <%=position %></div></h2>
 			<hr>
-			<form name="date" id="form-date" action="" class="text" method="get">
-				<div class="form-row">
-					<div class="col-sm">
-						<label>Период расчета оценок с </label>
-						<input type="date" name="date1" id="date1" class="date" value=<%=date1%> required>
-						<label> по </label>
-						<input type="date" name="date2" id="date2" class="date" value=<%=date2%> required>
-						<button class="btn btn-outline-dark" id="date" >Рассчитать оценки ПЭД за данный период</button>
-					</div>
+			<div class="form-row">
+				<div class="col-sm">
+					<label>Период расчета оценок с </label>
+					<b><%=date1%></b>
+					<label> по </label>
+					<b><%=date2%></b>
 				</div>
-			</form>
+			</div>
 			<div id="donekpi">
 				<% if(kpi) {%>
 					<h4 class="my-sm-3">Оценки ПЭД за выбранный период:</h4>
-					<table class="table border-color-f">
-						<thead>
-							<tr>
-								<th class="text-center align-middle" scope="col" width="10%">Шифр</th>
-								<th class="text-center align-middle" scope="col">Показатель</th>
-								<th class="text-center align-middle" scope="col" width="15%">Оценка</th>
-							</tr>
-						</thead>
-						<tbody>
-							<% for(let u = 0; u < kpi.length; u++) {%>
-								<% if(kpi[u].length != 0) {%>
+					<div class="table-responsive-md">
+						<table class="table border-color-f">
+							<thead>
 								<tr>
-									<th scope="row" class="text-center align-middle"><%=kpi[u][0].section[0] + "." %></th>
-									<th scope="row" class="text-center align-middle" colspan="2">Раздел <%=(u+1) + ". " + kpi[u][0].section %></th>
+									<th class="text-center align-middle" scope="col" width="10%">Шифр</th>
+									<th class="text-center align-middle" scope="col">Показатель</th>
+									<th class="text-center align-middle" scope="col" width="15%">Оценка</th>
 								</tr>
-								<% for(let i = 0; i < kpi[u].length; i++) {%>
-									<% let arr = kpi[u]; %>
-									<% if(arr[i].type == 1) {%>
+							</thead>
+							<tbody>
+								<% for(let u = 0; u < kpi.length; u++) {%>
+									<% if(kpi[u].length != 0) {%>
 									<tr>
-										<th class="text-center" scope="row"><%=arr[i].name %></th>
-										<td><%=arr[i].description %></td>
-										<td class="text-center align-middle"><big><%=arr[i].userBall[0] %></big></td>
+										<th scope="row" class="text-center align-middle"><%=kpi[u][0].section[0] + "." %></th>
+										<th scope="row" class="text-center align-middle" colspan="2">Раздел <%=(u+1) + ". " + kpi[u][0].section %></th>
 									</tr>
-									<%} %>
-									<% if(arr[i].type == 2) {%>
-									<tr>
-										<th class="text-center" scope="row" rowspan=<%=(arr[i].countCriterion + 1) + "" %>><%=arr[i].name %></th>
-										<td colspan="2"><%=arr[i].description %></td>
-									</tr>
-									<% for(let j = 0; j < arr[i].countCriterion; j++) {%>
-									<tr>
-										<td><%=arr[i].criterion[j].description %></td>
-										<td class="text-center align-middle"><big><%=arr[i].userBall[j] %></big></td>
-									</tr>
+									<% for(let i = 0; i < kpi[u].length; i++) {%>
+										<% let arr = kpi[u]; %>
+										<% if(arr[i].type == 1) {%>
+										<tr>
+											<th class="text-center" scope="row"><%=arr[i].name %></th>
+											<td><%=arr[i].description %></td>
+											<td class="text-center align-middle"><big><%=arr[i].userMark[0] %></big></td>
+										</tr>
+										<%} %>
+										<% if(arr[i].type == 2) {%>
+										<tr>
+											<th class="text-center" scope="row" rowspan=<%=(arr[i].countCriterion + 1) + "" %>><%=arr[i].name %></th>
+											<td colspan="2"><%=arr[i].description %></td>
+										</tr>
+										<% for(let j = 0; j < arr[i].countCriterion; j++) {%>
+										<tr>
+											<td><%=arr[i].criterion[j].description %></td>
+											<td class="text-center align-middle"><big><%=arr[i].userMark[j] %></big></td>
+										</tr>
+										<%} %>
+										<%} %>
 									<%} %>
 									<%} %>
 								<%} %>
-								<%} %>
-							<%} %>
-						</tbody>
-					</table>
+							</tbody>
+						</table>
+					</div>
 				<%} %>
 				<% if(!kpi) {%>
 					<hr>
 					<h4>За выбранный период нет выполненных ПЭД</h4>
-					<a href="/my-page/edit-kpi">Отметить выполнение ПЭД</a>
+					<a href="/pps/add-value-kpi">Отметить выполнение ПЭД</a>
 				<%} %>
 			</div>
 		</div>
+	</main>
 
-		<div class="footer">
-			<%- include("../common/footer.ejs") %>
-		</div>
+	<div class="footer mt-auto py-3">
+		<%- include("../common/footer.ejs") %>
 	</div>
 
 	<%- include("../common/scripts.ejs")%>
-	<script type="text/javascript" src="/scripts/pps/calculate-balls.js"></script>
+	<script type="text/javascript" src="/scripts/pps/calculate-marks.js"></script>
 </body>
 </html>

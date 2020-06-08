@@ -4,36 +4,56 @@
 	<title>Обновление структуры</title>
 	<%- include("../common/head.ejs")%>
 </head>
-<body>
-	<%- include("../common/menu.ejs") %>
-	<div class="wrapper">
+<body class="d-flex flex-column h-100">
+	<header>
+		<%- include("../common/menu.ejs") %>
+	</header>
+	<main role="main" class="flex-shrink-0">
 		<div class="content container-fluid">
-			<div>
-				<p>Необходимо прикрепить Excel-файл.</p>
-				<p>В каждой строке файла, начиная с первой (без перечисления названий в первой строке), 
+			<h2>Обновление структуры университета с Excel-файла</h2>
+			<hr>
+			<div class="warning">
+				<p>Необходимо прикрепить Excel-файл (xls или xlsx).</p>
+				<p>В каждой строке файла, начиная со <b>второй</b> (первая - названия столбцов),
 					должна содержаться информация о структуре университета в следующем формате:</p>
-				<p>В столбце <b>A</b> указывается факультут</p>
+				<p>В столбце <b>A</b> указывается факультет</p>
 				<p>В столбце <b>B</b> указывается кафедра</p>
 				<p>Кафедра указывается без слова "Кафедра" в именительном падеже</p>
+				<p>Факультет указывается без слова "Факультет" в именительном падеже</p>
 			</div>
-			<% if(action == 1) {%>
-				<p class="uspeshno">Успешно</p>
-			<%} %>
-			<% if(action == 2) {%>
-				<p class="errormess">Ошибка добавления</p>
-			<%} %>
-			<form enctype="multipart/form-data" action="" 
-			method="post" class="formborderadmin">
-				<input type="file" name="file" required>
-				<input type="submit" class="buttonmypage" value="Добавить">
+			<p>Пример файла:</p>
+			<p class="ml-md-3"><img class="border-secondary img-thumbnail" src="/img/update-with-excel/update-structure.png" alt="ошибка"></p>
+			<hr>
+
+			<form enctype="multipart/form-data" class="needs-validation m-md-3" action="" method="post" id="form-send" novalidate>
+				<div class="form-group row">
+					<label for="file" class="col-sm-3">Excel-файл для загрузки данных</label>
+					<div class="col-sm-5">
+						<div class="custom-file">
+							<input type="file" class="custom-file-input" id="file" name="file" required>
+							<label class="custom-file-label" id="label-file" for="file">Выберите файл...</label>
+							<div class="invalid-feedback">
+								Пожалуйста выберите файл
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-2">
+						<button id="addkpi" type="submit" class="btn btn-primary">Загрузить</button>
+					</div>
+				</div>
 			</form>
 		</div>
-		<div class="footer">
-			<%- include("../common/footer.ejs") %>
-		</div>
+	</main>
+
+	<div class="footer mt-auto py-3">
+		<%- include("../common/footer.ejs") %>
 	</div>
+	<%- include("../common/modal.ejs") %>
 
 	<%- include("../common/scripts.ejs")%>
+	<script type="text/javascript" src="/scripts/check-form.js"></script>
+	<script type="text/javascript" src="/scripts/send-form-data.js"></script>
+	<script type="text/javascript" src="/scripts/custom-file.js"></script>
 	
 </body>
 </html>

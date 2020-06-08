@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Изменить оценки</title>
+	<%- include("../common/head.ejs")%>
+</head>
+<body class="d-flex flex-column h-100">
+	<header>
+		<%- include("../common/menu.ejs") %>
+	</header>
+	<main role="main" class="flex-shrink-0">
+		<div class="content container-fluid">
+			<% if(!choose) {%>
+				<% if(action == 1) {%>
+					<p class="uspeshno">Успешно</p>
+				<%} %>
+				<% if(action == 2) {%>
+					<p class="errormess">Ошибка изменения оценок</p>
+				<%} %>
+				<form name="editmarks" class="formborderadmin"  action="" method="GET">
+					
+					<label for="name" class="text">Показатель эффективности</label>
+					<select name="name" class="text" id="namekpi" id="name">
+						<% for(let i = 0; i < kpi.length; i++) {%>
+						<option><%=kpi[i].name%></option>
+						<%} %>
+					</select>
+					<input type="submit" class="buttonmypage" value="Выбрать">
+				</form>
+			<%} %>
+			<% if(choose) {%>
+				<form name="editmarkskpi" class="formborderadmin" style="width: 95%;" action="" method="post">
+					<input type="hidden" name="name" value=<%=name%>>
+					Выбранный ПЭД: <%=description%>
+					<br>
+					<div id="error"></div>
+					<table>
+						<tr class="row1">
+							<% if(type == 2) {%>
+								<th rowspan="2">Показатель</th>
+							<%} %>
+							<th rowspan="2">Критерий оценки эффективности деятельности</th>
+							<th colspan="<%=positions.length%>">Группы</th>
+						</tr>
+						<tr class="row2">
+							<% for(let i = 0; i < positions.length; i++) {%>
+								<th><%=positions[i]%></th>
+							<%} %>
+						</tr>
+						<% for(let i = 0; i < arr.length; i++) {%>
+							<input type="hidden" name="id" value="<%=arr[i].id%>">
+							<tr>
+								<% if(type == 2) {%>
+									<td><%=arr[i].description %></td>
+								<%} %>
+								<td><%=arr[i].name %></td>
+								<% for(let k = 0; k < positions.length; k++) {%>
+									<td><input type="number" min="0" max="1000" name="<%=positions[k]%>" style="width: 50px;" class="inp" value="<%=arr[i].marks[positions[k]]%>" required></td>
+								<%} %>
+							</tr>
+						<%} %>
+					</table>
+					<input type="hidden" name="countcrit" value="<%=count_criterion%>">
+					<input type="submit" class="buttonmypage" id="submit" value="Изменить">
+				</form>
+			<%} %>
+			<br>
+		</div>
+	</main>
+
+	<div class="footer mt-auto py-3">
+		<%- include("../common/footer.ejs") %>
+	</div>
+
+	<%- include("../common/scripts.ejs")%>
+	<script type="text/javascript" src="/scripts/change-kpi/edit-marks.js"></script>
+
+</body>
+</html>

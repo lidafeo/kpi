@@ -13,5 +13,7 @@ exports.selectRightsRolesByRole = function(role) {
 
 //выбрать все права всех ролей
 exports.selectAllRightsRolesOrderByRole = function() {
-    return query("SELECT * from rights_roles where active=1 ORDER BY role ASC");
+    return query("SELECT * from rights_roles " +
+        "INNER JOIN rights ON rights.name=rights_roles.right_name " +
+        "where active=1 ORDER BY role ASC");
 };

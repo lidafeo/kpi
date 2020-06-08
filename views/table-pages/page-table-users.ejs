@@ -4,11 +4,13 @@
 	<title>Сотрудники</title>
 	<%- include("../common/head.ejs")%>
 </head>
-<body>
-	<%- include("../common/menu.ejs") %>
-	<div class="wrapper">
+<body class="d-flex flex-column h-100">
+	<header>
+		<%- include("../common/menu.ejs") %>
+	</header>
+	<main role="main" class="flex-shrink-0">
 		<div class="content container-fluid">
-			<h1>Список пользователей</h1>
+			<h2>Список пользователей</h2>
 			<hr>
 			<div class="table-filters form-group row">
 				<div class="col-sm d-flex">
@@ -40,8 +42,16 @@
 								<td class="text-center"><%=users[i].position %></td>
 								<td class="text-center"><%=users[i].faculty %></td>
 								<td class="text-center"><%=users[i].department %></td>
-								<% if(infoUser.rights.indexOf("delete_user") !== -1) {%>
-									<td class="text-center align-middle"><a href="#" class="delete-user" data-login="<%=users[i].login%>"><img src="/img/icons/trash.svg" alt="удалить" title="удалить" width="28px"></a></td>
+								<% if(infoUser.rights.indexOf("delete_user") !== -1 ||
+										infoUser.rights.indexOf("change_user") !== -1) {%>
+									<td class="text-center align-middle">
+										<% if(infoUser.rights.indexOf("change_user") !== -1) {%>
+											<a href="change-users/change-user?login=<%=users[i].login%>" class="change-user" data-login="<%=users[i].login%>"><img src="/img/icons/pencil.svg" alt="изменить" title="изменить" width="28px"></a>
+										<%}%>
+										<% if(infoUser.rights.indexOf("delete_user") !== -1) {%>
+											<a href="#" class="delete-user" data-login="<%=users[i].login%>"><img src="/img/icons/trash.svg" alt="удалить" title="удалить" width="28px"></a>
+										<%}%>
+									</td>
 								<%}%>
 							</tr>
 						<%} %>
@@ -49,13 +59,13 @@
 				</table>
 			</div>
 		</div>
-		
-		<div class="footer">
-			<%- include("../common/footer.ejs") %>
-		</div>
-		<%- include("../common/modal.ejs") %>
-		<%- include("../common/modal-confirm.ejs") %>
+	</main>
+
+	<div class="footer mt-auto py-3">
+		<%- include("../common/footer.ejs") %>
 	</div>
+	<%- include("../common/modal.ejs") %>
+	<%- include("../common/modal-confirm.ejs") %>
 
 	<%- include("../common/scripts.ejs")%>
 	<script type="text/javascript" src="/scripts/filter-table-by-th.js"></script>

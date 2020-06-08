@@ -4,50 +4,55 @@
 	<title>Сотрудники</title>
 	<%- include("../common/head.ejs")%>
 </head>
-<body>
-	<%- include("../common/menu.ejs") %>
-	<div class="wrapper">
+<body class="d-flex flex-column h-100">
+	<header>
+		<%- include("../common/menu.ejs") %>
+	</header>
+	<main role="main" class="flex-shrink-0">
 		<div class="content container-fluid">
-			<h1>Список пользователей ППС</h1>
+			<h2>Список пользователей ППС</h2>
+			<hr>
 			<div class="table-filters form-group row">
 				<div class="col-sm d-flex">
 					<img src="/img/icons/search.svg" alt="поиск" title="поиск" width="28px">
 					<input type="text" class="form-control ml-sm-3" placeholder="Поиск по ФИО">
 				</div>
 			</div>
-			<table class="table">
-				<thead>
-					<tr>
-						<th scope="col">ФИО</th>
-						<th scope="col">Логин</th>
-						<th scope="col">Должность</th>
-						<th scope="col">Факультет</th>
-						<th scope="col">Кафедра</th>
-                        <% if(infoUser.rights.indexOf("change_password_pps") !== -1) {%>
-                            <th class="text-center align-middle" scope="col">Действия</th>
-                        <%}%>
-					</tr>
-				</thead>
-				<tbody>
-					<% for(let i = 0; i < users.length; i ++) {%>
-						<tr class="table-data">
-							<th scope="row"><%=users[i].name %></th>
-							<td><%=users[i].login %></td>
-							<td><%=users[i].position %></td>
-							<td><%=users[i].faculty %></td>
-							<td><%=users[i].department %></td>
-                            <% if(infoUser.rights.indexOf("change_password_pps") !== -1) {%>
-                                <td class="text-center align-middle"><a href="/change-pps/change-password?login=<%=users[i].login%>"><img src="/img/icons/pencil.svg" alt="изменить пароль" title="изменить пароль" width="28px"></a></td>
-                            <%}%>
+			<div class="table-responsive-md">
+				<table class="table">
+					<thead>
+						<tr>
+							<th scope="col">ФИО</th>
+							<th scope="col">Логин</th>
+							<th scope="col">Должность</th>
+							<th scope="col">Факультет</th>
+							<th scope="col">Кафедра</th>
+							<% if(infoUser.rights.indexOf("change_password_pps") !== -1) {%>
+								<th class="text-center align-middle" scope="col">Действия</th>
+							<%}%>
 						</tr>
-					<%} %>
-				</tbody>
-			</table>
+					</thead>
+					<tbody>
+						<% for(let i = 0; i < users.length; i ++) {%>
+							<tr class="table-data">
+								<th scope="row"><%=users[i].name %></th>
+								<td><%=users[i].login %></td>
+								<td><%=users[i].position %></td>
+								<td><%=users[i].faculty %></td>
+								<td><%=users[i].department %></td>
+								<% if(infoUser.rights.indexOf("change_password_pps") !== -1) {%>
+									<td class="text-center align-middle"><a href="/change-pps/change-password?login=<%=users[i].login%>"><img src="/img/icons/pencil.svg" alt="изменить пароль" title="изменить пароль" width="28px"></a></td>
+								<%}%>
+							</tr>
+						<%} %>
+					</tbody>
+				</table>
+			</div>
 		</div>
-		
-		<div class="footer">
-			<%- include("../common/footer.ejs") %>
-		</div>
+	</main>
+
+	<div class="footer mt-auto py-3">
+		<%- include("../common/footer.ejs") %>
 	</div>
 
 	<%- include("../common/scripts.ejs")%>

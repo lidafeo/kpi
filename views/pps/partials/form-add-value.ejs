@@ -1,0 +1,90 @@
+<% if(textErr) {%>
+    <div class="text-danger m-sm-2">Этот ПЭД недоступен для Вашей должности</div>
+<%} %>
+<% if(!textErr) {%>
+    <div class="px-sm-3">
+        <h5><%=desc[0].name %></h5>
+        <h5><%=desc[0].description %></h5>
+        <hr>
+        <button id="plus" class="btn btn-outline-primary">+ Добавить значение</button>
+    </div>
+    <div id="plusdiv" class="px-sm-3">
+        <form enctype="multipart/form-data" name="form1" action="/upload" method="post" id="formAddKpi" class="needs-validation" novalidate>
+            <div class="text-danger form-group row ml-1" id="error"></div>
+            <input type="hidden" name="name" id="name">
+            <% if(desc[0].type == 2) {%>
+                <fieldset class="form-group">
+                    <div class="row">
+                        <legend class="col-form-label col-sm-3 pt-0">Тип*</legend>
+                        <div class="col-sm-7">
+                            <% for(let j = 0; j < desc[0].count_criterion; j++) {%>
+                            <div class="form-check">
+                                <input type="radio" class="form-check-input" name="criterion" id="radio<%=j%>" value="<%=j%>" required>
+                                <label class="form-check-label" for="radio<%=j%>">
+                                    <%=desc[j].criterion_description %>
+                                </label>
+                                <% if (j == desc[0].count_criterion - 1) {%>
+                                    <div class="invalid-feedback">
+                                        Пожалуйста укажите тип
+                                    </div>
+                                <%} %>
+                            </div>
+                            <%} %>
+                        </div>
+                    </div>
+                </fieldset>
+            <%} %>
+            <div class="form-group row">
+                <label for="datekpi" class="col-sm-3 col-form-label">Дата реализации (выполнения) ПЭД*</label>
+                <div class="col-sm-7">
+                    <input type="date" class="form-control" name="date" id="date-kpi" placeholder="гггг-мм-дд" pattern="[1-2]{1}[0-9]{3}-[0-1]{1}[0-9]{1}-[0-3]{1}[0-9]{1}" required>
+                    <div class="invalid-feedback">
+                        Пожалуйста введите дату исполнения ПЭД
+                    </div>
+                </div>
+            </div>
+            <% if(!desc[0].indicator_sum) {%>
+                <div class="form-group row">
+                    <label for="value" class="col-sm-3 col-form-label">Значение*</label>
+                    <div class="col-sm-7">
+                        <input type="number" class="form-control" min="0" max="1000" name="value" id="value" required>
+                        <div class="invalid-feedback">
+                            Пожалуйста введите значение ПЭД
+                        </div>
+                    </div>
+                </div>
+            <%} %>
+            <% if(desc[0].indicator_sum) {%>
+                <input type="hidden" name="value" value="1" id="value">
+            <%} %>
+            <div class="form-group row">
+                <label for="link" class="col-sm-3">Ссылка</label>
+                <div class="col-sm-7">
+                    <input type="text" name="link" class="form-control" id="link" maxlength="1024">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="text" class="col-sm-3">Пояснительная записка</label>
+                <div class="col-sm-7">
+                    <textarea name="text" class="form-control" id="text" maxlength="1024" rows="6"></textarea>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label for="file" class="col-sm-3">Файл для подтверждения</label>
+                <div class="col-sm-7">
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" id="file" name="file" aria-describedby="fileHelp">
+                        <div class="invalid-feedback" id="file-invalid-feedback">
+                            Размер файла не должен быть больше 1 Мб
+                        </div>
+                        <label class="custom-file-label" id="label-file" for="file">Выберите файл...</label>
+                    </div>
+                    <small id="fileHelp" class="form-text text-muted">Максимальный размер файла - 1 Мб</small>
+                </div>
+            </div>
+
+            <button id="addkpi" class="btn btn-primary">Сохранить</button>
+        </form>
+        <hr>
+    </div>
+<%} %>

@@ -4,43 +4,69 @@
 	<title>Установка периода</title>
 	<%- include("common/head.ejs")%>
 </head>
-<body>
-	<%- include("common/menu.ejs") %>
-	<div class="wrapper">
+<body class="d-flex flex-column h-100">
+	<header>
+		<%- include("common/menu.ejs") %>
+	</header>
+	<main role="main" class="flex-shrink-0">
 		<div class="content container-fluid">
-			<div class="page">
-				<div class="formborderadmin">
-					<h2 class="title-page">Расчетный период</h2>
-					<% if(period) {%>
-						<p style="margin: 1% auto;">Текущий период: с <%=period.date1 + " по " + period.date2%></p>
-					<%} %>
-					<% if(!period) {%>
-						<p style="color: peru;">Период для отчета не установлен</p>
-					<%} %>
-					<hr>
-					<div id="text"></div>
-					<h4>Установить новый расчетный период:</h4>
-					<form action="" method="post">
-						<div>
-							<label for="name_period">Название расчетного периода:</label>
-							<input type="text" name="name_period" id="name_period" autocomplete="зима 2000" required>
-						</div>
-						с <input type="date" class="date" name="date1" id="date1" required>
-						до <input type="date" class="date" name="date2" id="date2" required>
-						<input type="submit" id="sub" class="buttonmypage" value="Установить">
-					</form>
+			<h2>Расчетный период</h2>
+			<hr>
+			<% if(period) {%>
+			<p>Текущий период "<%=period.name_period%>": с <%=period.date1 + " по " + period.date2%></p>
+			<%} %>
+			<% if(!period) {%>
+				<p class="text-warning">Период для отчета не установлен</p>
+			<%} %>
+			<hr>
+			<h3>Установить новый расчетный период:</h3>
+			<form action="" class="needs-validation" method="post" id="form-set-period" novalidate>
+				<div class="form-group row">
+					<p class="text-danger col-sm" id="text"></p>
 				</div>
-			</div>
+				<div class="form-group row">
+					<label for="name_period" class="col-sm-2 col-form-label">Название периода</label>
+					<div class="col-sm-6">
+						<input type="text" name="name_period" class="form-control" id="name_period" placeholder="осень-зима 2000" maxlength="100" autocomplete="off" required>
+						<div class="invalid-feedback">
+							Пожалуйста введите название расчетного периода
+						</div>
+					</div>
+				</div>
+				<div class="form-group row">
+					<label for="date1" class="col-sm-2 col-form-label">Начало периода</label>
+					<div class="col-sm-6">
+						<input type="date" name="date1" class="form-control" id="date1" autocomplete="off" required>
+						<div class="invalid-feedback">
+							Пожалуйста введите начальную дату расчетного периода
+						</div>
+					</div>
+				</div>
+				<div class="form-group row">
+					<label for="date2" class="col-sm-2 col-form-label">Конец периода</label>
+					<div class="col-sm-6">
+						<input type="date" name="date2" class="form-control" id="date2" autocomplete="off" required>
+						<div class="invalid-feedback">
+							Пожалуйста введите конечную дату расчетного периода
+						</div>
+					</div>
+				</div>
+				<div class="form-group row">
+					<div class="col-sm-10">
+						<button type="submit" id="sub" class="btn btn-primary btn-lg">Установить</button>
+					</div>
+				</div>
+			</form>
 		</div>
+	</main>
 
-		<div class="footer">
-			<%- include("common/footer.ejs") %>
-		</div>
+	<div class="footer mt-auto py-3">
+		<%- include("common/footer.ejs") %>
 	</div>
 
 	<%- include("common/scripts.ejs")%>
 	<script type="text/javascript" src="/scripts/set-period.js"></script>
-
+	<script type="text/javascript" src="/scripts/check-form.js"></script>
 
 </body>
 </html>

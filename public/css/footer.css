@@ -1,16 +1,15 @@
-* {
-	margin: 0;
-	padding: 0;
-}
 html, body {
 	height: 100%;
+	margin: 0;
+	padding: 0;
 }
 .wrapper {
 	display: flex;
 	flex-direction: column;
 	height: 100%;
-	margin: auto auto;
-	width: 95%;
+	margin: 0;
+	padding: 0;
+	width: 100%;
 }
 
 .content {
@@ -23,5 +22,5 @@ html, body {
 	box-shadow: 0 0px 3px 0px rgba(0,0,0,0.1), 0px 1px 0px 0px rgba(0,0,0,0.1);
 	padding: .1em 1em;
 	text-align: center;
-	width: 94%
+	width: 100%
 }

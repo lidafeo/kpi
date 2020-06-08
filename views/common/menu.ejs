@@ -1,5 +1,5 @@
 <nav class="navbar navbar-expand-lg navbar-dark mb-md-3" style="background-color: rgba(42, 2, 88, 0.9);">
-	<a class="navbar-brand ml-md-4" href="/my-page"><%=infoUser.login%></a>
+	<a class="navbar-brand ml-sm-4" href="/my-page"><%=infoUser.login%></a>
 	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
 		<span class="navbar-toggler-icon"></span>
 	</button>
@@ -8,7 +8,7 @@
 		<ul class="navbar-nav mr-auto">
 			<% if(infoUser.rights.indexOf("get_my_score") !== -1) {%>
 				<li class="nav-item">
-					<a class="nav-link <%if (pageName == "/pps/get-my-score") {%><%='active'%><%}%>" href="/pps/get-my-score">Вычислить оценки <span class="sr-only">(current)</span></a>
+					<a class="nav-link <%if (pageName == "/pps/get-my-score") {%><%='active'%><%}%>" href="/pps/get-my-score">Получить оценки <span class="sr-only">(current)</span></a>
 				</li>
 			<%} %>
 			<% if(infoUser.rights.indexOf("add_value_of_kpi") !== -1) {%>
@@ -18,7 +18,7 @@
 			<%} %>
 			<% if(infoUser.rights.indexOf("get_my_values_of_kpi") !== -1) {%>
 				<li class="nav-item">
-					<a class="nav-link <%if (pageName == "/pps/get-values-kpi" || pageName == "/pps/val") {%><%='active'%><%}%>" href="/pps/get-values-kpi">Список выполненных ПЭД</a>
+					<a class="nav-link <%if (pageName == "/pps/get-values-kpi" || pageName == "/pps/val") {%><%='active'%><%}%>" href="/pps/get-values-kpi">Список добавленных ПЭД</a>
 				</li>
 			<%} %>
 			<% if(infoUser.rights.indexOf("verify") !== -1) {%>
@@ -36,7 +36,8 @@
 				<li class="nav-item dropdown">
 					<a class="nav-link dropdown-toggle
 						<%if (pageName == "/get-users" || pageName == "/change-users/add-user"
-							|| pageName == "/change-users/delete-user") {%>
+							|| pageName == "/change-users/delete-user"
+							|| pageName == "/change-users/change-user") {%>
 							<%='active'%>
 						<%}%>
 					" href="#" id="dropdownUsers" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -48,6 +49,9 @@
 						<%} %>
 						<% if(infoUser.rights.indexOf("create_user") !== -1) {%>
 							<a class="dropdown-item" href="/change-users/add-user">Добавить</a>
+						<%} %>
+						<% if(infoUser.rights.indexOf("change_user") !== -1) {%>
+							<a class="dropdown-item" href="/get-users">Изменить</a>
 						<%} %>
 						<% if(infoUser.rights.indexOf("delete_user") !== -1) {%>
 							<a class="dropdown-item" href="/get-users">Удалить</a>
@@ -79,7 +83,7 @@
 				</li>
 			<%} %>
 			<% if(infoUser.rights.indexOf("get_all_kpi") !== -1 || infoUser.rights.indexOf("change_kpi") !== -1
-					|| infoUser.rights.indexOf("change_balls_of_kpi") !== -1 || infoUser.rights.indexOf("create_kpi") !== -1
+					|| infoUser.rights.indexOf("change_marks_of_kpi") !== -1 || infoUser.rights.indexOf("create_kpi") !== -1
 					|| infoUser.rights.indexOf("delete_kpi") !== -1) {%>
 				<li class="nav-item dropdown">
 					<a class="nav-link dropdown-toggle
@@ -154,8 +158,8 @@
 						Обновление БД
 					</a>
 					<div class="dropdown-menu" aria-labelledby="dropdownUpdateDb">
-						<a class="dropdown-item" href="/update-db/add-users-from-file1">Добавить пользователей вариант 1</a>
-						<a class="dropdown-item" href="/update-db/add-users-from-file2">Добавить пользователей (ППС) вариант 2</a>
+						<a class="dropdown-item" href="/update-db/add-users-from-file1">Добавить ППС вариант 1</a>
+						<a class="dropdown-item" href="/update-db/add-users-from-file2">Добавить ППС вариант 2</a>
 						<a class="dropdown-item" href="/update-db/past-kpi">Добавить прошлые значения</a>
 						<a class="dropdown-item" href="/update-db/update-structure">Обновить структуру</a>
 					</div>
@@ -182,8 +186,19 @@
 				</li>
 			<%} %>
 		</ul>
+
+
+
 		<form class="form-inline my-2 my-lg-0 mr-md-4" action="/exit" method="post">
 			<button class="btn btn-outline-light my-2 my-sm-0" type="submit">Выйти</button>
 		</form>
+		<% if(infoUser.position) {%>
+			<a href="/pps/help.html" class="mr-md-2" target="_blank">
+				<svg class="bi bi-question-circle text-white" width="28px" height="28px" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+					<path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
+					<path d="M5.25 6.033h1.32c0-.781.458-1.384 1.36-1.384.685 0 1.313.343 1.313 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.007.463h1.307v-.355c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.326 0-2.786.647-2.754 2.533zm1.562 5.516c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"/>
+				</svg>
+			</a>
+		<%} %>
 	</div>
 </nav>

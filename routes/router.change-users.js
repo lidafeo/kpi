@@ -13,5 +13,8 @@ router.route('/delete-user')
 router.route('/add-user')
     .get(handler.pageAddUser)
     .post(urlencodedParser, handler.addUser);
+router.route('/change-user')
+    .get(handler.pageChangeUser)
+    .post(urlencodedParser, handler.changeUser);
 
 module.exports = router;

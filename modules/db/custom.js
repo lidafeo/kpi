@@ -19,10 +19,10 @@ exports.forReportPFU = function(date1, date2) {
 //тоже для отчета ПФУ
 exports.selectKpiAndUser = function() {
     return query("SELECT kpi.name name_kpi, users.name name_user, type, users.position, count_criterion, login, " +
-        "faculty, department, indicator_sum, start_val, final_val, ball, number_criterion " +
-        "FROM users, kpi, positions, criterions, balls " +
+        "faculty, department, indicator_sum, start_val, final_val, mark, number_criterion " +
+        "FROM users, kpi, positions, criterions, marks " +
         "WHERE positions.position=users.position AND " +
-        "criterions.name_kpi=kpi.name AND balls.position=positions.position AND " +
-        "balls.id_criterion=criterions.id " +
+        "criterions.name_kpi=kpi.name AND marks.position=positions.position AND " +
+        "marks.id_criterion=criterions.id " +
         "ORDER BY users.name ASC, users.login ASC, section ASC, subtype ASC, number ASC, number_criterion ASC");
 };

@@ -13,7 +13,6 @@ module.exports = {
         let countIgnore = 0;
         //addNames = []; addUsers = [];
         allNames = []; allUsers = [];
-
         let errParse = await getNamesKpiFromFile(workSheet);
         console.log("Parse names kpi", errParse);
 
@@ -109,8 +108,6 @@ let ruleParse = {'О.Д.1' : ['date', 'val', 'file'], 'О.Д.2' : ['date', 'val'
 
 
 function parseValue(value, kpi) {
-    let objParse = {'date': null, 'val': null, 'file': null, 'book': null, 'type': null, 'olimp': null, 'stud': null,
-        'result': null, 'link': null, 'event': null, 'typekpi': null, 'date2': null};
     let arrValues = value.split('|');
     let rule = ruleParse[kpi['name']];
     if(!rule) {
@@ -118,6 +115,8 @@ function parseValue(value, kpi) {
     }
     let resultArr = [];
     for(let i = 0; i < arrValues.length; i++) {
+        let objParse = {'date': null, 'val': null, 'file': null, 'book': null, 'type': null, 'olimp': null, 'stud': null,
+            'result': null, 'link': null, 'event': null, 'typekpi': null, 'date2': null};
         let arrParse = arrValues[i].split('~');
         if(arrParse.length == 1 && arrParse[0] == '') {
             continue;

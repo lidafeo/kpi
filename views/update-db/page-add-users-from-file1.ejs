@@ -1,49 +1,68 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Добавление пользователей</title>
+	<title>Добавление ППС</title>
 	<%- include("../common/head.ejs")%>
 </head>
-<body>
-	<%- include("../common/menu.ejs") %>
-	<div class="wrapper">
+<body class="d-flex flex-column h-100">
+	<header>
+		<%- include("../common/menu.ejs") %>
+	</header>
+	<main role="main" class="flex-shrink-0">
 		<div class="content container-fluid">
-			<h1 class="title-page">Добавление пользователей с Excel-файла</h1>
+			<h2>Добавление ППС с Excel-файла</h2>
+			<hr>
 			<div class="warning">
-				<p>Необходимо прикрепить Excel-файл.</p>
-				<p>В каждой строке файла, начиная с первой (без перечисления названий в первой строке), 
+				<p>Необходимо прикрепить Excel-файл (xls или xlsx).</p>
+				<p>В каждой строке файла, начиная с <b>первой</b> (без перечисления названий в первой строке),
 					должна содержаться информация о сотруднике в следующем формате:</p>
-				<p>В столбце <b>A</b> указывается полное ФИО сотрудника*</p>
-				<p>В столбце <b>B</b> указывается факультет, на котором работает сотрудник</p>
+				<p>В столбце <b>A</b> указывается полное ФИО сотрудника<b>*</b></p>
+				<p>В столбце <b>B</b> указывается факультет, на котором работает сотрудник<b>*</b></p>
 				<p>В столбце <b>C</b> указывается кафедра, на которой работает сотрудник</p>
-				<p>В столбце <b>D</b> указывается должность сотрудника*</p>
-				<p>В столбце <b>E</b> указывается <i>уникальный</i> логин сотрудника*</p>
-				<p>В столбце <b>F</b> указывается пароль сотрудника*</p>
-				<p>* - обязательные к заполнению поля</p>
+				<p>В столбце <b>D</b> указывается должность сотрудника<b>*</b></p>
+				<p>В столбце <b>E</b> указывается <i>уникальный</i> логин сотрудника<b>*</b></p>
+				<p>В столбце <b>F</b> указывается пароль сотрудника<b>*</b></p>
+				<p><b>*</b> обязательные к заполнению поля</p>
 			</div>
-			<% if(action == 1) {%>
-				<p class="uspeshno">Успешно</p>
-			<%} %>
-			<% if(action == 2) {%>
-				<p class="errormess">Ошибка добавления</p>
-			<%} %>
-			<form enctype="multipart/form-data" action="" 
-			method="post" class="formborderadmin">
-				<div class="col-form">
-					<input type="file" name="file" required>
-					<input type="submit" class="buttonmypage" value="Добавить">
+			<p>Пример файла:</p>
+			<p class="ml-md-3"><img class="border-secondary img-thumbnail" src="/img/update-with-excel/add-pps-1.png" alt="ошибка"></p>
+			<hr>
+
+			<form enctype="multipart/form-data" class="needs-validation m-md-3" action="" method="post" id="form-send" novalidate>
+				<div class="form-group row">
+					<label for="file" class="col-sm-3">Excel-файл для загрузки данных</label>
+					<div class="col-sm-5">
+						<div class="custom-file">
+							<input type="file" class="custom-file-input" id="file" name="file" required>
+							<label class="custom-file-label" id="label-file" for="file">Выберите файл...</label>
+							<div class="invalid-feedback">
+								Пожалуйста выберите файл
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-2">
+						<button id="addkpi" type="submit" class="btn btn-primary">Добавить</button>
+					</div>
 				</div>
 			</form>
-			<p style="color: brown;">Внимание! При отсутствии информации о сотруднике ячейку столбца, 
+
+			<p style="color: brown;">Внимание! При отсутствии информации о сотруднике ячейку столбца,
 				соответсвующего данной информации оставить пустой, без каких-либо символов.
-				Если эта информация является обязательной к заполнению (отмечена *), 
-				то данную информацию стоит уточнить и записать в прикрепляемый Excel-файл.</p>
+				Если эта информация является обязательной к заполнению (отмечена *),
+				то данную информацию стоит уточнить и записать в прикрепляемый Excel-файл.
+			</p>
+
 		</div>
-		<div class="footer">
-			<%- include("../common/footer.ejs") %>
-		</div>
+	</main>
+
+	<div class="footer mt-auto py-3">
+		<%- include("../common/footer.ejs") %>
 	</div>
+	<%- include("../common/modal.ejs") %>
 
 	<%- include("../common/scripts.ejs")%>
+	<script type="text/javascript" src="/scripts/check-form.js"></script>
+	<script type="text/javascript" src="/scripts/send-form-data.js"></script>
+	<script type="text/javascript" src="/scripts/custom-file.js"></script>
 </body>
 </html>

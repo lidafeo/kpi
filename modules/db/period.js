@@ -9,6 +9,13 @@ exports.insertActualPeriod = function(date1, date2, periodName) {
         [date1, date2, periodName]);
 };
 
+//добавление нового неактуального периода
+exports.insertNotActualPeriod = function(date1, date2, periodName) {
+    return query("INSERT INTO period (start_date, finish_date, actual, name_period) " +
+        "VALUES (?, ?, 0, ?)",
+        [date1, date2, periodName]);
+};
+
 //SELECT
 
 //получить актуальный период
@@ -21,4 +28,11 @@ exports.selectActualPeriod = function() {
 //делаем все периоды неактуальными
 exports.updatePeriodSetNotActual = function() {
     return query("UPDATE period SET actual=0 WHERE actual=1");
+};
+
+//DELETE
+
+//удаляем все периоды
+exports.deleteAllPeriods = function() {
+    return query("DELETE FROM period");
 };

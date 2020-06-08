@@ -1,16 +1,13 @@
-let DB = require('../modules/db');
-
 let writeLogs = require('../modules/logs').log;
 let writeErrorLogs = require('../modules/logs').error;
 
+let changeRolesService = require('../services/change-roles');
+
 //GET-запрос страницы для добавления роли
 exports.pageAddRole = function(req, res) {
-    let action = 0;
-    if(req.query.action == 'ok') action = 1;
-    if(req.query.action == 'err') action = 2;
-    DB.rights.selectAllRights().then(rights => {
-        res.render('change-roles/page-add-role', {rights: rights, action: action,
-            infoUser: req.session, pageName: '/change-roles/add-role'});
+    let user = req.session;
+    changeRolesService.pageAddRole(user).then(result => {
+        res.render('change-roles/page-add-role', result);
     }).catch(err => {
         console.log(err);
         writeErrorLogs(req.session.login, err);
@@ -20,29 +17,16 @@ exports.pageAddRole = function(req, res) {
 
 //POST-запрос на добавление роли
 exports.addRole = function(req, res) {
+    let user = req.session;
     console.log("Добавление роли");
     console.log(req.body);
     let rights = req.body.rights;
     let role = req.body.role;
-    try {
-        DB.roles.insertRole(role).then(result => {
-            //записываем логи
-            writeLogs(req.session.login, req.session.position, "добавил(а) роль " + role);
-            if (rights && rights.length > 0) {
-                Promise.all(rights.map(el => {
-                    DB.rightsRoles.insertRightsInRole(el, role);
-                })).then(result => {
-                    //записываем логи
-                    writeLogs(req.session.login, req.session.position, "добавил(а) права роли " + role);
-                    res.redirect('/change-roles/add-role?action=ok');
-                });
-            } else {
-                res.redirect('/change-roles/add-role?action=ok');
-            }
-        });
-    } catch (e) {
+    changeRolesService.addRole(user, role, rights).then(result => {
+        res.json(result);
+    }).catch(err => {
         console.log(err);
         writeErrorLogs(req.session.login, err);
         res.status(500).render('error/500');
-    }
+    });
 };

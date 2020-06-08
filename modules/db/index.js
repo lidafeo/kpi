@@ -1,4 +1,4 @@
-exports.balls = require('./balls');
+exports.marks = require('./marks');
 exports.criterions = require('./criterions');
 exports.kpi = require('./kpi');
 exports.period = require('./period');

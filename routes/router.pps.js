@@ -12,7 +12,7 @@ let checkRight = require('../modules/check-right');
 
 router.route('/get-my-score')
     .all(checkRight(["get_my_score"]))
-    .get(handler.pageGetMyScore);
+    .get(handler.pageGetScores);
 router.route('/add-value-kpi')
     .all(checkRight(["add_value_of_kpi"]))
     .get(handler.pageAddValueKpi)

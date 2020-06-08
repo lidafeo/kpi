@@ -4,54 +4,75 @@
 	<title>Значения ПЭД</title>
 	<%- include("../common/head.ejs")%>
 </head>
-<body>
-	<%- include("../common/menu.ejs") %>
-	<div class="wrapper">
+<body class="d-flex flex-column h-100">
+	<header>
+		<%- include("../common/menu.ejs") %>
+	</header>
+	<main role="main" class="flex-shrink-0">
 		<div class="content container-fluid">
-			<h3 class="nametable">Значения Показателей эффективности деятельности</h3>
-			<% if(balls.length != 0) {%>
-			<table>
-				<tr>
-					<th><h4>Дата добавления</h4></th>
-					<th><h4>Логин сотрудника</h4></th>
-					<th><h4>ПЭД</h4></th>
-					<th><h4>Значение</h4></th>
-					<th><h4>Дата начала действия</h4></th>
-					<th><h4>Дата окончания действия</h4></th>
-					<th><h4>Статус</h4></th>
-					<th><h4>Автор проверки</h4></th>
-				</tr>
-				<% for(let i = 0; i < balls.length; i++) {%>
-					<tr>
-						<td><%=balls[i].date_str %></td>
-						<td><%=balls[i].login_user %></td>
-						<td><%=balls[i].name_kpi %></td>
-						<td><%=balls[i].value %></td>
-						<td><%=balls[i].start_date_str %></td>
-						<td><%=balls[i].finish_date_str %></td>
-						<% if(!balls[i].valid) {%>
-							<td><font color="red">Недействительно</font></td>
-							<td><%=balls[i].author_verify %></td>
-						<%} %>
-						<% if(balls[i].valid) {%>
-							<td><font color="green">Выполнено</font></td>
-							<td></td>
-						<%} %>
-					</tr>
-				<%} %>
-			</table>
-			<%}%>
-			<% if(balls.length == 0) {%>
-			<p class="errormess">Нет добавленных значений ПЭД</p>
-			<%}%>
-		</div>
+			<h2>Значения Показателей эффективности деятельности</h2>
+			<hr>
+			<h5 class="mb-sm-3">Показаны значения, действительные на период<% if(period.name_period) {%>
+				<%=' "' + period.name_period + '": '%>
+				<%}%>
+				с <%=period.dateStart%> по <%=period.dateFinish%></h5>
 
-		<div class="footer">
-			<%- include("../common/footer.ejs") %>
+			<% if(marks.length != 0) {%>
+				<div class="table-filters form-group row">
+					<div class="col-sm d-flex">
+						<img src="/img/icons/search.svg" alt="поиск" title="поиск" width="28px">
+						<input type="text" class="form-control ml-sm-3" placeholder="Поиск по логину">
+					</div>
+				</div>
+				<div class="table-responsive-md">
+					<table class="table border-color-f">
+						<thead>
+							<tr>
+								<th class="text-center" scope="col">Дата добавления</th>
+								<th class="text-center" scope="col">Логин сотрудника</th>
+								<th class="text-center" scope="col">ПЭД</th>
+								<th class="text-center" scope="col">Значение</th>
+								<th class="text-center" scope="col">Дата начала действия</th>
+								<th class="text-center" scope="col">Дата окончания действия</th>
+								<th class="text-center" scope="col">Статус</th>
+								<th class="text-center" scope="col">Автор проверки</th>
+							</tr>
+						</thead>
+						<tbody>
+							<% for(let i = 0; i < marks.length; i++) {%>
+								<tr class="table-data">
+									<td class="text-center"><%=marks[i].date_str %></td>
+									<th class="text-center"><%=marks[i].login_user %></th>
+									<td class="text-center"><%=marks[i].name_kpi %></td>
+									<td class="text-center"><%=marks[i].value %></td>
+									<td class="text-center"><%=marks[i].start_date_str %></td>
+									<td class="text-center"><%=marks[i].finish_date_str %></td>
+									<% if(!marks[i].valid) {%>
+										<td class="text-center text-danger">Недействительно</td>
+										<td class="text-center"><%=marks[i].author_verify %></td>
+									<%} %>
+									<% if(marks[i].valid) {%>
+										<td class="text-center text-success">Выполнено</td>
+										<td class="text-center"></td>
+									<%} %>
+								</tr>
+							<%} %>
+						</tbody>
+					</table>
+				</div>
+			<%}%>
+			<% if(marks.length == 0) {%>
+			<p class="text-warning">Нет добавленных значений ПЭД</p>
+			<%}%>
 		</div>
+	</main>
+
+	<div class="footer mt-auto py-3">
+		<%- include("../common/footer.ejs") %>
 	</div>
 
 	<%- include("../common/scripts.ejs")%>
+	<script type="text/javascript" src="/scripts/filter-table-by-th.js"></script>
 
 </body>
 </html>

@@ -1,37 +1,37 @@
 module.exports = {
     //вычисление оценки
-    calculateBall: function (kpi, criterion) {
+    calculateMark: function (kpi, criterion) {
         let value;
-        let ball = [];
+        let mark = [];
         //ставим оценку ПЭДу первого типа
         if(kpi.type == 1) {
             //находим балл
-            value = getBall (kpi);
+            value = getMark (kpi);
             //вычисляем оценку
             for(let i = 0; i < criterion.length; i++) {
                 if(!criterion[i].finalVal) criterion[i].finalVal = Infinity;
                 if(value >= criterion[i].startVal && value <= criterion[i].finalVal) {
-                    ball[0] = criterion[i].ball;
+                    mark[0] = criterion[i].mark;
                 }
-                else if(!ball[0]) ball[0] = 0;
+                else if(!mark[0]) mark[0] = 0;
             }
         }
         //ставим оценку ПЭДу второго типа
         else {
             //находим и вычисляем оценку для каждой подстроки
             for(let i = 0; i < criterion.length; i++) {
-                value = getBall(kpi, i);
+                value = getMark(kpi, i);
                 if(!criterion[i].finalVal) criterion[i].finalVal = Infinity;
                 if(value >= criterion[i].startVal && value <= criterion[i].finalVal) {
                     if(kpi.num.indexOf(i) != -1) {
-                        ball.push(criterion[i].ball);
+                        mark.push(criterion[i].mark);
                     }
-                    else ball.push(0);
+                    else mark.push(0);
                 }
-                else ball.push(0);
+                else mark.push(0);
             }
         }
-        return ball;
+        return mark;
     },
     //преобразование даты к нормальному виду
     modifyDateOfValue: function (arrObj) {
@@ -54,7 +54,7 @@ function modifyOneDate (obj, prop) {
 }
 
 //функция вычисления балла
-function getBall (kpi, k) {
+function getMark (kpi, k) {
     let value = 0;
     if(kpi.indicatorSum) {
         if(kpi.type == 1) value = kpi.count;
@@ -62,12 +62,22 @@ function getBall (kpi, k) {
     }
     else {
         let date = new Date(0);
-        for(let i = 0; i < kpi.count; i++) {
-            if(kpi.type == 1 || kpi.type == 2 && kpi.num[i] == k)
-                if(kpi.date[i] > date) {
+        if(kpi.type == 1) {
+            for (let i = 0; i < kpi.count; i++) {
+                if (kpi.date[i] > date) {
                     value = kpi.val[i];
                     date = kpi.date[i];
                 }
+            }
+        } else {
+            for (let i = 0; i < kpi.count[k]; i++) {
+                if (kpi.type == 2 && kpi.num[i] == k) {
+                    if (kpi.date[i] > date) {
+                        value = kpi.val[i];
+                        date = kpi.date[i];
+                    }
+                }
+            }
         }
     }
     return value;

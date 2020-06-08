@@ -1,11 +1,13 @@
+let nodeDev = process.env.NODE_ENV ? process.env.NODE_ENV : 'dev';
+
 const mariadb = require('mariadb');
-const config = require('../../config/config.json');
+const config = require('../../config/' + nodeDev);
 
 const pool = mariadb.createPool({
 	host: config.db.host, 
 	user: config.db.user, 
 	password: config.db.password,
-	database: 'kpi',
+	database: config.db.database,
 	connectionLimit: 5
 });
 

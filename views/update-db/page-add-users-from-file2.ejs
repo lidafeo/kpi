@@ -1,60 +1,79 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Добавление пользователей</title>
+	<title>Добавление ППС</title>
 	<%- include("../common/head.ejs")%>
 	<link rel="stylesheet" type="text/css" href="/css/loader.css">
 </head>
-<body>
-	<%- include("../common/menu.ejs") %>
-	<div class="wrapper">
+<body class="d-flex flex-column h-100">
+	<header>
+		<%- include("../common/menu.ejs") %>
+	</header>
+	<main role="main" class="flex-shrink-0">
 		<div class="content container-fluid">
-			<h1 class="title-page">Добавление пользователей ППС с Excel-файла</h1>
-			<% if(!report) {%>
-				<div class="warning">
-					<p>Необходимо прикрепить Excel-файл.</p>
-					<p>В каждой строке файла, начиная с первой (без перечисления названий в первой строке), 
-						должна содержаться информация о сотруднике в следующем формате:</p>
-					<p>В столбце <b>A</b> указывается порядковый номер (можно оставить пустым)</p>
-					<p>В столбце <b>B</b> указывается полное <b>ФИО</b> сотрудника</p>
-					<p>В столбце <b>C</b> указывается <b>должность</b> сотрудника в именительном падеже</p>
-					<p>В столбце <b>D</b> указывается вид занятости (основное место работы, внутреннее совместительство или внешнее совместительство)</p>
-					<p>В столбце <b>E</b> указывается <b>подразделение</b>, в котором работает сотрудник</p>
-					<p>Для декана - это факультет, для остальных должностей - кафедра</p>
-					<p>В столбце <b>G</b> можно вручную задать логин</p>
-					<p>В столбце <b>H</b> можно вручную задать пароль</p>
-					<p style="color: chocolate;">Внимание! Логин и пароль сотрудников генерируются сервером. 
-						При возникновении конфликтных ситуаций Вы можете вручную задать логин или пароль сотрудника, записав его в соответствующее поле. 
-						Однако рекомендуется оставлять эти поля пустыми.</p>
+			<h2>Добавление ППС с Excel-файла</h2>
+			<hr>
+			<div class="warning">
+				<p>Необходимо прикрепить Excel-файл (xls или xlsx).</p>
+				<p>В каждой строке файла без пропусков, начиная <b>со второй</b>,
+					должна содержаться информация о сотруднике в следующем формате:</p>
+				<p>В столбце <b>A</b> указывается порядковый номер (поле можно оставить пустым)</p>
+				<p>В столбце <b>B</b> указывается полное <b>ФИО</b> сотрудника<b>*</b></p>
+				<p>В столбце <b>C</b> указывается <b>должность</b> сотрудника в именительном падеже<b>*</b></p>
+				<p>В столбце <b>D</b> указывается вид занятости (основное место работы, внутреннее совместительство или внешнее совместительство)<b>*</b></p>
+				<p>В столбце <b>E</b> указывается <b>подразделение</b>, в котором работает сотрудник<b>*</b></p>
+				<p>Для декана - это факультет, для остальных должностей - кафедра</p>
+				<p>В столбце <b>F</b> можно указать размер ставки</p>
+				<p>В столбце <b>G</b> можно вручную задать логин</p>
+				<p>В столбце <b>H</b> можно вручную задать пароль</p>
+				<p><b>*</b> обязательные к заполнению поля</p>
+				<p style="color: chocolate;">Внимание! Логин и пароль сотрудников генерируются сервером.
+					При возникновении конфликтных ситуаций Вы можете вручную задать логин или пароль сотрудника, записав его в соответствующее поле.
+					Однако рекомендуется оставлять эти поля пустыми.
+				</p>
+			</div>
+			<p>Пример файла:</p>
+			<p class="ml-md-3"><img class="border-secondary img-thumbnail" src="/img/update-with-excel/add-pps-2.png" alt="ошибка"></p>
+			<hr>
+			<form enctype="multipart/form-data" action="" method="post" class="needs-validation m-md-3 mb-md-4" id="form-from_file" novalidate>
+				<div class="form-group row">
+					<div class="col-sm-10">
+						<div class="form-check">
+							<input class="form-check-input" type="checkbox" name="option" id="option">
+							<label class="form-check-label" for="option">
+								Удалить всех пользователей ППС перед добавлением
+							</label>
+						</div>
+					</div>
 				</div>
-				<% if(action == 1) {%>
-					<p class="uspeshno">Успешно</p>
-				<%} %>
-				<% if(action == 2) {%>
-					<p class="errormess">Ошибка добавления</p>
-				<%} %>
-				<form enctype="multipart/form-data" action=""  
-				method="post" class="formborderadmin" id="form-from_file">
-					<div class="col-form">
-						<input type="checkbox" class="checkbox" name="del_pps" id="del_pps">
-						<label for="del_pps">Удалить всех пользователей ППС перед добавлением</label>
+				<div class="form-group row">
+					<label for="file" class="col-sm-3">Excel-файл для загрузки данных</label>
+					<div class="col-sm-5">
+						<div class="custom-file">
+							<input type="file" class="custom-file-input" id="file" name="file" required>
+							<label class="custom-file-label" id="label-file" for="file">Выберите файл...</label>
+							<div class="invalid-feedback">
+								Пожалуйста выберите файл
+							</div>
+						</div>
 					</div>
-					<div class="col-form">
-						<input type="file" name="file" required>
-						<input type="submit" class="buttonmypage" id="but-file" value="Добавить">
+					<div class="col-sm-2">
+						<button type="submit" id="but-file" class="btn btn-primary">Добавить</button>
 					</div>
-				</form>
-			<%} else {%>
-				<%- include("./partials/report-add-users.ejs") %>
-			<%} %>
+				</div>
+			</form>
 		</div>
-		<div class="footer">
-			<%- include("../common/footer.ejs") %>
-		</div>
+	</main>
+
+	<div class="footer mt-auto py-3">
+		<%- include("../common/footer.ejs") %>
 	</div>
+	<%- include("../common/modal.ejs") %>
 
 	<%- include("../common/scripts.ejs")%>
 	<script type="text/javascript" src="/plugins/carhartl-jquery-cookie-92b7715/jquery.cookie.js"></script>
-	<script type="text/javascript" src="/scripts/loader.js"></script>
+	<script type="text/javascript" src="/scripts/custom-file.js"></script>
+	<script type="text/javascript" src="/scripts/update-with-excel/send-form.js"></script>
+    <script type="text/javascript" src="/scripts/check-form.js"></script>
 </body>
 </html>

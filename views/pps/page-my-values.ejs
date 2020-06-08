@@ -4,72 +4,70 @@
 	<title>Значения ПЭД</title>
 	<%- include("../common/head.ejs")%>
 </head>
-<body>
-	<%- include("../common/menu.ejs") %>
-	<div class="wrapper">
+<body class="d-flex flex-column h-100">
+	<header>
+		<%- include("../common/menu.ejs") %>
+	</header>
+	<main role="main" class="flex-shrink-0">
 		<div class="content container-fluid">
-			<h1>Значения ПЭД</h1>
+			<h2>Значения ПЭД</h2>
 			<hr>
 			<h5 class="mb-sm-3">Показаны значения, действительные на период<% if(period.name_period) {%>
 				<%=' "' + period.name_period + '": '%>
 				<%}%>
 				 с <%=period.dateStart%> по <%=period.dateFinish%></h5>
 			<% if(kpi.length != 0) {%>
-				<table class="table border-color-f">
-					<thead>
-						<th class="text-center align-middle" scope="col">Дата добавления</th>
-						<th class="text-center align-middle" scope="col">ПЭД</th>
-						<th class="text-center align-middle" scope="col">Дата реализации</th>
-						<th class="text-center align-middle" scope="col">Значение</th>
-						<th class="text-center align-middle" scope="col">Файл</th>
-						<th class="text-center align-middle" scope="col">Выбранный показатель</th>
-						<th class="text-center align-middle" scope="col">Статус</th>
-						<th class="text-center align-middle" scope="col"></th>
-					</thead>
-					<tbody>
-						<% for(let i = 0; i < kpi.length; i++) {%>
-							<tr>
-								<td class="text-center align-middle"><%=kpi[i].modifydate %></td>
-								<td class="text-center align-middle"><%=kpi[i].name_kpi %></td>
-								<td class="text-center align-middle"><%=kpi[i].modifystart_date%></td>
-								<td class="text-center align-middle"><%=kpi[i].value%></td>
-								<% if(kpi[i].file) {%>
-									<td class="text-center align-middle">
-										<a href=<%="/download-file?file="+kpi[i].file %> download="">
-											<img src="/img/icons/download.svg" alt="Скачать файл" width="25">
-										</a>
-									</td>
-								<%} %>
-								<% if(!kpi[i].file) {%>
-									<td></td>
-								<%} %>
-								<% if(kpi[i].type == 2) {%>
-									<td class="text-center align-middle"><%=kpi[i].criterion_description %></td>
-								<%} %>
-								<% if(kpi[i].type != 2) {%>
-									<td></td>
-								<%} %>
-								<% if(kpi[i].valid == 0) {%>
-									<td class="text-center align-middle text-danger">Недействительно</td>
-								<%} %>
-								<% if(kpi[i].valid == 1) {%>
-									<td class="text-center align-middle text-success">Выполнено</td>
-								<%} %>
-								<td class="text-center align-middle"><a href="/pps/val/<%=kpi[i].id%>">Подробнее</a></td>
-							</tr>
-						<%} %>
-					</tbody>
-				</table>
+				<div class="table-responsive-md">
+					<table class="table border-color-f">
+						<thead>
+							<th class="text-center align-middle" scope="col">Дата добавления</th>
+							<th class="text-center align-middle" scope="col">ПЭД</th>
+							<th class="text-center align-middle" scope="col">Дата реализации</th>
+							<th class="text-center align-middle" scope="col">Значение</th>
+							<th class="text-center align-middle" scope="col">Файл</th>
+							<th class="text-center align-middle" scope="col">Статус</th>
+							<th class="text-center align-middle" scope="col"></th>
+						</thead>
+						<tbody>
+							<% for(let i = 0; i < kpi.length; i++) {%>
+								<tr>
+									<td class="text-center align-middle"><%=kpi[i].modifydate %></td>
+									<td class="text-center align-middle"><%=kpi[i].name_kpi %></td>
+									<td class="text-center align-middle"><%=kpi[i].modifystart_date%></td>
+									<td class="text-center align-middle"><%=kpi[i].value%></td>
+									<% if(kpi[i].file) {%>
+										<td class="text-center align-middle">
+											<a href=<%="/download-file?file="+kpi[i].file %> download="">
+												<img src="/img/icons/download.svg" alt="Скачать файл" width="25">
+											</a>
+										</td>
+									<%} %>
+									<% if(!kpi[i].file) {%>
+										<td></td>
+									<%} %>
+									<% if(kpi[i].valid == 0) {%>
+										<td class="text-center align-middle text-danger">Недействительно</td>
+									<%} %>
+									<% if(kpi[i].valid == 1) {%>
+										<td class="text-center align-middle text-success">Выполнено</td>
+									<%} %>
+									<td class="text-center align-middle"><a href="/pps/val/<%=kpi[i].id%>">Подробнее</a></td>
+								</tr>
+							<%} %>
+						</tbody>
+					</table>
+				</div>
 			<%} %>
 			<% if(kpi.length == 0) {%>
 				<hr>
-				<p>Нет отмеченных значений ПЭД</p>
+				<p class="text-warning">Нет отмеченных значений ПЭД</p>
 				<a href="/pps/add-value-kpi">Отметить выполнение ПЭД</a>
 			<%} %>
 		</div>
-		<div class="footer">
-			<%- include("../common/footer.ejs") %>
-		</div>
+	</main>
+
+	<div class="footer mt-auto py-3">
+		<%- include("../common/footer.ejs") %>
 	</div>
 
 	<%- include("../common/scripts.ejs")%>
