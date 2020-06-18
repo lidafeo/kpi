@@ -8,64 +8,66 @@
 			<%=' "' + period.name_period + '": '%>
 			<%}%>
 			с <%=period.dateStart%> по <%=period.dateFinish%></p>
-	<table class="table border-color-f">
-		<thead>
-			<tr>
-				<th class="text-center align-middle" scope="col">Дата</th>
-				<th class="text-center align-middle" scope="col">ПЭД</th>
-				<th class="text-center align-middle" scope="col">Значение</th>
-				<th class="text-center align-middle" scope="col">Файл</th>
-				<th class="text-center align-middle" scope="col">Записка</th>
-				<th class="text-center align-middle" scope="col">Ссылка</th>
-				<th class="text-center align-middle" scope="col">Статус</th>
-				<th class="text-center align-middle" scope="col">Действие</th>
-			</tr>
-		</thead>
-		<tbody>
-			<% for(let i = 0; i < kpi.length; i++) {%>
-				<tr id=<%="tr" + i %>>
-					<input type="hidden" id=<%="hd" + i %> name="hidd" value=<%=kpi[i].id%>>
-					<input type="hidden" id=<%="kpi" + i %>  value=<%=kpi[i].name_kpi%>>
-					<td class="text-center align-middle"><%=kpi[i].modifydate %></td>
-					<td class="text-center align-middle"><%=kpi[i].name_kpi %></td>
-					<td class="text-center align-middle"><%=kpi[i].value %></td>
-					<% if(kpi[i].file) {%>
-						<td class="text-center align-middle">
-							<a href=<%="/download-file?file="+kpi[i].file %> download="">
-								<img src="/img/icons/download.svg" width="25" alt="Скачать файл">
-							</a>
-						</td>
-					<%} %>
-					<% if(!kpi[i].file) {%>
-						<td></td>
-					<%} %>
-					<% if(kpi[i].text) {%>
-					<td class="text-center align-middle">
-						<img src="/img/icons/eye.svg" width="25" alt="записка" title="<%=kpi[i].text%>">
-					</td>
-					<%} %>
-					<% if(!kpi[i].text) {%>
-						<td></td>
-					<%} %>
-					<% if(kpi[i].link) {%>
-					<td class="text-center align-middle">
-						<a href="<%=kpi[i].link%>" target="_blank" class="a-link"><%=kpi[i].link%></a>
-					</td>
-					<%} %>
-					<% if(!kpi[i].link) {%>
-						<td></td>
-					<%} %>
-					<% if(!kpi[i].valid) {%>
-						<td class="text-center align-middle text-danger">Недействительно</td>
-					<%} %>
-					<% if(kpi[i].valid) {%>
-						<td class="text-center align-middle text-success">Выполнено</td>
-					<%} %>
-					<td class="text-center align-middle"><a href="/verify/val/<%=kpi[i].id%>">Проверить</a></td>
+	<div class="table-responsive-md">
+		<table class="table border-color-f">
+			<thead>
+				<tr>
+					<th class="text-center align-middle" scope="col">Дата</th>
+					<th class="text-center align-middle" scope="col">ПЭД</th>
+					<th class="text-center align-middle" scope="col">Значение</th>
+					<th class="text-center align-middle" scope="col">Файл</th>
+					<th class="text-center align-middle" scope="col">Записка</th>
+					<th class="text-center align-middle" scope="col">Ссылка</th>
+					<th class="text-center align-middle" scope="col">Статус</th>
+					<th class="text-center align-middle" scope="col">Действие</th>
 				</tr>
-			<%} %>
-		</tbody>
-	</table>
+			</thead>
+			<tbody>
+				<% for(let i = 0; i < kpi.length; i++) {%>
+					<tr id=<%="tr" + i %>>
+						<input type="hidden" id=<%="hd" + i %> name="hidd" value=<%=kpi[i].id%>>
+						<input type="hidden" id=<%="kpi" + i %>  value=<%=kpi[i].name_kpi%>>
+						<td class="text-center align-middle"><%=kpi[i].modifydate %></td>
+						<td class="text-center align-middle"><%=kpi[i].name_kpi %></td>
+						<td class="text-center align-middle"><%=kpi[i].value %></td>
+						<% if(kpi[i].file) {%>
+							<td class="text-center align-middle">
+								<a href=<%="/download-file?file="+kpi[i].file %> download="">
+									<img src="/img/icons/download.svg" width="25" alt="Скачать файл">
+								</a>
+							</td>
+						<%} %>
+						<% if(!kpi[i].file) {%>
+							<td></td>
+						<%} %>
+						<% if(kpi[i].text) {%>
+						<td class="text-center align-middle">
+							<img src="/img/icons/eye.svg" width="25" alt="записка" title="<%=kpi[i].text%>">
+						</td>
+						<%} %>
+						<% if(!kpi[i].text) {%>
+							<td></td>
+						<%} %>
+						<% if(kpi[i].link) {%>
+						<td class="text-center align-middle">
+							<a href="<%=kpi[i].link%>" target="_blank" class="a-link"><%=kpi[i].link%></a>
+						</td>
+						<%} %>
+						<% if(!kpi[i].link) {%>
+							<td></td>
+						<%} %>
+						<% if(!kpi[i].valid) {%>
+							<td class="text-center align-middle text-danger">Недействительно</td>
+						<%} %>
+						<% if(kpi[i].valid) {%>
+							<td class="text-center align-middle text-success">Выполнено</td>
+						<%} %>
+						<td class="text-center align-middle"><a href="/verify/val/<%=kpi[i].id%>">Проверить</a></td>
+					</tr>
+				<%} %>
+			</tbody>
+		</table>
+	</div>
 	<%} %>
 	<% if(kpi.length == 0) {%>
 		<p class="text-danger">Нет отмеченных ПЭД</p>

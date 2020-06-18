@@ -19,7 +19,7 @@ exports.pageAddUsersFromFile1 = function(req, res) {
     if(req.query.action == 'ok') action = 1;
     if(req.query.action == 'err') action = 2;
     res.render('update-db/page-add-users-from-file1', {infoUser: req.session,
-        pageName: '/update-db/add-users-from-file1'});
+        pageName: '/update-db/'});
 };
 
 //GET-запрос страницы добавления сотрудников с файла №2
@@ -28,7 +28,7 @@ exports.pageAddUsersFromFile2 = function(req, res) {
     if(req.query.action == 'ok') action = 1;
     if(req.query.action == 'err') action = 2;
     res.render('update-db/page-add-users-from-file2', {infoUser: req.session,
-        pageName: '/update-db/add-users-from-file2'});
+        pageName: '/update-db/'});
 };
 
 //GET-запрос страницы добавления прошлых значений ПЭД с файла
@@ -37,7 +37,7 @@ exports.pageAddPastKpi = function(req, res) {
     if(req.query.action == 'ok') action = 1;
     if(req.query.action == 'err') action = 2;
     res.render('update-db/page-add-past-values', {infoUser: req.session,
-        pageName: '/update-db/past-kpi'});
+        pageName: '/update-db/'});
 };
 
 //GET-запрос страницы обновления таблицы структуры университета
@@ -46,7 +46,7 @@ exports.pageUpdateStructure = function(req, res) {
     if(req.query.action == 'ok') action = 1;
     if(req.query.action == 'err') action = 2;
     res.render('update-db/page-update-structure', {infoUser: req.session,
-        pageName: '/update-db/update-structure'});
+        pageName: '/update-db/'});
 };
 
 //POST-запрос на добавление пользователей с файла вариант 1

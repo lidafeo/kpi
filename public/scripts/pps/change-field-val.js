@@ -18,7 +18,7 @@ $(document).ready(function() {
         let form = new FormData();
         let request = new XMLHttpRequest();
         form.append('id', $(this).data('id'));
-        $(this).find ('input, textarea').each(function() {
+        $(this).find('input, textarea').each(function() {
             if(this.name == 'file') {
                 form.append(this.name, $(this)[0].files[0]);
             } else {

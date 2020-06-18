@@ -14,7 +14,7 @@ exports.pageAddPps = async function(user) {
     let facultyArr = funcStructure.getFaculty(info.structure);
     let departmentArr = funcStructure.getDepartment(facultyArr[0], info.structure);
     return {positions: info.positions, faculty: facultyArr, department: departmentArr,
-        infoUser: user, pageName: '/change-pps/add-pps'};
+        infoUser: user, pageName: '/change-pps/'};
 };
 
 //запрос на добавление ППС
@@ -43,7 +43,7 @@ exports.pageChangePassword = async function(user, loginUser) {
     if(!users || users.length == 0 || !users[0].position)  {
         return null;
     }
-    return {user: users[0], infoUser: user, pageName: '/change-pps/change-password'};
+    return {user: users[0], infoUser: user, pageName: '/change-pps/'};
 };
 
 //запрос на изменение пароля ППС

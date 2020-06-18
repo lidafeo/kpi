@@ -95,3 +95,15 @@ exports.updateUser = function(login, user) {
     return query("UPDATE users SET name=?, role=?, position=?, faculty=?, " +
         "department=? WHERE login=?", arr);
 };
+
+//изменение кафедры у пользователей
+exports.updateDepartmentForUsers = function(department, structure) {
+    return query("UPDATE users SET department=?, faculty=? WHERE department=?",
+        [structure.department, structure.faculty, department]);
+};
+
+//изменение факультета у пользователей
+exports.updateFacultiesForUsers = function(faculty, newFaculty) {
+    return query("UPDATE users SET faculty=? WHERE faculty=?",
+        [newFaculty, faculty]);
+};

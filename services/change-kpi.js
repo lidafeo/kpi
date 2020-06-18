@@ -9,20 +9,20 @@ exports.pageAddKpi = async function(user) {
     let section = await DB.kpi.selectAllSection();
     let positions = await DB.positions.selectPositions();
     return {section: section, positions: positions, infoUser: user,
-        pageName: '/change-kpi/add-kpi'};
+        pageName: '/change-kpi/'};
 };
 
 //запрос страницы выбора ПЭД для изменения
 exports.pageChoiceKpi = async function(user) {
     let kpi = await DB.kpi.selectAllKpi();
-    return {kpi: kpi, infoUser: user, pageName: '/change-kpi/choice-kpi'};
+    return {kpi: kpi, infoUser: user, pageName: '/change-kpi/'};
 };
 
 //запрос страницы изменения ПЭД
 exports.pageEditKpi = async function(user, kpi) {
     let info = await funcKpi.getInfoOneKpi(kpi);
     console.log(info);
-    return {info: info, infoUser: user, pageName: '/change-kpi/edit-kpi'};
+    return {info: info, infoUser: user, pageName: '/change-kpi/'};
 };
 
 //запрос на добавление одного ПЭД

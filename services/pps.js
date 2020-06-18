@@ -205,7 +205,7 @@ function checkInput(fields, files) {
         return {'err': 'Необходимо прикрепить файл или написать пояснительную записку'};
     if(+fields.value <= 0)
         return {'err': 'Необходимо указать значение'};
-    if(!fields.date || new Date(fields.date) > new Date())
+    if(!fields.date)
         return {'err': 'Необходимо указать дату реализации'};
     if(new Date(fields.date) >= new Date((new Date()).getFullYear(), (new Date()).getMonth(), (new Date()).getDate() + 1))
         return {'err': 'Дата реализации не должна быть позже сегодняшней даты'};

@@ -14,7 +14,7 @@ exports.pageAddUser = async function(user) {
     let facultyArr = funcStructure.getFaculty(info.structure);
     let departmentArr = funcStructure.getDepartment(facultyArr[0], info.structure);
     return {roles: info.roles, positions: info.positions, faculty: facultyArr,
-        department: departmentArr, infoUser: user, pageName: '/change-users/add-user'};
+        department: departmentArr, infoUser: user, pageName: '/change-users/'};
 };
 
 //запрос страницы для изменения сотрудника
@@ -28,7 +28,7 @@ exports.pageChangeUser = async function(user, loginUser) {
     let departmentArr = funcStructure.getDepartment(userForChange[0].faculty, info.structure);
     return {roles: info.roles, positions: info.positions, faculty: facultyArr,
         department: departmentArr, user: userForChange[0], infoUser: user,
-        pageName: '/change-users/change-user'};
+        pageName: '/change-users/'};
 };
 
 //запрос на добавление пользователя

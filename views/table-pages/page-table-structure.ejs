@@ -18,17 +18,58 @@
 						<tr>
 							<th scope="col" class="text-center">Факультет</th>
 							<th scope="col" class="text-center">Кафедра</th>
+							<% if(infoUser.rights.indexOf("change_structure") !== -1) {%>
+								<th class="text-center" scope="col">Действия</th>
+							<%}%>
 						</tr>
 					</thead>
 					<tbody>
 						<% for (faculty in structure) {%>
 							<tr>
-								<th class="text-center align-middle" scope="row" rowspan="<%=structure[faculty].length%>"><%=faculty %></th>
+								<th class="text-center align-middle" scope="row" rowspan="<%=structure[faculty].length%>">
+									<% if(infoUser.rights.indexOf("change_structure") !== -1) {%>
+										<div class="field-value" data-name="<%=faculty%>"><span><%=faculty%></span>
+											<a href="#" class="change-faculty"><img src="/img/icons/pencil.svg" alt="изменить" title="изменить" width="28px"></a>
+										</div>
+										<div class="d-none form-change" data-name="<%=faculty%>">
+											<form class="needs-validation change-sub" novalidate>
+												<input type="hidden" id="old" name="oldFaculty" value="<%=faculty%>">
+												<div class="form-row">
+													<div class="col-sm">
+														<input type="text" class="form-control" id="new" name="faculty" value="<%=faculty%>" required>
+														<div class="invalid-feedback">
+															Пожалуйста введите название факультета
+														</div>
+													</div>
+												</div>
+												<div class="form-row">
+													<div class="col-sm">
+														<button class="btn btn-primary ml-sm-2" type="submit">сохранить</button>
+														<button class="btn btn-secondary ml-sm-2 cancel" type="button">отменить</button>
+													</div>
+												</div>
+											</form>
+										</div>
+									<%}%>
+									<% if(infoUser.rights.indexOf("change_structure") == -1) {%>
+										<%=faculty%>
+									<%}%>
+								</th>
 								<td class="text-center"><%=structure[faculty][0] %></td>
+								<% if(infoUser.rights.indexOf("change_structure") !== -1) {%>
+									<td class="text-center align-middle">
+										<a href="change-structure/change-department?department=<%=structure[faculty][0]%>" class="change-structure"><img src="/img/icons/pencil.svg" alt="изменить" title="изменить" width="28px"></a>
+									</td>
+								<%}%>
 							</tr>
 							<% for (let i = 1; i < structure[faculty].length; i++) {%>
 								<tr>
 									<td class="text-center"><%=structure[faculty][i] %></td>
+									<% if(infoUser.rights.indexOf("change_structure") !== -1) {%>
+										<td class="text-center align-middle">
+											<a href="change-structure/change-department?department=<%=structure[faculty][i]%>" class="change-structure"><img src="/img/icons/pencil.svg" alt="изменить" title="изменить" width="28px"></a>
+										</td>
+									<%}%>
 								</tr>
 							<%} %>
 						<%} %>
@@ -41,8 +82,11 @@
 	<div class="footer mt-auto py-3">
 		<%- include("../common/footer.ejs") %>
 	</div>
+	<%- include("../common/modal.ejs") %>
 
 	<%- include("../common/scripts.ejs")%>
+	<script type="text/javascript" src="/scripts/change-structure/change-faculty.js"></script>
+	<script type="text/javascript" src="/scripts/check-form.js"></script>
 
 </body>
 </html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Изменение кафедры</title>
+    <%- include("../common/head.ejs")%>
+</head>
+<body class="d-flex flex-column h-100">
+    <header>
+        <%- include("../common/menu.ejs") %>
+    </header>
+    <main role="main" class="flex-shrink-0">
+        <div class="content container-fluid">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/get-structure">Просмотр структуры</a></li>
+                    <li class="breadcrumb-item" aria-current="page">Изменение кафедры</li>
+                </ol>
+            </nav>
+            <h2>Изменение кафедры <%=structure.department%></h2>
+            <hr>
+            <form name="" action="" method="post" class="needs-validation" id="form-send" novalidate>
+                <input type="hidden" name="oldDepartment" id="department" class="form-control" value="<%=structure.department%>">
+
+                <div class="form-group row" id="faculty-div">
+                    <% if(faculties.length != 0) {%>
+                        <label for="faculty" class="col-sm-2 col-form-label">Факультет</label>
+                        <div class="col-sm-10">
+                            <select name="faculty" id="faculty" class="form-control">
+                                <% for(let i = 0; i < faculties.length; i++) {%>
+                                    <% if(faculties[i] == structure.faculty) {%>
+                                        <option selected><%=faculties[i]%></option>
+                                    <%} %>
+                                    <% if(faculties[i] != structure.faculty) {%>
+                                        <option><%=faculties[i]%></option>
+                                    <%} %>
+                                <%} %>
+                            </select>
+                        </div>
+                    <%}%>
+                </div>
+
+                <div class="form-group row">
+                    <label for="name" class="col-sm-2 col-form-label">Кафедра</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="department" class="form-control" id="name" value="<%=structure.department%>" maxlength="100" required>
+                        <div class="invalid-feedback">
+                            Пожалуйста введите название кафедры
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-sm-10">
+                        <button type="submit" class="btn btn-primary btn-lg">Сохранить</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <div class="footer mt-auto py-3">
+        <%- include("../common/footer.ejs") %>
+    </div>
+    <%- include("../common/modal-close.ejs") %>
+
+    <%- include("../common/scripts.ejs")%>
+    <script type="text/javascript" src="/scripts/check-form.js"></script>
+    <script type="text/javascript" src="/scripts/send-form.js"></script>
+</body>
+</html>

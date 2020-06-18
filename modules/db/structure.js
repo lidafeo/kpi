@@ -27,6 +27,10 @@ exports.selectDepartments = function(faculty) {
         "WHERE faculty=?",
         [faculty]);
 };
+//получить все факультеты
+exports.selectAllFaculties = function() {
+    return query("SELECT DISTINCT faculty FROM structure");
+};
 /*
 //получить одну кафедру
 exports.selectOneDepartments = function(department) {
@@ -71,4 +75,16 @@ exports.selectDepartmentWithLike = function(dep) {
     return query("SELECT department, faculty FROM structure " +
         "WHERE abbr_department=? OR department=? OR department LIKE '%" + dep + "%'",
         [dep, dep]);
+};
+
+//изменить кафедру
+exports.updateDepartment = function(department, structure) {
+    return query("UPDATE structure SET department=?, faculty=? WHERE department=?",
+        [structure.department, structure.faculty, department]);
+};
+
+//изменить факультет
+exports.updateFaculty = function(faculty, newFaculty) {
+    return query("UPDATE structure SET faculty=? WHERE faculty=?",
+        [newFaculty, faculty]);
 };

@@ -45,67 +45,69 @@
                         <%}%>
                     </div>
                     <h3>Просмотр значения ПЭД</h3>
-                    <table class="table">
-                        <tbody>
-                        <tr>
-                            <th scope="row">Автор значения ПЭД</th>
-                            <td><%=val.login_user%></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">ПЭД (шифр)</th>
-                            <td><%=val.name_kpi%></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">ПЭД (полное название)</th>
-                            <td><%=val.description%></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Дата добавления</th>
-                            <td><%=val.modifydate%></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Дата исполнения</th>
-                            <td><%=val.modifystart_date%></td>
-                        </tr>
-                        <% if(val.type == 2) {%>
-                        <tr>
-                            <th scope="row">Тип</th>
-                            <td><%=val.criterion_description%></td>
-                        </tr>
-                        <%} %>
-                        <tr>
-                            <th scope="row">Значение</th>
-                            <td><%=val.value%></td>
-                        </tr>
-                        <tr>
-                            <th scope="row">Статус</th>
-                            <%if (val.valid) {%>
-                                <td class="text-success">Выполнено</td>
+                    <div class="table-responsive-md">
+                        <table class="table">
+                            <tbody>
+                            <tr>
+                                <th scope="row">Автор значения ПЭД</th>
+                                <td><%=val.login_user%></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">ПЭД (шифр)</th>
+                                <td><%=val.name_kpi%></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">ПЭД (полное название)</th>
+                                <td><%=val.description%></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Дата добавления</th>
+                                <td><%=val.modifydate%></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Дата исполнения</th>
+                                <td><%=val.modifystart_date%></td>
+                            </tr>
+                            <% if(val.type == 2) {%>
+                            <tr>
+                                <th scope="row">Тип</th>
+                                <td><%=val.criterion_description%></td>
+                            </tr>
+                            <%} %>
+                            <tr>
+                                <th scope="row">Значение</th>
+                                <td><%=val.value%></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Статус</th>
+                                <%if (val.valid) {%>
+                                    <td class="text-success">Выполнено</td>
+                                <%}%>
+                                <%if (!val.valid) {%>
+                                    <td class="text-danger">Недействительно</td>
+                                <%}%>
+                            </tr>
+                            <% if (val.link) {%>
+                            <tr>
+                                <th scope="row">Ссылка</th>
+                                <td><a href="<%=val.link%>" target="_blank"><%=val.link%></a></td>
+                            </tr>
                             <%}%>
-                            <%if (!val.valid) {%>
-                                <td class="text-danger">Недействительно</td>
+                            <% if (val.file) {%>
+                            <tr>
+                                <th scope="row">Файл</th>
+                                <td><a href="/download-file?file=<%=val.file%>" download=""><img src="/img/icons/download.svg" alt="Скачать файл" width="25"></a></td>
+                            </tr>
                             <%}%>
-                        </tr>
-                        <% if (val.link) {%>
-                        <tr>
-                            <th scope="row">Ссылка</th>
-                            <td><a href="<%=val.link%>" target="_blank"><%=val.link%></a></td>
-                        </tr>
-                        <%}%>
-                        <% if (val.file) {%>
-                        <tr>
-                            <th scope="row">Файл</th>
-                            <td><a href="/download-file?file=<%=val.file%>" download=""><img src="/img/icons/download.svg" alt="Скачать файл" width="25"></a></td>
-                        </tr>
-                        <%}%>
-                        <% if (val.text) {%>
-                        <tr>
-                            <th scope="row">Пояснительная записка</th>
-                            <td><%=val.text%></td>
-                        </tr>
-                        <%}%>
-                        </tbody>
-                    </table>
+                            <% if (val.text) {%>
+                            <tr>
+                                <th scope="row">Пояснительная записка</th>
+                                <td><%=val.text%></td>
+                            </tr>
+                            <%}%>
+                            </tbody>
+                        </table>
+                    </div>
                     <div id="div-incorrect">
                         <% if(val.valid) {%>
                             <h3>Отметить данное исполнение ПЭД как неверное</h3>

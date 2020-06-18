@@ -28,7 +28,7 @@
 							<th class="text-center" scope="col">Должность</th>
 							<th class="text-center" scope="col">Факультет</th>
 							<th class="text-center" scope="col">Кафедра</th>
-							<% if(infoUser.rights.indexOf("delete_user") !== -1) {%>
+							<% if(infoUser.rights.indexOf("delete_user") !== -1 || infoUser.rights.indexOf("change_user") !== -1) {%>
 								<th class="text-center" scope="col">Действия</th>
 							<%}%>
 						</tr>
